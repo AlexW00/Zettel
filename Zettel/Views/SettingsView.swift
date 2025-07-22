@@ -12,6 +12,7 @@ struct SettingsView: View {
     @ObservedObject var noteStore: NoteStore
     @EnvironmentObject var themeStore: ThemeStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
     @State private var showingFolderPicker = false
     
     var body: some View {
@@ -111,12 +112,52 @@ struct SettingsView: View {
                             Text("settings.app_name".localized)
                                 .font(.system(size: 16, weight: .medium))
                             
-                            Text("settings.app_description".localized)
+                            Text("View on GitHub")
                                 .font(.system(size: 14))
                                 .foregroundColor(.secondary)
                         }
                         
                         Spacer()
+                        
+                        Button(action: {
+                            if let url = URL(string: "https://github.com/AlexW00/Zettel") {
+                                openURL(url)
+                            }
+                        }) {
+                            Image(systemName: "arrow.up.right")
+                                .font(.system(size: 14))
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    .padding(.vertical, 4)
+                    
+                    HStack {
+                        Image(systemName: "person.circle")
+                            .foregroundColor(.iconTint)
+                            .frame(width: 24)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Developer")
+                                .font(.system(size: 16, weight: .medium))
+                            
+                            Text("Follow me on X ^^")
+                                .font(.system(size: 14))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            if let url = URL(string: "https://x.com/AlexWeichart") {
+                                openURL(url)
+                            }
+                        }) {
+                            Image(systemName: "arrow.up.right")
+                                .font(.system(size: 14))
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                     .padding(.vertical, 4)
                 } header: {
