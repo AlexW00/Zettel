@@ -94,7 +94,6 @@ Note content with #tags and markdown formatting
 - ✅ Opens documents in place
 - ✅ User-selected file access
 - ❌ No network access
-- ❌ No cloud sync
 
 ## Build Configuration
 
@@ -124,7 +123,6 @@ Note content with #tags and markdown formatting
 - **Sandboxed**: Full app sandbox
 - **File Access**: Only user-selected files
 - **No Analytics**: No tracking or data collection
-- **Local Storage**: All data stored locally
 
 ## Development History
 
