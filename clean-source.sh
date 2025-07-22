@@ -21,5 +21,18 @@ find . -name "*.swift" -type f | while read -r file; do
     fi
 done
 
+# Clean Xcode project file - remove personal development team and bundle identifier
+PROJECT_FILE="Zettel.xcodeproj/project.pbxproj"
+if [ -f "$PROJECT_FILE" ]; then
+    # Replace development team IDs with empty strings
+    sed -i '' 's/DEVELOPMENT_TEAM = [A-Z0-9]*;/DEVELOPMENT_TEAM = "";/g' "$PROJECT_FILE"
+    
+    # Replace bundle identifiers with empty strings (keep only Apple's default)
+    sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = com\.[^;]*;/PRODUCT_BUNDLE_IDENTIFIER = "";/g' "$PROJECT_FILE"
+    
+    echo "Cleaned: $PROJECT_FILE"
+fi
+
 echo -e "${GREEN}✓ Removed personal information from Swift files${NC}"
+echo -e "${GREEN}✓ Removed personal information from Xcode project file${NC}"
 echo -e "${GREEN}✓ Source files are ready for open source publication${NC}"
