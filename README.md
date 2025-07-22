@@ -1,6 +1,6 @@
 # Zettel
 
-A minimalist iOS note-taking app with a unique "tear-off" interaction pattern for archiving notes.
+![English  en  _ iPhone - 6 9_ Display - 5 _ 2025-07-22_17-56-17-imageonline co-merged](https://github.com/user-attachments/assets/355c20f2-6bb8-4438-8d44-2498fc7ce37c)
 
 ## Features
 
