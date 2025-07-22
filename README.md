@@ -70,4 +70,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and contribution gu
 ## Storage
 
 Notes are stored as Markdown files in your selected directory (default: Documents/). You can change the storage location in Settings and access files through the iOS Files app.
-# Test change
