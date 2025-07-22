@@ -1,0 +1,163 @@
+//
+//  SettingsView.swift
+//  Zettel
+//
+//  Created for Zettel project
+//
+
+import SwiftUI
+import UniformTypeIdentifiers
+
+struct SettingsView: View {
+    @ObservedObject var noteStore: NoteStore
+    @EnvironmentObject var themeStore: ThemeStore
+    @Environment(\.dismiss) private var dismiss
+    @State private var showingFolderPicker = false
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                // Theme Section
+                Section {
+                    HStack {
+                        Image(systemName: "paintbrush")
+                            .foregroundColor(.iconTint)
+                            .frame(width: 24)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("settings.appearance".localized)
+                                .font(.system(size: 16, weight: .medium))
+                            
+                            Text("settings.theme_description".localized)
+                                .font(.system(size: 12))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Menu {
+                            ForEach(AppTheme.allCases, id: \.self) { theme in
+                                Button(action: {
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        themeStore.currentTheme = theme
+                                    }
+                                }) {
+                                    HStack {
+                                        Text(theme.displayName)
+                                        if themeStore.currentTheme == theme {
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Text(themeStore.currentTheme.displayName)
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundColor(.primary)
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                } header: {
+                    Text("settings.display".localized)
+                } footer: {
+                    Text("settings.system_description".localized)
+                }
+                
+                // Storage Section
+                Section {
+                    HStack {
+                        Image(systemName: "folder")
+                            .foregroundColor(.iconTint)
+                            .frame(width: 24)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("settings.storage_location".localized)
+                                .font(.system(size: 16, weight: .medium))
+                            
+                            Text(noteStore.storageDirectory.path)
+                                .font(.system(size: 12))
+                                .foregroundColor(.secondary)
+                                .lineLimit(2)
+                                .truncationMode(.middle)
+                        }
+                        
+                        Spacer()
+                        
+                        Button("Change") {
+                            showingFolderPicker = true
+                        }
+                        .font(.system(size: 14, weight: .medium))
+                    }
+                    .padding(.vertical, 4)
+                } header: {
+                    Text("Storage")
+                } footer: {
+                    Text("settings.storage_description".localized)
+                }
+                
+                // App Info Section
+                Section {
+                    HStack {
+                        Image(systemName: "info.circle")
+                            .foregroundColor(.iconTint)
+                            .frame(width: 24)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("settings.app_name".localized)
+                                .font(.system(size: 16, weight: .medium))
+                            
+                            Text("settings.app_description".localized)
+                                .font(.system(size: 14))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                    }
+                    .padding(.vertical, 4)
+                } header: {
+                    Text("About")
+                }
+            }
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .font(.system(size: 16, weight: .medium))
+                }
+            }
+        }
+        .preferredColorScheme(themeStore.currentTheme.colorScheme)
+        .fileImporter(
+            isPresented: $showingFolderPicker,
+            allowedContentTypes: [.folder],
+            allowsMultipleSelection: false
+        ) { result in
+            switch result {
+            case .success(let urls):
+                if let url = urls.first {
+                    // The fileImporter already handles security scoping
+                    noteStore.updateStorageDirectory(url)
+                }
+            case .failure(let error):
+                print("Error selecting folder: \(error)")
+            }
+        }
+    }
+}
+
+// MARK: - Preview
+
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SettingsView(noteStore: NoteStore())
+            .environmentObject(ThemeStore())
+    }
+}

@@ -1,0 +1,40 @@
+/* 
+  Localizable.strings
+  Zettel
+
+  Created by GitHub Copilot on 08.07.25.
+  
+  English localization strings for the Zettel app.
+*/
+
+// Settings
+"settings.appearance" = "Appearance";
+"settings.display" = "Display";
+"settings.theme_description" = "Choose your preferred theme";
+"settings.system_description" = "System follows your device's appearance settings.";
+"settings.storage_location" = "Storage Location";
+"settings.storage_description" = "Notes are saved as .md files in the selected folder.";
+"settings.app_name" = "Zettel";
+"settings.app_description" = "Minimalist notepad for iOS";
+
+// Theme Options
+"theme.system" = "System";
+"theme.light" = "Light";
+"theme.dark" = "Dark";
+
+// Overview
+"overview.all_notes" = "All";
+"overview.tag_count" = "(%d)";
+"overview.additional_tags" = "+%d";
+
+// General
+"general.cancel" = "Cancel";
+"general.save" = "Save";
+"general.delete" = "Delete";
+"general.edit" = "Edit";
+"general.done" = "Done";
+"general.ok" = "OK";
+
+// Tags
+"tags.hashtag_prefix" = "#%@";
+"tags.no_tags" = "No tags";
