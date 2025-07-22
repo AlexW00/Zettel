@@ -53,7 +53,6 @@ Or run the configuration and build separately:
 - `./configure.sh` - Configure Xcode project with environment variables
 - `./build.sh` - Configure and build the project
 - `./clean.sh` - Reset project configuration to clean state
-- `./clean-source.sh` - Remove personal information from source files
 
 ## Contributing
 
