@@ -2,6 +2,10 @@
 
 ![English  en  _ iPhone - 6 9_ Display - 5 _ 2025-07-22_17-56-17-imageonline co-merged](https://github.com/user-attachments/assets/355c20f2-6bb8-4438-8d44-2498fc7ce37c)
 
+## App Store
+
+You can download Zettel on the App Store for free: [link](https://apps.apple.com/de/app/zettel-quick-notes/id6748525244)
+
 ## Features
 
 - **Single-note focus**: Edit one note at a time with full-screen interface
