@@ -1,0 +1,73 @@
+/* 
+  Localizable.strings
+  Zettel
+
+  Created by GitHub Copilot on 25.07.25.
+  
+  German localization strings for the Zettel app.
+*/
+
+// General Actions
+"general.done" = "Fertig";
+"general.cancel" = "Abbrechen";
+"general.save" = "Sichern";
+"general.delete" = "Löschen";
+"general.edit" = "Bearbeiten";
+"general.ok" = "OK";
+"general.change" = "Ändern";
+
+// Navigation & Titles
+"navigation.settings" = "Einstellungen";
+"navigation.about" = "Über";
+"navigation.storage" = "Speicher";
+
+// Note Interface
+"note.title_placeholder" = "Notiztitel";
+"note.untitled" = "Ohne Titel";
+"note.empty" = "Leere Notiz";
+"note.tear_zone_accessibility" = "Reißbereich";
+
+// Settings
+"settings.appearance" = "Erscheinungsbild";
+"settings.display" = "Anzeige";
+"settings.storage" = "Speicher";
+"settings.about" = "Über";
+"settings.theme_description" = "Wählen Sie Ihr bevorzugtes Design";
+"settings.system_description" = "System folgt den Darstellungseinstellungen Ihres Geräts.";
+"settings.storage_location" = "Speicherort";
+"settings.storage_description" = "Notizen werden als .md-Dateien im ausgewählten Ordner gespeichert.";
+"settings.app_name" = "Zettel";
+"settings.app_description" = "Minimalistischer Notizblock für iOS";
+"settings.developer" = "Entwickler";
+"settings.developer_description" = "Folge mir auf X ^^";
+"settings.view_on_github" = "Auf GitHub anzeigen";
+
+// Theme Options
+"theme.system" = "System";
+"theme.light" = "Hell";
+"theme.dark" = "Dunkel";
+
+// Overview
+"overview.all_notes" = "Alle";
+"overview.empty_state_message" = "Ihre gespeicherten Notizen werden hier angezeigt";
+"overview.tag_count" = "(%d)";
+"overview.additional_tags" = "+%d";
+
+// Tags
+"tags.hashtag_prefix" = "#%@";
+"tags.no_tags" = "Keine Tags";
+
+// Error Messages
+"error.corrupted_file" = "Die Notizdatei ist beschädigt und kann nicht gelesen werden.";
+"error.file_system_error" = "Dateisystemfehler: %@";
+"error.encoding_error" = "Der Notizinhalt kann nicht codiert oder decodiert werden.";
+"error.title_too_long" = "Titel ist zu lang (%d Zeichen). Maximal erlaubt: %d Zeichen.";
+"error.content_too_long" = "Inhalt ist zu lang (%d Zeichen). Maximal erlaubt: %d Zeichen.";
+"error.too_many_tags" = "Zu viele Tags (%d Tags). Maximal erlaubt: %d Tags.";
+"error.tag_too_long" = "Tag '%@' ist zu lang. Maximal erlaubt: %d Zeichen.";
+
+// Accessibility
+"accessibility.tear_zone" = "Reißbereich";
+"accessibility.settings_button" = "Einstellungen";
+"accessibility.selection_mode" = "Auswahlmodus";
+"accessibility.note_card" = "Notizkarte";

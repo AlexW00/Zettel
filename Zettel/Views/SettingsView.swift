@@ -89,14 +89,14 @@ struct SettingsView: View {
                         
                         Spacer()
                         
-                        Button("Change") {
+                        Button(StringConstants.Actions.change.localized) {
                             showingFolderPicker = true
                         }
                         .font(.system(size: 14, weight: .medium))
                     }
                     .padding(.vertical, 4)
                 } header: {
-                    Text("Storage")
+                    Text(StringConstants.Navigation.storage.localized)
                 } footer: {
                     Text("settings.storage_description".localized)
                 }
@@ -112,7 +112,7 @@ struct SettingsView: View {
                             Text("settings.app_name".localized)
                                 .font(.system(size: 16, weight: .medium))
                             
-                            Text("View on GitHub")
+                            Text(StringConstants.Settings.viewOnGitHub.localized)
                                 .font(.system(size: 14))
                                 .foregroundColor(.secondary)
                         }
@@ -138,10 +138,10 @@ struct SettingsView: View {
                             .frame(width: 24)
                         
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Developer")
+                            Text(StringConstants.Settings.developer.localized)
                                 .font(.system(size: 16, weight: .medium))
                             
-                            Text("Follow me on X ^^")
+                            Text(StringConstants.Settings.developerDescription.localized)
                                 .font(.system(size: 14))
                                 .foregroundColor(.secondary)
                         }
@@ -161,14 +161,14 @@ struct SettingsView: View {
                     }
                     .padding(.vertical, 4)
                 } header: {
-                    Text("About")
+                    Text(StringConstants.Navigation.about.localized)
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle(StringConstants.Navigation.settings.localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
+                    Button(StringConstants.Actions.done.localized) {
                         dismiss()
                     }
                     .font(.system(size: 16, weight: .medium))

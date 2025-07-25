@@ -16,11 +16,11 @@ enum NoteError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .corruptedFile:
-            return "The note file is corrupted and cannot be read."
+            return StringConstants.Errors.corruptedFile.localized
         case .fileSystemError(let message):
-            return "File system error: \(message)"
+            return StringConstants.Errors.fileSystemError.localized(message)
         case .encodingError:
-            return "Unable to encode or decode the note content."
+            return StringConstants.Errors.encodingError.localized
         }
     }
 }
@@ -174,7 +174,7 @@ struct Note: Identifiable, Codable, Equatable {
             .trimmingCharacters(in: .whitespacesAndNewlines)
         
         // Ensure we have a non-empty filename
-        return sanitized.isEmpty ? "Untitled" : sanitized
+        return sanitized.isEmpty ? StringConstants.Note.untitled.localized : sanitized
     }
     /// Returns a preview of the content (first few lines for overview)
     var contentPreview: String {
@@ -186,7 +186,7 @@ struct Note: Identifiable, Codable, Equatable {
         let lines = content.components(separatedBy: .newlines)
         let previewLines = lines.prefix(maxLines)
         let preview = previewLines.joined(separator: "\n")
-        return preview.isEmpty ? "Empty note" : preview
+        return preview.isEmpty ? StringConstants.Note.emptyNote.localized : preview
     }
     
     /// Serializes the note as plain markdown content
@@ -294,13 +294,13 @@ enum ValidationError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .titleTooLong(let current, let max):
-            return "Title is too long (\(current) characters). Maximum allowed: \(max) characters."
+            return StringConstants.Errors.titleTooLong.localized(current, max)
         case .contentTooLong(let current, let max):
-            return "Content is too long (\(current) characters). Maximum allowed: \(max) characters."
+            return StringConstants.Errors.contentTooLong.localized(current, max)
         case .tooManyTags(let current, let max):
-            return "Too many tags (\(current) tags). Maximum allowed: \(max) tags."
+            return StringConstants.Errors.tooManyTags.localized(current, max)
         case .tagTooLong(let tag, let max):
-            return "Tag '\(tag)' is too long. Maximum allowed: \(max) characters."
+            return StringConstants.Errors.tagTooLong.localized(tag, max)
         }
     }
 }

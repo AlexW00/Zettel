@@ -99,7 +99,7 @@ struct MainView: View {
     
     private var noteCard: some View {
         VStack(spacing: 0) {
-            TextField("Note Title", text: $noteStore.currentNote.title)
+            TextField(StringConstants.Note.titlePlaceholder.localized, text: $noteStore.currentNote.title)
                 .font(.system(size: 17, weight: .semibold, design: .monospaced))
                 .monospacedDigit()
                 .foregroundColor(.primaryText)
@@ -148,7 +148,7 @@ struct MainView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
-                    Button("Done") {
+                    Button(StringConstants.Actions.done.localized) {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
                     }
@@ -329,7 +329,7 @@ struct TearEdgeView: View {
             // Support for iPad with trackpad/mouse
             isHovering = hovering
         }
-        .accessibilityLabel("Tear zone")
+        .accessibilityLabel(StringConstants.Accessibility.tearZone.localized)
         .accessibilityHint("Swipe horizontally from either side to tear off and archive the current note. Start from left side to tear rightward, start from right side to tear leftward.")
         .accessibilityAddTraits(.allowsDirectInteraction)
     }

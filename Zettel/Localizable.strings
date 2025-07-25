@@ -7,15 +7,40 @@
   English localization strings for the Zettel app.
 */
 
+// General Actions
+"general.done" = "Done";
+"general.cancel" = "Cancel";
+"general.save" = "Save";
+"general.delete" = "Delete";
+"general.edit" = "Edit";
+"general.ok" = "OK";
+"general.change" = "Change";
+
+// Navigation & Titles
+"navigation.settings" = "Settings";
+"navigation.about" = "About";
+"navigation.storage" = "Storage";
+
+// Note Interface
+"note.title_placeholder" = "Note Title";
+"note.untitled" = "Untitled";
+"note.empty" = "Empty note";
+"note.tear_zone_accessibility" = "Tear zone";
+
 // Settings
 "settings.appearance" = "Appearance";
 "settings.display" = "Display";
+"settings.storage" = "Storage";
+"settings.about" = "About";
 "settings.theme_description" = "Choose your preferred theme";
 "settings.system_description" = "System follows your device's appearance settings.";
 "settings.storage_location" = "Storage Location";
 "settings.storage_description" = "Notes are saved as .md files in the selected folder.";
 "settings.app_name" = "Zettel";
 "settings.app_description" = "Minimalist notepad for iOS";
+"settings.developer" = "Developer";
+"settings.developer_description" = "Follow me on X ^^";
+"settings.view_on_github" = "View on GitHub";
 
 // Theme Options
 "theme.system" = "System";
@@ -24,17 +49,25 @@
 
 // Overview
 "overview.all_notes" = "All";
+"overview.empty_state_message" = "Your saved notes will appear here";
 "overview.tag_count" = "(%d)";
 "overview.additional_tags" = "+%d";
-
-// General
-"general.cancel" = "Cancel";
-"general.save" = "Save";
-"general.delete" = "Delete";
-"general.edit" = "Edit";
-"general.done" = "Done";
-"general.ok" = "OK";
 
 // Tags
 "tags.hashtag_prefix" = "#%@";
 "tags.no_tags" = "No tags";
+
+// Error Messages
+"error.corrupted_file" = "The note file is corrupted and cannot be read.";
+"error.file_system_error" = "File system error: %@";
+"error.encoding_error" = "Unable to encode or decode the note content.";
+"error.title_too_long" = "Title is too long (%d characters). Maximum allowed: %d characters.";
+"error.content_too_long" = "Content is too long (%d characters). Maximum allowed: %d characters.";
+"error.too_many_tags" = "Too many tags (%d tags). Maximum allowed: %d tags.";
+"error.tag_too_long" = "Tag '%@' is too long. Maximum allowed: %d characters.";
+
+// Accessibility
+"accessibility.tear_zone" = "Tear zone";
+"accessibility.settings_button" = "Settings";
+"accessibility.selection_mode" = "Selection mode";
+"accessibility.note_card" = "Note card";

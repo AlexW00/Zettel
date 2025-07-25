@@ -137,7 +137,7 @@ struct OverviewGrid: View {
                                                             noteStore.deleteArchivedNote(note)
                                                         }
                                                     } label: {
-                                                        Label("Delete", systemImage: "trash")
+                                                        Label(StringConstants.Actions.delete.localized, systemImage: "trash")
                                                     }
                                                 }
                                             }
@@ -207,7 +207,7 @@ struct OverviewGrid: View {
                                     }
                                     .disabled(selectedNotes.isEmpty)
 
-                                    Button("Cancel") {
+                                    Button(StringConstants.Actions.cancel.localized) {
                                         exitSelectionMode()
                                     }
                                     .foregroundColor(.primaryText)
@@ -338,7 +338,7 @@ struct EmptyStateView: View {
                 .font(.system(size: 48, weight: .light))
                 .foregroundColor(.tertiaryText)
             
-            Text("Your saved notes will appear here")
+            Text(StringConstants.Overview.emptyStateMessage.localized)
                 .font(.system(size: 16, weight: .regular))
                 .foregroundColor(.tertiaryText)
                 .multilineTextAlignment(.center)
