@@ -1,0 +1,74 @@
+/* 
+  Localizable.strings
+  Zettel
+
+  Created by GitHub Copilot on 25.07.25.
+  
+  Japanese localization strings for the Zettel app.
+  TODO: Translate English placeholders to Japanese
+*/
+
+// General Actions
+"general.done" = "Done"; // TODO: Translate to Japanese
+"general.cancel" = "Cancel"; // TODO: Translate to Japanese
+"general.save" = "Save"; // TODO: Translate to Japanese
+"general.delete" = "Delete"; // TODO: Translate to Japanese
+"general.edit" = "Edit"; // TODO: Translate to Japanese
+"general.ok" = "OK"; // TODO: Translate to Japanese
+"general.change" = "Change"; // TODO: Translate to Japanese
+
+// Navigation & Titles
+"navigation.settings" = "Settings"; // TODO: Translate to Japanese
+"navigation.about" = "About"; // TODO: Translate to Japanese
+"navigation.storage" = "Storage"; // TODO: Translate to Japanese
+
+// Note Interface
+"note.title_placeholder" = "Note Title"; // TODO: Translate to Japanese
+"note.untitled" = "Untitled"; // TODO: Translate to Japanese
+"note.empty" = "Empty note"; // TODO: Translate to Japanese
+"note.tear_zone_accessibility" = "Tear zone"; // TODO: Translate to Japanese
+
+// Settings
+"settings.appearance" = "Appearance"; // TODO: Translate to Japanese
+"settings.display" = "Display"; // TODO: Translate to Japanese
+"settings.storage" = "Storage"; // TODO: Translate to Japanese
+"settings.about" = "About"; // TODO: Translate to Japanese
+"settings.theme_description" = "Choose your preferred theme"; // TODO: Translate to Japanese
+"settings.system_description" = "System follows your device's appearance settings."; // TODO: Translate to Japanese
+"settings.storage_location" = "Storage Location"; // TODO: Translate to Japanese
+"settings.storage_description" = "Notes are saved as .md files in the selected folder."; // TODO: Translate to Japanese
+"settings.app_name" = "Zettel"; // TODO: Keep as-is or translate to Japanese
+"settings.app_description" = "Minimalist notepad for iOS"; // TODO: Translate to Japanese
+"settings.developer" = "Developer"; // TODO: Translate to Japanese
+"settings.developer_description" = "Follow me on X ^^"; // TODO: Translate to Japanese
+"settings.view_on_github" = "View on GitHub"; // TODO: Translate to Japanese
+
+// Theme Options
+"theme.system" = "System"; // TODO: Translate to Japanese
+"theme.light" = "Light"; // TODO: Translate to Japanese
+"theme.dark" = "Dark"; // TODO: Translate to Japanese
+
+// Overview
+"overview.all_notes" = "All"; // TODO: Translate to Japanese
+"overview.empty_state_message" = "Your saved notes will appear here"; // TODO: Translate to Japanese
+"overview.tag_count" = "(%d)"; // TODO: Keep format, translate context if needed
+"overview.additional_tags" = "+%d"; // TODO: Keep format, translate context if needed
+
+// Tags
+"tags.hashtag_prefix" = "#%@"; // TODO: Keep format, decide if # symbol is appropriate
+"tags.no_tags" = "No tags"; // TODO: Translate to Japanese
+
+// Error Messages
+"error.corrupted_file" = "The note file is corrupted and cannot be read."; // TODO: Translate to Japanese
+"error.file_system_error" = "File system error: %@"; // TODO: Translate to Japanese
+"error.encoding_error" = "Unable to encode or decode the note content."; // TODO: Translate to Japanese
+"error.title_too_long" = "Title is too long (%d characters). Maximum allowed: %d characters."; // TODO: Translate to Japanese
+"error.content_too_long" = "Content is too long (%d characters). Maximum allowed: %d characters."; // TODO: Translate to Japanese
+"error.too_many_tags" = "Too many tags (%d tags). Maximum allowed: %d tags."; // TODO: Translate to Japanese
+"error.tag_too_long" = "Tag '%@' is too long. Maximum allowed: %d characters."; // TODO: Translate to Japanese
+
+// Accessibility
+"accessibility.tear_zone" = "Tear zone"; // TODO: Translate to Japanese
+"accessibility.settings_button" = "Settings"; // TODO: Translate to Japanese
+"accessibility.selection_mode" = "Selection mode"; // TODO: Translate to Japanese
+"accessibility.note_card" = "Note card"; // TODO: Translate to Japanese

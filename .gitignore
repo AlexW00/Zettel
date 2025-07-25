@@ -66,4 +66,6 @@ fastlane/test_output
 .env
 .env.local
 .env.production
+
+# Copilot stuff
 plan/
