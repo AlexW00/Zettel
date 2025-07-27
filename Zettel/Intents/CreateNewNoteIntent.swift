@@ -9,15 +9,17 @@ import AppIntents
 import SwiftUI
 import Foundation
 
-/// App Intent for creating a new note via Shortcuts
-struct CreateNewNoteIntent: AppIntent {
-    static var title: LocalizedStringResource = "shortcuts.create_new_note"
-    static var description = IntentDescription("shortcuts.create_new_note_description")
+/// App Intent for creating a new note via Shortcuts and Widgets
+public struct CreateNewNoteIntent: AppIntent {
+    public static var title: LocalizedStringResource = "shortcuts.create_new_note"
+    public static var description = IntentDescription("shortcuts.create_new_note_description")
     
-    static var openAppWhenRun: Bool = true
+    public static var openAppWhenRun: Bool = true
+    
+    public init() {}
     
     /// Performs the intent action
-    func perform() async throws -> some IntentResult {
+    public func perform() async throws -> some IntentResult {
         // Post notification to trigger new note creation
         // This allows the app to handle confirmation dialogs if needed
         await MainActor.run {
@@ -32,7 +34,7 @@ struct CreateNewNoteIntent: AppIntent {
 }
 
 /// Extension to handle notification names
-extension Notification.Name {
+public extension Notification.Name {
     static let createNewNoteFromShortcut = Notification.Name("createNewNoteFromShortcut")
     static let showNewNoteConfirmation = Notification.Name("showNewNoteConfirmation")
 }
