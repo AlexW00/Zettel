@@ -71,3 +71,10 @@
 "accessibility.settings_button" = "Einstellungen";
 "accessibility.selection_mode" = "Auswahlmodus";
 "accessibility.note_card" = "Notizkarte";
+
+// Shortcuts
+"shortcuts.create_new_note" = "Neue Notiz erstellen";
+"shortcuts.create_new_note_description" = "Erstellt eine neue Notiz in Zettel";
+"shortcuts.new_note_short_title" = "Neue Notiz";
+"shortcuts.confirmation_title" = "Neue Notiz erstellen?";
+"shortcuts.confirmation_message" = "Sie haben ungespeicherte Inhalte. Das Erstellen einer neuen Notiz löscht Ihre aktuelle Arbeit.";

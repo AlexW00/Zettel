@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import AppIntents
 
 enum TearDirection {
     case rightward
@@ -14,6 +15,7 @@ struct MainView: View {
     @State private var isDragging = false
     @State private var tearProgress: CGFloat = 0
     @State private var tearDirection: TearDirection = .rightward
+    @State private var showNewNoteConfirmation = false
     
     private let tearThreshold: CGFloat = GestureConstants.tearThreshold
     private let tearZoneHeight: CGFloat = LayoutConstants.Size.tearZoneHeight
@@ -84,11 +86,22 @@ struct MainView: View {
                 .sheet(isPresented: $showSettings) {
                     SettingsView(noteStore: noteStore)
                 }
+                .alert(StringConstants.Shortcuts.confirmationTitle.localized, isPresented: $showNewNoteConfirmation) {
+                    Button(StringConstants.Actions.cancel.localized, role: .cancel) { }
+                    Button(StringConstants.Shortcuts.createNewNote.localized, role: .destructive) {
+                        noteStore.createNewNoteFromShortcut()
+                    }
+                } message: {
+                    Text(StringConstants.Shortcuts.confirmationMessage.localized)
+                }
             }
         } overviewContent: {
             OverviewGrid(noteStore: noteStore, showArchive: $showArchive)
         }
         .environmentObject(noteStore)
+        .onAppear {
+            setupNotificationListeners()
+        }
         .onChange(of: noteStore.shouldShowMainView) { _, newValue in
             if newValue {
                 showArchive = false
@@ -166,6 +179,16 @@ struct MainView: View {
             anchor: tearDirection == .rightward ? .leading : .trailing,
             perspective: 0.5
         )
+    }
+    
+    private func setupNotificationListeners() {
+        NotificationCenter.default.addObserver(
+            forName: .showNewNoteConfirmation,
+            object: nil,
+            queue: .main
+        ) { _ in
+            showNewNoteConfirmation = true
+        }
     }
     
     private func shareNote() {

@@ -19,5 +19,9 @@
 	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>CreateNewNoteIntent</string>
+	</array>
 </dict>
 </plist>

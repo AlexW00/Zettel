@@ -71,3 +71,10 @@
 "accessibility.settings_button" = "Settings";
 "accessibility.selection_mode" = "Selection mode";
 "accessibility.note_card" = "Note card";
+
+// Shortcuts
+"shortcuts.create_new_note" = "Create New Note";
+"shortcuts.create_new_note_description" = "Creates a new note in Zettel";
+"shortcuts.new_note_short_title" = "New Note";
+"shortcuts.confirmation_title" = "Create New Note?";
+"shortcuts.confirmation_message" = "You have unsaved content. Creating a new note will clear your current work.";

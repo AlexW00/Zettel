@@ -6,11 +6,17 @@
 //
 
 import SwiftUI
+import AppIntents
 
 @main
 struct ZettelApp: App {
     @StateObject private var noteStore = NoteStore()
     @StateObject private var themeStore = ThemeStore()
+    
+    init() {
+        // Register app shortcuts
+        ZettelAppShortcuts.updateAppShortcutParameters()
+    }
     
     var body: some Scene {
         WindowGroup {

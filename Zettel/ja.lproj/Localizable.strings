@@ -5,6 +5,7 @@
   Created by GitHub Copilot on 25.07.25.
   
   Japanese localization strings for the Zettel app.
+  WIP; I will translate all strings later; Dont update for now.
 */
 
 // General Actions
@@ -71,3 +72,10 @@
 "accessibility.settings_button" = "Settings";
 "accessibility.selection_mode" = "Selection mode";
 "accessibility.note_card" = "Note card";
+
+// Shortcuts
+"shortcuts.create_new_note" = "新しいメモを作成";
+"shortcuts.create_new_note_description" = "Zettelで新しいメモを作成します";
+"shortcuts.new_note_short_title" = "新しいメモ";
+"shortcuts.confirmation_title" = "新しいメモを作成しますか？";
+"shortcuts.confirmation_message" = "未保存のコンテンツがあります。新しいメモを作成すると、現在の作業がクリアされます。";

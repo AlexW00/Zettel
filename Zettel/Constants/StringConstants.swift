@@ -95,4 +95,13 @@ enum StringConstants {
         static let selectionMode = "accessibility.selection_mode"
         static let noteCard = "accessibility.note_card"
     }
+    
+    // MARK: - Shortcuts
+    enum Shortcuts {
+        static let createNewNote = "shortcuts.create_new_note"
+        static let createNewNoteDescription = "shortcuts.create_new_note_description"
+        static let newNoteShortTitle = "shortcuts.new_note_short_title"
+        static let confirmationTitle = "shortcuts.confirmation_title"
+        static let confirmationMessage = "shortcuts.confirmation_message"
+    }
 }
