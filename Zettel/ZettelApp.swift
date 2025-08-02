@@ -29,6 +29,10 @@ struct ZettelApp: App {
                 .onOpenURL { url in
                     handleOpenURL(url)
                 }
+                .onAppear {
+                    // Start initial note loading after the UI appears
+                    noteStore.startInitialNoteLoading()
+                }
         }
     }
     

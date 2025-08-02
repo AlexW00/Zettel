@@ -80,3 +80,9 @@
 "shortcuts.new_note_short_title" = "新しいメモ";
 "shortcuts.confirmation_title" = "新しいメモを作成しますか？";
 "shortcuts.confirmation_message" = "未保存のコンテンツがあります。新しいメモを作成すると、現在の作業がクリアされます。";
+
+// Loading States
+"loading.loading_notes" = "メモを読み込み中";
+"loading.loading_subtitle" = "メモを読み込んでいます。しばらくお待ちください...";
+"loading.loading_error" = "メモの読み込みに失敗しました";
+"loading.retry_button" = "再試行";

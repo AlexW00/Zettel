@@ -113,7 +113,16 @@ struct OverviewGrid: View {
                     }
                     
                     ZStack {
-                        if filteredNotes.isEmpty {
+                        if noteStore.isInitialLoadingNotes {
+                            // Show loading indicator during initial load
+                            LoadingStateView(
+                                error: noteStore.loadingError,
+                                retryAction: noteStore.loadingError != nil ? {
+                                    noteStore.retryNoteLoading()
+                                } : nil
+                            )
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        } else if filteredNotes.isEmpty {
                             // Empty state view
                             EmptyStateView()
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -178,8 +187,8 @@ struct OverviewGrid: View {
                             .background(Color.overviewBackground)
                         }
                         
-                        // Top fade gradient (only show when not in empty state)
-                        if showTopFade && !filteredNotes.isEmpty {
+                        // Top fade gradient (only show when not in empty state or loading)
+                        if showTopFade && !filteredNotes.isEmpty && !noteStore.isInitialLoadingNotes {
                             VStack {
                                 LinearGradient(
                                     gradient: Gradient(colors: [

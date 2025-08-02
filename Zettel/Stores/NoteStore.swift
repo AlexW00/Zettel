@@ -38,6 +38,15 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     /// Controls whether the main view should be displayed
     @Published var shouldShowMainView: Bool = false
     
+    /// Indicates if initial note loading is in progress
+    @Published var isInitialLoadingNotes: Bool = false
+    
+    /// Tracks whether the initial load has completed at least once
+    @Published var hasCompletedInitialLoad: Bool = false
+    
+    /// Tracks any error that occurred during note loading
+    @Published var loadingError: Error?
+    
     // Tag support
     @Published var tagStore = TagStore()
     
@@ -96,27 +105,120 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
         // Create directory if it doesn't exist
         createStorageDirectoryIfNeeded()
 
-        // Load existing notes
-        loadArchivedNotes()
+        // Don't load notes synchronously - defer to async method
+        // Initialize tag store with empty notes for now
+        tagStore.updateTagsImmediately(from: [])
 
-        // Initialize tag store with loaded notes
-        tagStore.updateTagsImmediately(from: archivedNotes)
-
-        // Check if this is the first launch and create welcome note if needed
-        if isFirstLaunch() {
-            createWelcomeNote()
-        }
-        
         // Start monitoring file system changes
         startMonitoringFileSystem()
         
         // Set up shortcut notification listener
         setupShortcutNotificationListener()
+        
+        // Check if this is the first launch and create welcome note if needed
+        // Do this after other setup to ensure it doesn't interfere with async loading
+        if isFirstLaunch() {
+            createWelcomeNote()
+        }
     }
     
     deinit {
         NSFileCoordinator.removeFilePresenter(self)
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    // MARK: - Loading State Management
+    
+    /// Updates loading state with proper transitions
+    private func updateLoadingState(isLoading: Bool, error: Error? = nil) {
+        isInitialLoadingNotes = isLoading
+        loadingError = error
+        if !isLoading {
+            hasCompletedInitialLoad = true
+        }
+    }
+    
+    /// Starts the initial note loading process asynchronously
+    func startInitialNoteLoading() {
+        Task { @MainActor in
+            updateLoadingState(isLoading: true)
+            do {
+                try await loadArchivedNotesAsync()
+                updateLoadingState(isLoading: false)
+            } catch {
+                updateLoadingState(isLoading: false, error: error)
+                print("Error during initial note loading: \(error)")
+            }
+        }
+    }
+    
+    /// Retry loading notes after an error
+    func retryNoteLoading() {
+        startInitialNoteLoading()
+    }
+    
+    /// Asynchronous version of note loading that doesn't block the main thread
+    private func loadArchivedNotesAsync() async throws {
+        let result = try await Task.detached { [weak self] in
+            guard let self = self else { 
+                throw NoteError.fileSystemError("NoteStore was deallocated during loading")
+            }
+            
+            // Perform file operations on background thread
+            return try await self.performFileSystemScan()
+        }.value
+        
+        // Update UI on main thread
+        await MainActor.run {
+            self.archivedNotes = result
+            self.tagStore.updateTagsImmediately(from: result)
+        }
+    }
+    
+    /// Performs the actual file system scanning on a background thread
+    private func performFileSystemScan() async throws -> [Note] {
+        // Debug: Add sleep to test loading screen
+        // try await Task.sleep(nanoseconds: 8_000_000_000) // 3 seconds
+        
+        // Start accessing the security-scoped resource if needed
+        let didStartAccessing = storageDirectory.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                storageDirectory.stopAccessingSecurityScopedResource()
+            }
+        }
+        
+        do {
+            let fileURLs = try FileManager.default.contentsOfDirectory(
+                at: storageDirectory, 
+                includingPropertiesForKeys: [.creationDateKey, .contentModificationDateKey], 
+                options: [.skipsHiddenFiles]
+            )
+            
+            var notes: [Note] = []
+            
+            for fileURL in fileURLs where fileURL.pathExtension == "md" {
+                if let content = try? String(contentsOf: fileURL, encoding: .utf8) {
+                    // Get filename without extension as fallback title
+                    let filenameWithoutExtension = fileURL.deletingPathExtension().lastPathComponent
+                    
+                    // Extract file metadata
+                    let creationDate = getFileCreationDate(fileURL) ?? Date()
+                    let modificationDate = getFileModificationDate(fileURL) ?? Date()
+                    
+                    // Create note with file metadata
+                    let note = Note.fromSerializedContent(content, fallbackTitle: filenameWithoutExtension, createdAt: creationDate, modifiedAt: modificationDate)
+                    notes.append(note)
+                }
+            }
+            
+            // Sort by modification date (most recently modified first)
+            return notes.sorted { $0.modifiedAt > $1.modifiedAt }
+            
+        } catch {
+            print("Error loading archived notes: \(error)")
+            throw NoteError.fileSystemError("Failed to load notes: \(error.localizedDescription)")
+        }
     }
     
     // MARK: - Shortcut Integration
@@ -598,7 +700,11 @@ Happy #notetaking ^^
     }
     
     private func refreshArchivedNotes() {
-        // Reload notes from disk to catch external changes
+        // Don't refresh if initial loading is in progress
+        guard !isInitialLoadingNotes else { return }
+        
+        // For subsequent refreshes, use the original synchronous method
+        // This ensures external changes are picked up quickly
         loadArchivedNotes()
     }
     

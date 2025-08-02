@@ -80,3 +80,9 @@
 "shortcuts.new_note_short_title" = "Neue Notiz";
 "shortcuts.confirmation_title" = "Neue Notiz erstellen?";
 "shortcuts.confirmation_message" = "Sie haben ungespeicherte Inhalte. Das Erstellen einer neuen Notiz löscht Ihre aktuelle Arbeit.";
+
+// Loading States
+"loading.loading_notes" = "Notizen werden geladen";
+"loading.loading_subtitle" = "Bitte warten Sie, während Ihre Notizen geladen werden...";
+"loading.loading_error" = "Fehler beim Laden der Notizen";
+"loading.retry_button" = "Erneut versuchen";

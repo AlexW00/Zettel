@@ -80,3 +80,9 @@
 "shortcuts.new_note_short_title" = "New Note";
 "shortcuts.confirmation_title" = "Create New Note?";
 "shortcuts.confirmation_message" = "You have unsaved content. Creating a new note will clear your current work.";
+
+// Loading States
+"loading.loading_notes" = "Loading Notes";
+"loading.loading_subtitle" = "Please wait while we load your notes...";
+"loading.loading_error" = "Failed to Load Notes";
+"loading.retry_button" = "Retry";

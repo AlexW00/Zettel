@@ -106,4 +106,12 @@ enum StringConstants {
         static let confirmationTitle = "shortcuts.confirmation_title"
         static let confirmationMessage = "shortcuts.confirmation_message"
     }
+    
+    // MARK: - Loading States
+    enum Loading {
+        static let loadingNotes = "loading.loading_notes"
+        static let loadingSubtitle = "loading.loading_subtitle"
+        static let loadingError = "loading.loading_error"
+        static let retryButton = "loading.retry_button"
+    }
 }
