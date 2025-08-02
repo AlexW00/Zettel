@@ -56,7 +56,7 @@ struct TagTextViewRepresentable: UIViewRepresentable {
         // Disable autocorrect and other automatic text features
         textView.autocorrectionType = .no
         textView.spellCheckingType = .no
-        textView.autocapitalizationType = .none
+        textView.autocapitalizationType = .sentences
         textView.smartQuotesType = .no
         textView.smartDashesType = .no
         textView.smartInsertDeleteType = .no
@@ -124,7 +124,7 @@ class TagTextView: UITextView {
         // Disable autocorrect and other automatic text features
         autocorrectionType = .no
         spellCheckingType = .no
-        autocapitalizationType = .none
+        autocapitalizationType = .sentences
         smartQuotesType = .no
         smartDashesType = .no
         smartInsertDeleteType = .no
