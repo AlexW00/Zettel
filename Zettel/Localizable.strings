@@ -86,3 +86,7 @@
 "loading.loading_subtitle" = "Please wait while we load your notes...";
 "loading.loading_error" = "Failed to Load Notes";
 "loading.retry_button" = "Retry";
+
+// Welcome Note
+"welcome.title" = "Welcome to Zettel";
+"welcome.content" = "In Zettel, you can:\n\n* swipe ← to see your notes\n* swipe over the … line to save\n\nHappy #notetaking ^^";

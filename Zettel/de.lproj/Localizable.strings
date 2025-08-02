@@ -86,3 +86,7 @@
 "loading.loading_subtitle" = "Bitte warten Sie, während Ihre Notizen geladen werden...";
 "loading.loading_error" = "Fehler beim Laden der Notizen";
 "loading.retry_button" = "Erneut versuchen";
+
+// Welcome Note
+"welcome.title" = "Willkommen bei Zettel";
+"welcome.content" = "In Zettel kannst du:\n\n* nach ← wischen um alle Zettel zu sehen\n* über die … Linie wischen um zu speichern\n\nViel Spaß beim #notieren ^^";

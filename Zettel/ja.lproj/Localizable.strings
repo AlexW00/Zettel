@@ -86,3 +86,7 @@
 "loading.loading_subtitle" = "メモを読み込んでいます。しばらくお待ちください...";
 "loading.loading_error" = "メモの読み込みに失敗しました";
 "loading.retry_button" = "再試行";
+
+// Welcome Note
+"welcome.title" = "Zettelへようこそ";
+"welcome.content" = "Zettelでは:\n\n* ←スワイプでメモを表示\n* →スワイプ（…ライン!）で保存\n\n楽しい#メモライフを ^^";
