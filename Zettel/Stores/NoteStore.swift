@@ -198,17 +198,39 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
             var notes: [Note] = []
             
             for fileURL in fileURLs where fileURL.pathExtension == "md" {
-                if let content = try? String(contentsOf: fileURL, encoding: .utf8) {
-                    // Get filename without extension as fallback title
+                // Check if file is downloaded (not just a cloud stub)
+                if await isFileDownloaded(fileURL) {
+                    if let content = try? String(contentsOf: fileURL, encoding: .utf8) {
+                        // Get filename without extension as fallback title
+                        let filenameWithoutExtension = fileURL.deletingPathExtension().lastPathComponent
+                        
+                        // Extract file metadata
+                        let creationDate = getFileCreationDate(fileURL) ?? Date()
+                        let modificationDate = getFileModificationDate(fileURL) ?? Date()
+                        
+                        // Create note with file metadata
+                        let note = Note.fromSerializedContent(content, fallbackTitle: filenameWithoutExtension, createdAt: creationDate, modifiedAt: modificationDate)
+                        notes.append(note)
+                    }
+                } else {
+                    // File is not downloaded (cloud stub), create placeholder note and start download
                     let filenameWithoutExtension = fileURL.deletingPathExtension().lastPathComponent
-                    
-                    // Extract file metadata
                     let creationDate = getFileCreationDate(fileURL) ?? Date()
                     let modificationDate = getFileModificationDate(fileURL) ?? Date()
                     
-                    // Create note with file metadata
-                    let note = Note.fromSerializedContent(content, fallbackTitle: filenameWithoutExtension, createdAt: creationDate, modifiedAt: modificationDate)
-                    notes.append(note)
+                    // Create placeholder note with downloading state
+                    var placeholderNote = Note(title: filenameWithoutExtension, content: "")
+                    placeholderNote.createdAt = creationDate
+                    placeholderNote.modifiedAt = modificationDate
+                    placeholderNote.isCloudStub = true
+                    placeholderNote.cloudURL = fileURL
+                    placeholderNote.isDownloading = true
+                    notes.append(placeholderNote)
+                    
+                    // Start background download
+                    Task.detached { [weak self] in
+                        await self?.downloadCloudFileInBackground(fileURL: fileURL, noteId: placeholderNote.id)
+                    }
                 }
             }
             
@@ -400,6 +422,11 @@ Happy #notetaking ^^
     
     /// Loads an archived note into the current note for editing
     func loadArchivedNoteAsCurrent(_ note: Note) {
+        // If note is currently downloading, do nothing
+        if note.isDownloading {
+            return
+        }
+        
         // Save current note if it has content
         if !currentNote.content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             archiveCurrentNote()
@@ -408,8 +435,35 @@ Happy #notetaking ^^
         // Store the original filename for rename deletion logic
         originalFilename = note.filename
         
-        // Load the note for editing (keeping all properties including ID)
-        currentNote = note
+        // If this is a cloud stub (not downloading), trigger download and wait
+        if note.isCloudStub && !note.isDownloading {
+            // Set loading state and show placeholder note immediately
+            var placeholderNote = note
+            placeholderNote.content = "Loading from iCloud..."
+            currentNote = placeholderNote
+            
+            // Download the file asynchronously
+            Task {
+                do {
+                    try await downloadCloudFile(for: note)
+                    // After successful download, load the updated note
+                    if let updatedNote = archivedNotes.first(where: { $0.id == note.id }) {
+                        await MainActor.run {
+                            currentNote = updatedNote
+                        }
+                    }
+                } catch {
+                    await MainActor.run {
+                        var errorNote = note
+                        errorNote.content = "Failed to load from iCloud: \(error.localizedDescription)"
+                        currentNote = errorNote
+                    }
+                }
+            }
+        } else {
+            // Load the note for editing (keeping all properties including ID)
+            currentNote = note
+        }
     }
     
     // MARK: - File Management
@@ -703,9 +757,15 @@ Happy #notetaking ^^
         // Don't refresh if initial loading is in progress
         guard !isInitialLoadingNotes else { return }
         
-        // For subsequent refreshes, use the original synchronous method
-        // This ensures external changes are picked up quickly
-        loadArchivedNotes()
+        // Use the async method that properly handles cloud files
+        // This prevents UI hangs when external files are added/removed
+        Task {
+            do {
+                try await loadArchivedNotesAsync()
+            } catch {
+                print("Error during note refresh: \(error)")
+            }
+        }
     }
     
     // MARK: - External File Loading
@@ -773,5 +833,153 @@ Happy #notetaking ^^
     /// Gets notes that contain all of the specified tags
     func getNotesWithAllTags(_ tagNames: Set<String>) -> [Note] {
         return tagStore.getNotesWithAllTags(tagNames, from: archivedNotes)
+    }
+    
+    // MARK: - Cloud File Support
+    
+    /// Checks if a file is downloaded locally (not just a cloud stub)
+    private func isFileDownloaded(_ url: URL) async -> Bool {
+        do {
+            let resourceValues = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
+            
+            // If the file has no ubiquity download status, it's a local file
+            guard let downloadStatus = resourceValues.ubiquitousItemDownloadingStatus else {
+                return true
+            }
+            
+            // Check if the file is downloaded
+            switch downloadStatus {
+            case .current, .downloaded:
+                return true
+            case .notDownloaded:
+                return false
+            default:
+                return false
+            }
+        } catch {
+            // If we can't determine the status, assume it's available
+            return true
+        }
+    }
+    
+    /// Downloads a cloud file asynchronously in the background
+    private func downloadCloudFileInBackground(fileURL: URL, noteId: String) async {
+        do {
+            // Start accessing the security-scoped resource
+            let didStartAccessing = fileURL.startAccessingSecurityScopedResource()
+            defer {
+                if didStartAccessing {
+                    fileURL.stopAccessingSecurityScopedResource()
+                }
+            }
+            
+            // Trigger download
+            try FileManager.default.startDownloadingUbiquitousItem(at: fileURL)
+            
+            // Wait for download to complete (with timeout)
+            let maxWaitTime: TimeInterval = 60 // 60 seconds timeout for background downloads
+            let startTime = Date()
+            
+            while Date().timeIntervalSince(startTime) < maxWaitTime {
+                if await isFileDownloaded(fileURL) {
+                    break
+                }
+                try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second intervals for background
+            }
+            
+            // Check if download succeeded
+            if await isFileDownloaded(fileURL) {
+                // Read the file content
+                let content = try String(contentsOf: fileURL, encoding: .utf8)
+                
+                // Update the note in the archived notes list on main thread
+                await MainActor.run {
+                    if let index = archivedNotes.firstIndex(where: { $0.id == noteId }) {
+                        let originalNote = archivedNotes[index]
+                        var updatedNote = Note.fromSerializedContent(content, 
+                                                                    fallbackTitle: originalNote.title, 
+                                                                    createdAt: originalNote.createdAt, 
+                                                                    modifiedAt: originalNote.modifiedAt)
+                        updatedNote.isCloudStub = false
+                        updatedNote.isDownloading = false
+                        updatedNote.cloudURL = nil
+                        archivedNotes[index] = updatedNote
+                        
+                        // Update tags
+                        tagStore.updateTagsImmediately(from: archivedNotes)
+                    }
+                }
+            } else {
+                // Download failed or timed out
+                await MainActor.run {
+                    if let index = archivedNotes.firstIndex(where: { $0.id == noteId }) {
+                        archivedNotes[index].isDownloading = false
+                        // Note remains as cloud stub for manual retry
+                    }
+                }
+            }
+        } catch {
+            // Download failed
+            await MainActor.run {
+                if let index = archivedNotes.firstIndex(where: { $0.id == noteId }) {
+                    archivedNotes[index].isDownloading = false
+                    // Note remains as cloud stub for manual retry
+                }
+            }
+            print("Background download failed for \(fileURL): \(error)")
+        }
+    }
+    
+    /// Downloads a cloud file asynchronously
+    func downloadCloudFile(for note: Note) async throws {
+        guard note.isCloudStub, let cloudURL = note.cloudURL else {
+            throw NoteError.fileSystemError("Note is not a cloud stub or missing cloud URL")
+        }
+        
+        // Start accessing the security-scoped resource
+        let didStartAccessing = cloudURL.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                cloudURL.stopAccessingSecurityScopedResource()
+            }
+        }
+        
+        do {
+            // Trigger download
+            try FileManager.default.startDownloadingUbiquitousItem(at: cloudURL)
+            
+            // Wait for download to complete (with timeout)
+            let maxWaitTime: TimeInterval = 30 // 30 seconds timeout
+            let startTime = Date()
+            
+            while Date().timeIntervalSince(startTime) < maxWaitTime {
+                if await isFileDownloaded(cloudURL) {
+                    break
+                }
+                try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+            }
+            
+            // Check if download succeeded
+            if await isFileDownloaded(cloudURL) {
+                // Update the note in the archived notes list
+                if let index = archivedNotes.firstIndex(where: { $0.id == note.id }) {
+                    let content = try String(contentsOf: cloudURL, encoding: .utf8)
+                    var updatedNote = Note.fromSerializedContent(content, 
+                                                                fallbackTitle: note.title, 
+                                                                createdAt: note.createdAt, 
+                                                                modifiedAt: note.modifiedAt)
+                    updatedNote.isCloudStub = false
+                    updatedNote.cloudURL = nil
+                    archivedNotes[index] = updatedNote
+                    
+                    // Update tags
+                    tagStore.updateTagsImmediately(from: archivedNotes)
+                }
+            } else {
+                throw NoteError.fileSystemError("Failed to download file within timeout period")
+            }
+        } catch {
+            throw NoteError.fileSystemError("Failed to download cloud file: \(error.localizedDescription)")
+        }
     }
 }

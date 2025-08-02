@@ -100,10 +100,30 @@ struct Note: Identifiable, Codable, Equatable {
     
     /// Timestamp when the note was last modified
     var modifiedAt: Date
+    
+    /// Indicates if this note is a cloud stub (not yet downloaded)
+    var isCloudStub: Bool = false
+    
+    /// Indicates if this cloud stub is currently being downloaded
+    var isDownloading: Bool = false
+    
+    /// URL to the cloud file (only set for cloud stubs)
+    var cloudURL: URL?
 
     /// String identifier derived from filename for Identifiable conformance
     var id: String {
         return filename
+    }
+    
+    // MARK: - Codable Support
+    
+    enum CodingKeys: String, CodingKey {
+        case title
+        case content
+        case createdAt
+        case modifiedAt
+        // Exclude cloud-specific properties from serialization
+        // isCloudStub, isDownloading, and cloudURL are transient properties
     }
     
     init(title: String = "", content: String = "") {

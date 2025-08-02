@@ -153,10 +153,12 @@ struct OverviewGrid: View {
                                             .onTapGesture {
                                                 if isSelectionMode {
                                                     toggleNoteSelection(note)
-                                                } else {
+                                                } else if !note.isDownloading {
+                                                    // Only allow tapping if note is not currently downloading
                                                     noteStore.loadArchivedNoteAsCurrent(note)
                                                     showArchive = false
                                                 }
+                                                // If note is downloading, do nothing
                                             }
                                     }
                                 }
@@ -257,15 +259,39 @@ struct NoteCard: View {
 
                 // Content preview with overflow handling
                 ZStack(alignment: .bottom) {
-                    Text(note.content)
-                        .font(.system(size: 12, weight: .regular, design: .monospaced))
-                        .foregroundColor(.secondaryText)
-                        .lineLimit(nil)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    if note.isCloudStub {
+                        // Show different states for cloud files
+                        VStack {
+                            if note.isDownloading {
+                                // Show downloading indicator
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                                    .padding(.bottom, 4)
+                                Text("Downloading...")
+                                    .font(.system(size: 10, weight: .regular, design: .monospaced))
+                                    .foregroundColor(.secondaryText.opacity(0.8))
+                            } else {
+                                // Show cloud icon for undownloaded files
+                                Image(systemName: "icloud.and.arrow.down")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.secondaryText.opacity(0.6))
+                                Text("Tap to download")
+                                    .font(.system(size: 10, weight: .regular, design: .monospaced))
+                                    .foregroundColor(.secondaryText.opacity(0.6))
+                            }
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else {
+                        Text(note.content)
+                            .font(.system(size: 12, weight: .regular, design: .monospaced))
+                            .foregroundColor(.secondaryText)
+                            .lineLimit(nil)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    }
 
-                    // Gradient overlay for overflow indication (hidden in selection mode)
-                    if !isSelectionMode {
+                    // Gradient overlay for overflow indication (hidden in selection mode and for cloud stubs)
+                    if !isSelectionMode && !note.isCloudStub {
                         LinearGradient(
                             gradient: Gradient(colors: [
                                 Color.noteBackground.opacity(0),
@@ -299,6 +325,7 @@ struct NoteCard: View {
                 RoundedRectangle(cornerRadius: cardCornerRadius)
                     .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 2)
             )
+            .opacity(note.isDownloading ? 0.6 : 1.0) // Reduce opacity for downloading notes
             .rotationEffect(.degrees(isSelectionMode && !isSelected ? (wiggleAnimation ? 1 : -1) : 0))
             .animation(
                 isSelectionMode && !isSelected ?
