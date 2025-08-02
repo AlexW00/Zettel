@@ -41,6 +41,8 @@
 "settings.developer" = "Developer";
 "settings.developer_description" = "Follow me on X ^^";
 "settings.view_on_github" = "View on GitHub";
+"settings.font_size" = "Font Size";
+"settings.font_size_description" = "Adjust the font size for note content text";
 
 // Theme Options
 "theme.system" = "System";

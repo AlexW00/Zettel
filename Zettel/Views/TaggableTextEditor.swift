@@ -74,6 +74,17 @@ struct TagTextViewRepresentable: UIViewRepresentable {
                 uiView.selectedRange = selectedRange
             }
         }
+        
+        // Update font if it has changed
+        if uiView.font != font {
+            uiView.font = font
+        }
+        
+        // Update text color if it has changed
+        let newColor = UIColor(foregroundColor)
+        if uiView.textColor != newColor {
+            uiView.textColor = newColor
+        }
     }
     
     func makeCoordinator() -> Coordinator {

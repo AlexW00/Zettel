@@ -41,6 +41,8 @@
 "settings.developer" = "開発者";
 "settings.developer_description" = "X（旧Twitter）でフォローしてください ^^";
 "settings.view_on_github" = "GitHubで表示";
+"settings.font_size" = "フォントサイズ";
+"settings.font_size_description" = "ノートコンテンツテキストのフォントサイズを調整";
 
 // Theme Options
 "theme.system" = "システム";

@@ -9,6 +9,7 @@ enum TearDirection {
 
 struct MainView: View {
     @EnvironmentObject var noteStore: NoteStore
+    @EnvironmentObject var themeStore: ThemeStore
     @EnvironmentObject var localizationManager: LocalizationManager
     @State private var showSettings = false
     @State private var showArchive = false
@@ -152,7 +153,7 @@ struct MainView: View {
                     get: { noteStore.currentNote.content },
                     set: { noteStore.updateCurrentNoteContent($0) }
                 ),
-                font: UIFont.monospacedSystemFont(ofSize: LayoutConstants.FontSize.large, weight: .regular),
+                font: UIFont.monospacedSystemFont(ofSize: themeStore.contentFontSize, weight: .regular),
                 foregroundColor: .primaryText
             )
             .padding(.horizontal, LayoutConstants.Padding.large)

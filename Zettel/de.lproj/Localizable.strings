@@ -41,6 +41,8 @@
 "settings.developer" = "Entwickler";
 "settings.developer_description" = "Folge mir auf X ^^";
 "settings.view_on_github" = "Auf GitHub anzeigen";
+"settings.font_size" = "Schriftgröße";
+"settings.font_size_description" = "Passen Sie die Schriftgröße für den Notizinhalt an";
 
 // Theme Options
 "theme.system" = "System";

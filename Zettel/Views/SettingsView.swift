@@ -64,6 +64,50 @@ struct SettingsView: View {
                         }
                     }
                     .padding(.vertical, 4)
+                    
+                    // Font Size Slider
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: "textformat.size")
+                                .foregroundColor(.iconTint)
+                                .frame(width: 24)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(StringConstants.Settings.fontSize.localized)
+                                    .font(.system(size: 16, weight: .medium))
+                                
+                                Text(StringConstants.Settings.fontSizeDescription.localized)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            Text("\(Int(themeStore.contentFontSize))")
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(.secondary)
+                                .frame(width: 30, alignment: .trailing)
+                        }
+                        
+                        HStack {
+                            Text("A")
+                                .font(.system(size: 12))
+                                .foregroundColor(.secondary)
+                            
+                            Slider(
+                                value: $themeStore.contentFontSize,
+                                in: LayoutConstants.FontSize.contentMinSize...LayoutConstants.FontSize.contentMaxSize,
+                                step: 1
+                            )
+                            .accentColor(.iconTint)
+                            
+                            Text("A")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.leading, 32) // Align with icon
+                    }
+                    .padding(.vertical, 4)
                 } header: {
                     Text("settings.display".localized)
                 } footer: {

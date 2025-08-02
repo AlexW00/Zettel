@@ -53,6 +53,13 @@ class ThemeStore: ObservableObject {
         }
     }
     
+    /// The font size for content text, automatically saved to UserDefaults
+    @Published var contentFontSize: CGFloat {
+        didSet {
+            UserDefaults.standard.set(contentFontSize, forKey: "contentFontSize")
+        }
+    }
+    
     /**
      * Initializes the theme store with the previously saved theme preference.
      * Defaults to system theme if no preference is found.
@@ -60,6 +67,9 @@ class ThemeStore: ObservableObject {
     init() {
         let savedTheme = UserDefaults.standard.string(forKey: "selectedTheme") ?? AppTheme.system.rawValue
         self.currentTheme = AppTheme(rawValue: savedTheme) ?? .system
+        
+        let savedFontSize = UserDefaults.standard.object(forKey: "contentFontSize") as? CGFloat
+        self.contentFontSize = savedFontSize ?? LayoutConstants.FontSize.large
     }
 }
 

@@ -33,6 +33,11 @@ enum LayoutConstants {
         static let large: CGFloat = 16
         static let title: CGFloat = 17
         static let bigTitle: CGFloat = 18
+        
+        // Font size range for content
+        static let contentMinSize: CGFloat = 12
+        static let contentMaxSize: CGFloat = 24
+        static let contentDefaultSize: CGFloat = large
     }
     
     enum Animation {

@@ -51,6 +51,8 @@ enum StringConstants {
         static let developer = "settings.developer"
         static let developerDescription = "settings.developer_description"
         static let viewOnGitHub = "settings.view_on_github"
+        static let fontSize = "settings.font_size"
+        static let fontSizeDescription = "settings.font_size_description"
     }
     
     // MARK: - Overview & Archive
