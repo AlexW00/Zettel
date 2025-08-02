@@ -9,7 +9,7 @@ import AppIntents
 import SwiftUI
 import Foundation
 
-/// App Intent for creating a new note via Shortcuts and Widgets
+/// App Intent for creating a new note via Shortcuts
 public struct CreateNewNoteIntent: AppIntent {
     public static var title: LocalizedStringResource = "shortcuts.create_new_note"
     public static var description = IntentDescription("shortcuts.create_new_note_description")
