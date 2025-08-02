@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         MainView()
+            .languageAware()
     }
 }
 
@@ -17,4 +18,5 @@ struct ContentView: View {
     ContentView()
         .environmentObject(NoteStore())
         .environmentObject(ThemeStore())
+        .environmentObject(LocalizationManager.shared)
 }

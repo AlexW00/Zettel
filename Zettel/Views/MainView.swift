@@ -9,6 +9,7 @@ enum TearDirection {
 
 struct MainView: View {
     @EnvironmentObject var noteStore: NoteStore
+    @EnvironmentObject var localizationManager: LocalizationManager
     @State private var showSettings = false
     @State private var showArchive = false
     @State private var dragOffset: CGFloat = 0
@@ -363,4 +364,5 @@ struct TearEdgeView: View {
     MainView()
         .environmentObject(NoteStore())
         .environmentObject(ThemeStore())
+        .environmentObject(LocalizationManager.shared)
 }

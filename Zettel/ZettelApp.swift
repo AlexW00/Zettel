@@ -12,6 +12,7 @@ import AppIntents
 struct ZettelApp: App {
     @StateObject private var noteStore = NoteStore()
     @StateObject private var themeStore = ThemeStore()
+    @StateObject private var localizationManager = LocalizationManager.shared
     
     init() {
         // Register app shortcuts
@@ -23,6 +24,7 @@ struct ZettelApp: App {
             ContentView()
                 .environmentObject(noteStore)
                 .environmentObject(themeStore)
+                .environmentObject(localizationManager)
                 .preferredColorScheme(themeStore.currentTheme.colorScheme)
                 .onOpenURL { url in
                     handleOpenURL(url)

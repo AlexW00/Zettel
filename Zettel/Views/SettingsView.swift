@@ -11,6 +11,7 @@ import UniformTypeIdentifiers
 struct SettingsView: View {
     @ObservedObject var noteStore: NoteStore
     @EnvironmentObject var themeStore: ThemeStore
+    @EnvironmentObject var localizationManager: LocalizationManager
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
     @State private var showingFolderPicker = false
@@ -166,6 +167,7 @@ struct SettingsView: View {
             }
             .navigationTitle(StringConstants.Navigation.settings.localized)
             .navigationBarTitleDisplayMode(.inline)
+            .languageAware() // Make the entire navigation reactive to language changes
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(StringConstants.Actions.done.localized) {
@@ -200,5 +202,6 @@ struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView(noteStore: NoteStore())
             .environmentObject(ThemeStore())
+            .environmentObject(LocalizationManager.shared)
     }
 }
