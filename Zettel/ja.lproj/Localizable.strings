@@ -5,7 +5,6 @@
   Created by GitHub Copilot on 25.07.25.
   
   Japanese localization strings for the Zettel app.
-  WIP; I will translate all strings later; Dont update for now.
 */
 
 // General Actions
@@ -29,49 +28,49 @@
 "note.tear_zone_accessibility" = "切り取り領域";
 
 // Settings
-"settings.appearance" = "Appearance";
-"settings.display" = "Display";
-"settings.storage" = "Storage";
-"settings.about" = "About";
-"settings.theme_description" = "Choose your preferred theme";
-"settings.system_description" = "System follows your device's appearance settings.";
-"settings.storage_location" = "Storage Location";
-"settings.storage_description" = "Notes are saved as .md files in the selected folder.";
-"settings.app_name" = "Zettel"; // TODO: Keep as-is or translate to Japanese
-"settings.app_description" = "Minimalist notepad for iOS";
-"settings.developer" = "Developer";
-"settings.developer_description" = "Follow me on X ^^";
-"settings.view_on_github" = "View on GitHub";
+"settings.appearance" = "外観";
+"settings.display" = "表示";
+"settings.storage" = "ストレージ";
+"settings.about" = "概要";
+"settings.theme_description" = "お好みのテーマを選択してください";
+"settings.system_description" = "システム設定はデバイスの外観設定に従います。";
+"settings.storage_location" = "保存場所";
+"settings.storage_description" = "ノートは選択したフォルダに.mdファイルとして保存されます。";
+"settings.app_name" = "Zettel";
+"settings.app_description" = "iOS用ミニマリストメモ帳";
+"settings.developer" = "開発者";
+"settings.developer_description" = "X（旧Twitter）でフォローしてください ^^";
+"settings.view_on_github" = "GitHubで表示";
 
 // Theme Options
-"theme.system" = "System";
-"theme.light" = "Light";
-"theme.dark" = "Dark";
+"theme.system" = "システム";
+"theme.light" = "ライト";
+"theme.dark" = "ダーク";
 
 // Overview
-"overview.all_notes" = "All";
-"overview.empty_state_message" = "Your saved notes will appear here";
-"overview.tag_count" = "(%d)"; // TODO: Keep format, translate context if needed
-"overview.additional_tags" = "+%d"; // TODO: Keep format, translate context if needed
+"overview.all_notes" = "すべて";
+"overview.empty_state_message" = "保存したノートがここに表示されます";
+"overview.tag_count" = "(%d)";
+"overview.additional_tags" = "+%d";
 
 // Tags
-"tags.hashtag_prefix" = "#%@"; // TODO: Keep format, decide if # symbol is appropriate
-"tags.no_tags" = "No tags";
+"tags.hashtag_prefix" = "#%@";
+"tags.no_tags" = "タグなし";
 
 // Error Messages
-"error.corrupted_file" = "The note file is corrupted and cannot be read.";
-"error.file_system_error" = "File system error: %@";
-"error.encoding_error" = "Unable to encode or decode the note content.";
-"error.title_too_long" = "Title is too long (%d characters). Maximum allowed: %d characters.";
-"error.content_too_long" = "Content is too long (%d characters). Maximum allowed: %d characters.";
-"error.too_many_tags" = "Too many tags (%d tags). Maximum allowed: %d tags.";
-"error.tag_too_long" = "Tag '%@' is too long. Maximum allowed: %d characters.";
+"error.corrupted_file" = "ノートファイルが破損しており、読み取ることができません。";
+"error.file_system_error" = "ファイルシステムエラー: %@";
+"error.encoding_error" = "ノートの内容をエンコードまたはデコードできません。";
+"error.title_too_long" = "タイトルが長すぎます（%d文字）。最大許可文字数: %d文字。";
+"error.content_too_long" = "内容が長すぎます（%d文字）。最大許可文字数: %d文字。";
+"error.too_many_tags" = "タグが多すぎます（%dタグ）。最大許可数: %dタグ。";
+"error.tag_too_long" = "タグ「%@」が長すぎます。最大許可文字数: %d文字。";
 
 // Accessibility
-"accessibility.tear_zone" = "Tear zone";
-"accessibility.settings_button" = "Settings";
-"accessibility.selection_mode" = "Selection mode";
-"accessibility.note_card" = "Note card";
+"accessibility.tear_zone" = "切り取り領域";
+"accessibility.settings_button" = "設定";
+"accessibility.selection_mode" = "選択モード";
+"accessibility.note_card" = "ノートカード";
 
 // Shortcuts
 "shortcuts.create_new_note" = "新しいメモを作成";
