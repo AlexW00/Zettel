@@ -484,9 +484,8 @@ struct TagFilterBar: View {
                                     .padding(.vertical, 6)
                                     .background(selectedTags.isEmpty ? Color.accentColor : Color.noteBackground)
                                     .cornerRadius(16)
-                                    .scaleEffect(selectedTags.isEmpty ? 1.05 : 1.0)
-                                    .shadow(color: selectedTags.isEmpty ? Color.accentColor.opacity(Color.mediumOpacity) : Color.clear, 
-                                           radius: selectedTags.isEmpty ? 4 : 0, x: 0, y: 2)
+                                    .shadow(color: Color.accentColor.opacity(selectedTags.isEmpty ? Color.mediumOpacity : 0), 
+                                           radius: 2, x: 0, y: 1)
                             }
                             .animation(.easeInOut(duration: 0.25), value: selectedTags.isEmpty)
                             .buttonStyle(TagButtonStyle())
@@ -518,9 +517,8 @@ struct TagFilterBar: View {
                                     .padding(.vertical, 6)
                                     .background(selectedTags.contains(tag.name) ? Color.accentColor : Color.noteBackground)
                                     .cornerRadius(16)
-                                    .scaleEffect(selectedTags.contains(tag.name) ? 1.05 : 1.0)
-                                    .shadow(color: selectedTags.contains(tag.name) ? Color.accentColor.opacity(Color.mediumOpacity) : Color.clear, 
-                                           radius: selectedTags.contains(tag.name) ? 4 : 0, x: 0, y: 2)
+                                    .shadow(color: Color.accentColor.opacity(selectedTags.contains(tag.name) ? Color.mediumOpacity : 0), 
+                                           radius: 2, x: 0, y: 1)
                                 }
                                 .animation(.easeInOut(duration: 0.25), value: selectedTags.contains(tag.name))
                                 .buttonStyle(TagButtonStyle())
@@ -581,7 +579,7 @@ struct TagFilterBar: View {
                 }
             }
         }
-        .frame(height: 56) // Increased height to accommodate button shadows and bloom effects
+        .frame(height: 48) // Adjusted height for consistent layout with smaller shadows
     }
     
     private func checkForOverflow(contentWidth: CGFloat, containerWidth: CGFloat) {
