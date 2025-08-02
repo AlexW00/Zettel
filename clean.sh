@@ -26,16 +26,12 @@ done
 # Clean Xcode project file
 echo "Cleaning Xcode project file..."
 
-# Restore project file from backup if it exists
-if [ -f Zettel.xcodeproj/project.pbxproj.backup ]; then
-    cp Zettel.xcodeproj/project.pbxproj.backup Zettel.xcodeproj/project.pbxproj
-    echo -e "${GREEN}✓ Restored project.pbxproj from backup${NC}"
-else
-    # Reset values to empty strings
-    sed -i '' 's/DEVELOPMENT_TEAM = [^;]*;/DEVELOPMENT_TEAM = "";/g' Zettel.xcodeproj/project.pbxproj
-    sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = [^;]*;/PRODUCT_BUNDLE_IDENTIFIER = "";/g' Zettel.xcodeproj/project.pbxproj
-    echo -e "${GREEN}✓ Reset DEVELOPMENT_TEAM and PRODUCT_BUNDLE_IDENTIFIER to empty values${NC}"
-fi
+# Only reset personal configuration values, preserve project settings like version numbers
+# Reset development team and bundle identifier to empty strings
+sed -i '' 's/DEVELOPMENT_TEAM = [^;]*;/DEVELOPMENT_TEAM = "";/g' Zettel.xcodeproj/project.pbxproj
+sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = [^;]*;/PRODUCT_BUNDLE_IDENTIFIER = "";/g' Zettel.xcodeproj/project.pbxproj
+echo -e "${GREEN}✓ Reset DEVELOPMENT_TEAM and PRODUCT_BUNDLE_IDENTIFIER to empty values${NC}"
+echo -e "${GREEN}✓ Preserved project settings (version numbers, build configuration, etc.)${NC}"
 
 echo -e "${GREEN}✓ Cleaned Swift files${NC}"
 echo -e "${GREEN}✓ Project cleaned and ready for open source distribution${NC}"
