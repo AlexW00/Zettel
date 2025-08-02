@@ -263,7 +263,7 @@ struct NoteCard: View {
                                 .cornerRadius(2)
                             Rectangle()
                                 .fill(Color.secondaryText.opacity(0.3))
-                                .frame(maxWidth: .infinity, height: 12)
+                                .frame(maxWidth: .infinity)
                                 .cornerRadius(2)
                             Rectangle()
                                 .fill(Color.secondaryText.opacity(0.3))
@@ -338,7 +338,7 @@ struct NoteCard: View {
                             .background(
                                 Circle()
                                     .fill(Color.noteBackground)
-                                    .frame(width: 24, height: 24)
+                                    .frame(width: 24)
                             )
                     }
                     Spacer()
