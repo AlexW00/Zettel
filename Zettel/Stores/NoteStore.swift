@@ -14,6 +14,27 @@ import UIKit
 import UniformTypeIdentifiers
 import AppIntents
 
+// MARK: - Utility Functions
+
+/// Synchronous file date utilities for background tasks
+private func getFileCreationDateSync(_ fileURL: URL) -> Date? {
+    do {
+        let attributes = try FileManager.default.attributesOfItem(atPath: fileURL.path)
+        return attributes[.creationDate] as? Date
+    } catch {
+        return nil
+    }
+}
+
+private func getFileModificationDateSync(_ fileURL: URL) -> Date? {
+    do {
+        let attributes = try FileManager.default.attributesOfItem(atPath: fileURL.path)
+        return attributes[.modificationDate] as? Date
+    } catch {
+        return nil
+    }
+}
+
 /**
  * Manages the storage and retrieval of notes from the file system.
  * 
@@ -425,31 +446,101 @@ Happy #notetaking ^^
         do {
             let fileURLs = try FileManager.default.contentsOfDirectory(at: storageDirectory, includingPropertiesForKeys: [.creationDateKey, .contentModificationDateKey], options: [.skipsHiddenFiles])
             
-            var notes: [Note] = []
+            // First pass: create placeholder notes for immediate UI display
+            var placeholderNotes: [Note] = []
             
             for fileURL in fileURLs where fileURL.pathExtension == "md" {
-                if let content = try? String(contentsOf: fileURL, encoding: .utf8) {
-                    // Get filename without extension as fallback title
-                    let filenameWithoutExtension = fileURL.deletingPathExtension().lastPathComponent
-                    
-                    // Extract file metadata
-                    let creationDate = getFileCreationDate(fileURL) ?? Date()
-                    let modificationDate = getFileModificationDate(fileURL) ?? Date()
-                    
-                    // Create note with file metadata
-                    let note = Note.fromSerializedContent(content, fallbackTitle: filenameWithoutExtension, createdAt: creationDate, modifiedAt: modificationDate)
-                    notes.append(note)
-                }
+                let filenameWithoutExtension = fileURL.deletingPathExtension().lastPathComponent
+                let creationDate = getFileCreationDate(fileURL) ?? Date()
+                let modificationDate = getFileModificationDate(fileURL) ?? Date()
+                
+                // Create placeholder note with loading state
+                let placeholderNote = Note.createLoadingPlaceholder(
+                    title: filenameWithoutExtension,
+                    createdAt: creationDate,
+                    modifiedAt: modificationDate
+                )
+                placeholderNotes.append(placeholderNote)
             }
             
-            // Sort by modification date (most recently modified first)
-            self.archivedNotes = notes.sorted { $0.modifiedAt > $1.modifiedAt }
+            // Sort placeholders by modification date (most recently modified first)
+            self.archivedNotes = placeholderNotes.sorted { $0.modifiedAt > $1.modifiedAt }
             
-            // Update tag store with archived notes only
-            tagStore.updateTagsImmediately(from: notes)
+            // Second pass: load content asynchronously
+            loadNotesContentAsync(fileURLs: fileURLs)
             
         } catch {
             print("Error loading archived notes: \(error)")
+        }
+    }
+    
+    private func loadNotesContentAsync(fileURLs: [URL]) {
+        let storageDir = storageDirectory  // Capture the directory
+        
+        Task.detached { [weak self] in
+            guard let self = self else { return }
+            
+            let loadedNotes = await withTaskGroup(of: Note?.self) { group in
+                var notes: [Note] = []
+                
+                // Start accessing the security-scoped resource for background loading
+                let didStartAccessing = storageDir.startAccessingSecurityScopedResource()
+                defer {
+                    if didStartAccessing {
+                        storageDir.stopAccessingSecurityScopedResource()
+                    }
+                }
+                
+                for fileURL in fileURLs where fileURL.pathExtension == "md" {
+                    group.addTask {
+                        do {
+                            // for debug: Artificial delay for debugging loading states
+                            // try await Task.sleep(for: .seconds(10))
+                            
+                            let content = try String(contentsOf: fileURL, encoding: .utf8)
+                            let filenameWithoutExtension = fileURL.deletingPathExtension().lastPathComponent
+                            
+                            // Get file dates directly (not async)
+                            let creationDate = getFileCreationDateSync(fileURL) ?? Date()
+                            let modificationDate = getFileModificationDateSync(fileURL) ?? Date()
+                            
+                            // Create fully loaded note
+                            let note = Note.fromSerializedContent(content, fallbackTitle: filenameWithoutExtension, createdAt: creationDate, modifiedAt: modificationDate)
+                            return note
+                        } catch {
+                            print("Error loading note from \(fileURL): \(error)")
+                            return nil
+                        }
+                    }
+                }
+                
+                for await note in group {
+                    if let note = note {
+                        notes.append(note)
+                        
+                        // Update UI progressively as each note loads
+                        await MainActor.run {
+                            self.updateLoadedNote(note)
+                        }
+                    }
+                }
+                
+                return notes
+            }
+            
+            await MainActor.run {
+                // Final update with all loaded notes
+                self.archivedNotes = loadedNotes.sorted { $0.modifiedAt > $1.modifiedAt }
+                
+                // Update tag store with fully loaded notes
+                self.tagStore.updateTagsImmediately(from: loadedNotes)
+            }
+        }
+    }
+    
+    private func updateLoadedNote(_ loadedNote: Note) {
+        if let index = archivedNotes.firstIndex(where: { $0.filename == loadedNote.filename }) {
+            archivedNotes[index] = loadedNote
         }
     }
     

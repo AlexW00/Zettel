@@ -131,7 +131,7 @@ struct OverviewGrid: View {
                                         NoteCard(note: note, isSelected: selectedNotes.contains(note.filename), isSelectionMode: isSelectionMode)
                                             .frame(height: cardHeight(for: geometry.size.width))
                                             .contextMenu {
-                                                if !isSelectionMode {
+                                                if !isSelectionMode && !note.isLoading {
                                                     Button(role: .destructive) {
                                                         withAnimation(.easeInOut(duration: 0.3)) {
                                                             noteStore.deleteArchivedNote(note)
@@ -142,6 +142,11 @@ struct OverviewGrid: View {
                                                 }
                                             }
                                             .onTapGesture {
+                                                // Prevent interaction with loading notes
+                                                if note.isLoading {
+                                                    return
+                                                }
+                                                
                                                 if isSelectionMode {
                                                     toggleNoteSelection(note)
                                                 } else {
@@ -248,26 +253,47 @@ struct NoteCard: View {
 
                 // Content preview with overflow handling
                 ZStack(alignment: .bottom) {
-                    Text(note.content)
-                        .font(.system(size: 12, weight: .regular, design: .monospaced))
-                        .foregroundColor(.secondaryText)
-                        .lineLimit(nil)
-                        .multilineTextAlignment(.leading)
+                    if note.isLoading {
+                        // Loading placeholder
+                        VStack(alignment: .leading, spacing: 4) {
+                            // Simulated text lines for loading state
+                            Rectangle()
+                                .fill(Color.secondaryText.opacity(0.3))
+                                .frame(height: 12)
+                                .cornerRadius(2)
+                            Rectangle()
+                                .fill(Color.secondaryText.opacity(0.3))
+                                .frame(maxWidth: .infinity, height: 12)
+                                .cornerRadius(2)
+                            Rectangle()
+                                .fill(Color.secondaryText.opacity(0.3))
+                                .frame(width: 120, height: 12)
+                                .cornerRadius(2)
+                        }
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                        .shimmer() // Add shimmer effect for loading
+                    } else {
+                        Text(note.content)
+                            .font(.system(size: 12, weight: .regular, design: .monospaced))
+                            .foregroundColor(.secondaryText)
+                            .lineLimit(nil)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
-                    // Gradient overlay for overflow indication (hidden in selection mode)
-                    if !isSelectionMode {
-                        LinearGradient(
-                            gradient: Gradient(colors: [
-                                Color.noteBackground.opacity(0),
-                                Color.noteBackground.opacity(0.8),
-                                Color.noteBackground
-                            ]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                        .frame(height: 20)
-                        .allowsHitTesting(false)
+                        // Gradient overlay for overflow indication (hidden in selection mode)
+                        if !isSelectionMode {
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color.noteBackground.opacity(0),
+                                    Color.noteBackground.opacity(0.8),
+                                    Color.noteBackground
+                                ]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                            .frame(height: 20)
+                            .allowsHitTesting(false)
+                        }
                     }
                 }
                 .clipped()
@@ -275,10 +301,12 @@ struct NoteCard: View {
                 Spacer()
 
                 // Tags positioned at the bottom
-                let noteTags = Array(note.extractedTags.sorted())
-                if !noteTags.isEmpty {
-                    TagListView(tags: noteTags, maxTags: 2, compact: true)
-                        .padding(.top, 4)
+                if !note.isLoading {
+                    let noteTags = Array(note.extractedTags.sorted())
+                    if !noteTags.isEmpty {
+                        TagListView(tags: noteTags, maxTags: 2, compact: true)
+                            .padding(.top, 4)
+                    }
                 }
             }
             .padding(12)
@@ -290,6 +318,7 @@ struct NoteCard: View {
                 RoundedRectangle(cornerRadius: cardCornerRadius)
                     .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 2)
             )
+            .opacity(note.isLoading ? 0.6 : 1.0) // Reduced opacity for loading notes
             .rotationEffect(.degrees(isSelectionMode && !isSelected ? (wiggleAnimation ? 1 : -1) : 0))
             .animation(
                 isSelectionMode && !isSelected ?
@@ -358,6 +387,53 @@ extension OverviewGrid {
     }
 }
 
+// MARK: - Shimmer Effect for Loading States
+
+struct ShimmerEffect: ViewModifier {
+    @State private var shimmerOffset: CGFloat = -300
+    @Environment(\.colorScheme) var colorScheme
+    
+    private var shimmerColor: Color {
+        colorScheme == .dark ? Color.white : Color.white
+    }
+    
+    func body(content: Content) -> some View {
+        content
+            .overlay(
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color.clear,
+                        shimmerColor.opacity(colorScheme == .dark ? 0.05 : 0.1),
+                        shimmerColor.opacity(colorScheme == .dark ? 0.15 : 0.6),
+                        shimmerColor.opacity(colorScheme == .dark ? 0.25 : 0.8),
+                        shimmerColor.opacity(colorScheme == .dark ? 0.15 : 0.6),
+                        shimmerColor.opacity(colorScheme == .dark ? 0.05 : 0.1),
+                        Color.clear
+                    ]),
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+                .frame(width: 120) // Make the shimmer band wider
+                .offset(x: shimmerOffset)
+                .animation(
+                    Animation.linear(duration: 1.2)
+                        .repeatForever(autoreverses: false),
+                    value: shimmerOffset
+                )
+            )
+            .clipped()
+            .onAppear {
+                shimmerOffset = 300
+            }
+    }
+}
+
+extension View {
+    func shimmer() -> some View {
+        self.modifier(ShimmerEffect())
+    }
+}
+
 
 // MARK: - Selection Actions Extension
 
@@ -383,6 +459,11 @@ extension OverviewGrid {
     }
     
     private func toggleNoteSelection(_ note: Note) {
+        // Don't allow selection of loading notes
+        if note.isLoading {
+            return
+        }
+        
         withAnimation {
             if selectedNotes.contains(note.filename) {
                 selectedNotes.remove(note.filename)

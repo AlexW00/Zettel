@@ -88,7 +88,7 @@ class TagCacheManager {
  * 
  * Each note is identified by its filename, making the system simple and straightforward.
  */
-struct Note: Identifiable, Codable, Equatable {
+struct Note: Identifiable, Equatable {
     /// Display title of the note
     var title: String
     
@@ -101,14 +101,19 @@ struct Note: Identifiable, Codable, Equatable {
     /// Timestamp when the note was last modified
     var modifiedAt: Date
 
+    /// Indicates whether the note content is still being loaded from disk
+    /// This is a runtime-only property and is not persisted
+    var isLoading: Bool = false
+
     /// String identifier derived from filename for Identifiable conformance
     var id: String {
         return filename
     }
     
-    init(title: String = "", content: String = "") {
+    init(title: String = "", content: String = "", isLoading: Bool = false) {
         self.title = title
         self.content = content
+        self.isLoading = isLoading
         let now = Date()
         self.createdAt = now
         self.modifiedAt = now
@@ -208,6 +213,14 @@ struct Note: Identifiable, Codable, Equatable {
         return note
     }
     
+    /// Creates a placeholder note for async loading
+    static func createLoadingPlaceholder(title: String, createdAt: Date, modifiedAt: Date) -> Note {
+        var note = Note(title: title, content: "", isLoading: true)
+        note.createdAt = createdAt
+        note.modifiedAt = modifiedAt
+        return note
+    }
+    
     // MARK: - Tag Support
     
     /// Extracts all tags from both title and content
@@ -230,6 +243,32 @@ struct Note: Identifiable, Codable, Equatable {
     var tagDisplayString: String {
         let sortedTags = extractedTags.sorted()
         return sortedTags.map { "#\($0)" }.joined(separator: " ")
+    }
+}
+
+// MARK: - Codable Implementation
+
+extension Note: Codable {
+    enum CodingKeys: String, CodingKey {
+        case title, content, createdAt, modifiedAt
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        title = try container.decode(String.self, forKey: .title)
+        content = try container.decode(String.self, forKey: .content)
+        createdAt = try container.decode(Date.self, forKey: .createdAt)
+        modifiedAt = try container.decode(Date.self, forKey: .modifiedAt)
+        isLoading = false // Always false when decoded from storage
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(title, forKey: .title)
+        try container.encode(content, forKey: .content)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(modifiedAt, forKey: .modifiedAt)
+        // isLoading is not encoded as it's runtime-only
     }
 }
 
