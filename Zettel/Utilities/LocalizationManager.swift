@@ -67,34 +67,34 @@ class LocalizationManager: ObservableObject {
         if let bundlePath = Bundle.main.path(forResource: languageCode, ofType: "lproj"),
            let bundle = Bundle(path: bundlePath) {
             localizationBundle = bundle
-            print("🌍 Using localization bundle for language: \(languageCode)")
+            // print("🌍 Using localization bundle for language: \(languageCode)")
         } else {
             // Fallback to main bundle (English)
             localizationBundle = Bundle.main
-            print("🌍 Fallback to main bundle for language: \(languageCode)")
+            // print("🌍 Fallback to main bundle for language: \(languageCode)")
         }
         
-        print("🌍 Current language: \(currentLanguage) -> \(languageCode)")
+        // print("🌍 Current language: \(currentLanguage) -> \(languageCode)")
     }
     
     @objc private func localeDidChange() {
-        print("🌍 Locale did change notification received")
+        // print("🌍 Locale did change notification received")
         updateLanguage()
     }
     
     @objc private func appDidBecomeActive() {
-        print("🌍 App became active - checking for language changes")
+        // print("🌍 App became active - checking for language changes")
         let oldLanguage = currentLanguage
         updateLanguageAndBundle()
         
         if oldLanguage != currentLanguage {
-            print("🌍 Language changed from \(oldLanguage) to \(currentLanguage)")
+            // print("🌍 Language changed from \(oldLanguage) to \(currentLanguage)")
             updateLanguage()
         }
     }
     
     @objc private func languageDidChange() {
-        print("🌍 Language preferences changed notification received")
+        // print("🌍 Language preferences changed notification received")
         updateLanguage()
     }
     
@@ -102,7 +102,7 @@ class LocalizationManager: ObservableObject {
         DispatchQueue.main.async {
             self.updateLanguageAndBundle()
             self.languageUpdateId = UUID()
-            print("🌍 UI update triggered with new ID: \(self.languageUpdateId)")
+            // print("🌍 UI update triggered with new ID: \(self.languageUpdateId)")
         }
     }
     
@@ -113,17 +113,17 @@ class LocalizationManager: ObservableObject {
         // If the key wasn't found in the specific bundle, try the main bundle
         if localizedString == key {
             let fallbackString = Bundle.main.localizedString(forKey: key, value: nil, table: nil)
-            print("⚠️ Using fallback localization for '\(key)': '\(fallbackString)'")
+            // print("⚠️ Using fallback localization for '\(key)': '\(fallbackString)'")
             return fallbackString
         }
         
-        print("✅ Localized '\(key)' -> '\(localizedString)'")
+        // print("✅ Localized '\(key)' -> '\(localizedString)'")
         return localizedString
     }
     
     /// Force a language update (useful for testing or manual refresh)
     func forceUpdate() {
-        print("🌍 Force update requested")
+        // print("🌍 Force update requested")
         updateLanguage()
     }
 }
