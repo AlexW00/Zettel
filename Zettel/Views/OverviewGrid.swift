@@ -142,7 +142,7 @@ struct OverviewGrid: View {
                                             .contextMenu {
                                                 if !isSelectionMode {
                                                     Button(role: .destructive) {
-                                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                                        withAnimation(.easeInOut(duration: 0.2)) {
                                                             noteStore.deleteArchivedNote(note)
                                                         }
                                                     } label: {
@@ -399,7 +399,7 @@ extension OverviewGrid {
 
 extension OverviewGrid {
     private func deleteNote(_ note: Note) {
-        withAnimation(.easeInOut(duration: 0.3)) {
+        withAnimation(.easeInOut(duration: 0.2)) {
             noteStore.deleteArchivedNote(note)
         }
     }
@@ -473,7 +473,7 @@ struct TagFilterBar: View {
                         HStack(spacing: 8) {
                             // "All" button
                             Button(action: {
-                                withAnimation(.easeInOut(duration: 0.3)) {
+                                withAnimation(.easeInOut(duration: 0.2)) {
                                     selectedTags.removeAll()
                                 }
                             }) {
@@ -487,14 +487,14 @@ struct TagFilterBar: View {
                                     .shadow(color: Color.accentColor.opacity(selectedTags.isEmpty ? Color.mediumOpacity : 0), 
                                            radius: 2, x: 0, y: 1)
                             }
-                            .animation(.easeInOut(duration: 0.25), value: selectedTags.isEmpty)
+                            .animation(.easeInOut(duration: 0.2), value: selectedTags.isEmpty)
                             .buttonStyle(TagButtonStyle())
                             .id("allButton")
                             
                             // Tag filter buttons
                             ForEach(availableTags) { tag in
                                 Button(action: {
-                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                    withAnimation(.easeInOut(duration: 0.2)) {
                                         if selectedTags.contains(tag.name) {
                                             selectedTags.remove(tag.name)
                                         } else {
@@ -520,7 +520,7 @@ struct TagFilterBar: View {
                                     .shadow(color: Color.accentColor.opacity(selectedTags.contains(tag.name) ? Color.mediumOpacity : 0), 
                                            radius: 2, x: 0, y: 1)
                                 }
-                                .animation(.easeInOut(duration: 0.25), value: selectedTags.contains(tag.name))
+                                .animation(.easeInOut(duration: 0.2), value: selectedTags.contains(tag.name))
                                 .buttonStyle(TagButtonStyle())
                                 .id("tag_\(tag.name)")
                             }
