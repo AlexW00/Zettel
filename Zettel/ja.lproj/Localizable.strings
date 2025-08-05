@@ -89,4 +89,4 @@
 
 // Welcome Note
 "welcome.title" = "Zettelへようこそ";
-"welcome.content" = "Zettelでは:\n\n* ←スワイプでメモを表示\n* →スワイプ（…ライン!）で保存\n\n楽しい#メモライフを ^^";
+"welcome.content" = "Zettelでは:\n\n* ←スワイプでメモを表示\n* →スワイプで保存\n\n楽しい#メモライフを ^^";

@@ -89,4 +89,4 @@
 
 // Welcome Note
 "welcome.title" = "Welcome to Zettel";
-"welcome.content" = "In Zettel, you can:\n\n* swipe ← to see your notes\n* swipe over the … line to save\n\nHappy #notetaking ^^";
+"welcome.content" = "In Zettel, you can:\n\n* swipe ← to see your notes\n* swipe → to save\n\nHappy #notetaking ^^";

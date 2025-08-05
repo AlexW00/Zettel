@@ -9,7 +9,7 @@ You can download Zettel on the App Store for free: [link](https://apps.apple.com
 ## Features
 
 - **Single-note focus**: Edit one note at a time with full-screen interface
-- **Tear gesture**: Archive notes by dragging from screen edges (mimics tearing paper)
+- **Tear gesture**: Archive notes by swiping right anywhere on the note (mimics tearing paper)
 - **Tag system**: Organize notes with hashtags (#tag)
 - **Markdown support**: Plain text with markdown formatting
 - **File integration**: Works with iOS Files app, exports/imports .md files

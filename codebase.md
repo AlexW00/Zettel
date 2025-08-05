@@ -16,7 +16,7 @@ Zettel is a minimalist iOS markdown note-taking app with a unique "tear-off" int
 ## Core Features
 
 1. **Single-Note Focus**: One active note at a time with full-screen editing
-2. **Tear-Off Archiving**: Physical drag gesture from edges to archive notes
+2. **Tear-Off Archiving**: Physical drag gesture (swipe right) anywhere on the note to archive
 3. **Tag System**: Hashtag-based organization with visual tag chips
 4. **Document Integration**: Full iOS Files app integration
 5. **Markdown Support**: Custom keyboard toolbar for formatting
@@ -58,7 +58,7 @@ Zettel is a minimalist iOS markdown note-taking app with a unique "tear-off" int
 
 ## Data Flow
 
-1. **Note Creation**: User writes → Save on tear → Create .md file
+1. **Note Creation**: User writes → Save on right swipe → Create .md file
 2. **Note Loading**: Read .md files → Parse metadata → Display in grid
 3. **Tag Extraction**: Regex parsing → Cache management → UI updates
 4. **File Sync**: NSFilePresenter → External change detection → Auto-reload
@@ -106,7 +106,7 @@ Note content with #tags and markdown formatting
 ## UI/UX Design Principles
 
 1. **Minimalist Interface**: Focus on content, not chrome
-2. **Physical Metaphors**: Tear gesture mimics real paper
+2. **Physical Metaphors**: Right swipe gesture mimics tearing paper
 3. **Haptic Feedback**: Reinforces physical interactions
 4. **Smooth Animations**: Spring animations for natural feel
 5. **Consistent Theming**: System-aware color scheme
@@ -204,7 +204,7 @@ Manages tag-related functionality:
 
 ### UI Components
 
-- **MainView**: Single-note editing with tear gesture
+- **MainView**: Single-note editing with right swipe gesture
 - **OverviewGrid**: Masonry-style grid of archived notes
 - **TaggableTextEditor**: UIKit text view with tag suggestions
 - **SwipeNavigationView**: Container managing swipe transitions
