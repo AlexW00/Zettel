@@ -14,13 +14,12 @@ struct MainView: View {
     @State private var showSettings = false
     @State private var showArchive = false
     @State private var dragOffset: CGFloat = 0
-    @State private var animatedOffset: CGFloat = 0
     @State private var isDragging = false
     @State private var tearProgress: CGFloat = 0
-    @State private var animatedTearProgress: CGFloat = 0
     @State private var tearDirection: TearDirection = .rightward
     @State private var showNewNoteConfirmation = false
     @State private var lastHapticStep: Int = 0
+    @State private var isAnimating = false
     
     private let tearThreshold: CGFloat = GestureConstants.tearThreshold
     private let tearZoneHeight: CGFloat = LayoutConstants.Size.tearZoneHeight
@@ -143,7 +142,7 @@ struct MainView: View {
             .padding(.horizontal, LayoutConstants.Padding.large)
             .padding(.bottom, LayoutConstants.Padding.large)
             .background(Color.noteBackground)
-            .opacity(max(0.25, 1.0 - ((isDragging ? tearProgress : animatedTearProgress) * ThemeConstants.Opacity.veryHeavy)))
+            .opacity(max(0.25, 1.0 - (tearProgress * ThemeConstants.Opacity.veryHeavy)))
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
@@ -156,11 +155,14 @@ struct MainView: View {
         .background(Color.noteBackground)
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .shadow(color: Color.cardShadow, radius: 8, x: 0, y: 2)
-        .scaleEffect(x: 1 + (isDragging ? tearProgress : animatedTearProgress) * 0.1, y: 1 - (isDragging ? tearProgress : animatedTearProgress) * 0.02)
-        .offset(x: (isDragging ? dragOffset * 0.1 : animatedOffset) + (isDragging ? tearProgress : animatedTearProgress) * 20)
-        .opacity(1 - (isDragging ? tearProgress : animatedTearProgress) * 0.3)
+        .scaleEffect(
+            x: 1 + tearProgress * 0.1, 
+            y: 1 - tearProgress * 0.02
+        )
+        .offset(x: dragOffset * 0.1 + tearProgress * 20)
+        .opacity(1 - tearProgress * 0.3)
         .rotation3DEffect(
-            .degrees((isDragging ? tearProgress : animatedTearProgress) * 15),
+            .degrees(tearProgress * 15),
             axis: (x: 0, y: 1, z: 0),
             anchor: .leading,
             perspective: 0.5
@@ -171,7 +173,7 @@ struct MainView: View {
                     let translation = value.translation.width
                     
                     // Only respond to left-to-right swipes (positive translation)
-                    if translation > 0 {
+                    if translation > 0 && !isAnimating {
                         if !isDragging {
                             isDragging = true
                             tearDirection = .rightward
@@ -192,37 +194,42 @@ struct MainView: View {
                     }
                 }
                 .onEnded { value in
+                    guard !isAnimating else { return }
+                    
                     let translation = value.translation.width
                     let shouldTear = translation > 0 && tearProgress >= GestureConstants.tearThreshold
                     
-                    // Reset haptic step but keep isDragging for animation
+                    // Reset haptic step and start animation
                     lastHapticStep = 0
+                    isAnimating = true
                     
                     if shouldTear {
                         let impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
                         impactFeedback.impactOccurred()
                         
-                        // Animate the note back to its original state over 0.3 seconds
+                        // Animate the note back to its original state
                         withAnimation(.easeOut(duration: 0.2)) {
                             dragOffset = 0
                             tearProgress = 0
                         }
                         
-                        // Reset dragging state and archive after animation completes
+                        // Reset state and archive after animation completes
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             isDragging = false
+                            isAnimating = false
                             noteStore.archiveCurrentNote()
                         }
                     } else {
-                        // Use a single animation for all reset values
+                        // Animate back to original position
                         withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
                             dragOffset = 0
                             tearProgress = 0
                         }
                         
-                        // Reset dragging state after short animation
+                        // Reset state after animation
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             isDragging = false
+                            isAnimating = false
                         }
                     }
                 }
