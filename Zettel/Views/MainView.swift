@@ -20,6 +20,7 @@ struct MainView: View {
     @State private var showNewNoteConfirmation = false
     @State private var lastHapticStep: Int = 0
     @State private var isAnimating = false
+    @State private var animationID = UUID()
     
     private let tearThreshold: CGFloat = GestureConstants.tearThreshold
     private let tearZoneHeight: CGFloat = LayoutConstants.Size.tearZoneHeight
@@ -155,18 +156,11 @@ struct MainView: View {
         .background(Color.noteBackground)
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .shadow(color: Color.cardShadow, radius: 8, x: 0, y: 2)
-        .scaleEffect(
-            x: 1 + tearProgress * 0.1, 
-            y: 1 - tearProgress * 0.02
-        )
-        .offset(x: dragOffset * 0.1 + tearProgress * 20)
-        .opacity(1 - tearProgress * 0.3)
-        .rotation3DEffect(
-            .degrees(tearProgress * 15),
-            axis: (x: 0, y: 1, z: 0),
-            anchor: .leading,
-            perspective: 0.5
-        )
+        .modifier(TearAnimationModifier(
+            tearProgress: tearProgress,
+            dragOffset: dragOffset,
+            animationID: animationID
+        ))
         .simultaneousGesture(
             DragGesture(minimumDistance: GestureConstants.minimumDragDistance)
                 .onChanged { value in
@@ -203,31 +197,34 @@ struct MainView: View {
                     lastHapticStep = 0
                     isAnimating = true
                     
+                    // Generate new animation ID to force fresh animation state
+                    animationID = UUID()
+                    
                     if shouldTear {
                         let impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
                         impactFeedback.impactOccurred()
                         
-                        // Animate the note back to its original state
+                        // Use explicit animation with completion
                         withAnimation(.easeOut(duration: 0.2)) {
                             dragOffset = 0
                             tearProgress = 0
                         }
                         
                         // Reset state and archive after animation completes
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                             isDragging = false
                             isAnimating = false
                             noteStore.archiveCurrentNote()
                         }
                     } else {
-                        // Animate back to original position
-                        withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
+                        // Use explicit animation with completion
+                        withAnimation(.spring(response: 0.2, dampingFraction: 0.8, blendDuration: 0)) {
                             dragOffset = 0
                             tearProgress = 0
                         }
                         
                         // Reset state after animation
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                             isDragging = false
                             isAnimating = false
                         }
@@ -311,6 +308,39 @@ struct TearIndicatorView: View {
         }
         .accessibilityLabel(StringConstants.Accessibility.tearZone.localized)
         .accessibilityHint("Swipe left to right anywhere on the note to tear off and archive it.")
+    }
+}
+
+// MARK: - Tear Animation Modifier
+
+struct TearAnimationModifier: ViewModifier, Animatable {
+    var tearProgress: CGFloat
+    var dragOffset: CGFloat
+    let animationID: UUID
+    
+    var animatableData: AnimatablePair<CGFloat, CGFloat> {
+        get { AnimatablePair(tearProgress, dragOffset) }
+        set { 
+            tearProgress = newValue.first
+            dragOffset = newValue.second
+        }
+    }
+    
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(
+                x: 1.0 + (tearProgress * 0.1),
+                y: 1.0 - (tearProgress * 0.02)
+            )
+            .offset(x: (dragOffset * 0.1) + (tearProgress * 20.0))
+            .opacity(1.0 - (tearProgress * 0.3))
+            .rotation3DEffect(
+                .degrees(tearProgress * 15.0),
+                axis: (x: 0, y: 1, z: 0),
+                anchor: .leading,
+                perspective: 0.5
+            )
+            .id(animationID) // Force view refresh when animation ID changes
     }
 }
 
