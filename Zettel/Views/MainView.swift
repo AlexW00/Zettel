@@ -195,40 +195,34 @@ struct MainView: View {
                     let translation = value.translation.width
                     let shouldTear = translation > 0 && tearProgress >= GestureConstants.tearThreshold
                     
-                    // Reset dragging state immediately to prevent timing conflicts
-                    isDragging = false
+                    // Reset haptic step but keep isDragging for animation
                     lastHapticStep = 0
                     
                     if shouldTear {
                         let impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
                         impactFeedback.impactOccurred()
                         
-                        let screenWidth = UIScreen.main.bounds.width
-                        
-                        // Use a single animation block to prevent timing conflicts
-                        withAnimation(.easeOut(duration: LayoutConstants.Animation.standard)) {
-                            animatedOffset = screenWidth
-                            animatedTearProgress = 1
-                            // Clear drag state in the same animation
+                        // Animate the note back to its original state over 0.3 seconds
+                        withAnimation(.easeOut(duration: 0.2)) {
                             dragOffset = 0
                             tearProgress = 0
                         }
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + LayoutConstants.Animation.standard) {
+                        // Reset dragging state and archive after animation completes
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            isDragging = false
                             noteStore.archiveCurrentNote()
-                            // Reset all state without animation to avoid conflicts
-                            dragOffset = 0
-                            tearProgress = 0
-                            animatedOffset = 0
-                            animatedTearProgress = 0
                         }
                     } else {
                         // Use a single animation for all reset values
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
                             dragOffset = 0
                             tearProgress = 0
-                            animatedOffset = 0
-                            animatedTearProgress = 0
+                        }
+                        
+                        // Reset dragging state after short animation
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            isDragging = false
                         }
                     }
                 }
