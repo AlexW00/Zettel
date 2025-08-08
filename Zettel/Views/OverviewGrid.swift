@@ -282,10 +282,10 @@ struct NoteCard: View {
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else {
-                        Text(note.content)
+                        Text(note.contentPreview(maxLines: 6))
                             .font(.system(size: 12, weight: .regular, design: .monospaced))
                             .foregroundColor(.secondaryText)
-                            .lineLimit(nil)
+                            .lineLimit(6)
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     }

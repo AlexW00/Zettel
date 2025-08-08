@@ -144,9 +144,11 @@ struct Note: Identifiable, Codable, Equatable {
 
     /// Updates the title and modifies the timestamp
     mutating func updateTitle(_ newTitle: String) {
+        let oldFilename = self.filename
         self.title = newTitle
         self.modifiedAt = Date()
-        // Invalidate tag cache using filename
+        // Invalidate tag cache using both old and new filename keys to avoid stale entries
+        TagCacheManager.shared.invalidateCache(for: oldFilename)
         TagCacheManager.shared.invalidateCache(for: self.filename)
     }
     

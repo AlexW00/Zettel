@@ -74,7 +74,7 @@ enum GestureConstants {
 // MARK: - Cache Constants
 
 enum CacheConstants {
-    static let tagCacheLimit: Int = 100
+    static let tagCacheLimit: Int = 1000
     static let tagCacheSizeLimit: Int = 10 * 1024 * 1024 // 10MB
     static let tagUpdateDelay: TimeInterval = 0.3
 }

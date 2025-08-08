@@ -83,50 +83,56 @@ class TagStore: ObservableObject {
         }
     }
     
-    /// Updates the tag store with tags from all notes (immediate, no debouncing)
+    /// Compute tag index off the main thread and publish results on main.
     func updateTagsImmediately(from notes: [Note]) {
-        var tagCounts: [String: Int] = [:]
-        var tagDisplayNames: [String: String] = [:]
+        // Capture light-weight copies for background work
+        let lightweightNotes = notes.map { (title: $0.title, content: $0.content) }
         
-        // Count tag usage across all notes
-        for note in notes {
-            let noteTags = note.extractedTags
-            for tagName in noteTags {
-                tagCounts[tagName, default: 0] += 1
-                // Keep track of display name (preserve case from first occurrence)
-                if tagDisplayNames[tagName] == nil {
-                    // Find the original hashtag in the note to preserve case
-                    let allText = note.title + " " + note.content
-                    if let originalTag = findOriginalTagCase(tagName, in: allText) {
-                        tagDisplayNames[tagName] = originalTag
-                    } else {
-                        tagDisplayNames[tagName] = tagName
+        Task.detached {
+            // Compute in background
+            var tagCounts: [String: Int] = [:]
+            var tagDisplayNames: [String: String] = [:]
+            
+            for note in lightweightNotes {
+                // Single-pass extraction over title and content
+                var noteText = note.title
+                noteText.append(" ")
+                noteText.append(note.content)
+                
+                // Use TagParser once per note text for both normalized and display names
+                let (normalizedToDisplay, uniqueNormalized) = TagParser.extractNormalizedAndDisplay(from: noteText)
+                
+                for tagName in uniqueNormalized {
+                    tagCounts[tagName, default: 0] += 1
+                    if tagDisplayNames[tagName] == nil {
+                        tagDisplayNames[tagName] = normalizedToDisplay[tagName] ?? tagName
                     }
                 }
             }
-        }
-        
-        // Update published properties
-        self.tagUsageCounts = tagCounts
-        
-        // Create Tag objects with usage counts and display names
-        var newTagsByName: [String: Tag] = [:]
-        for (normalizedName, count) in tagCounts {
-            let displayName = tagDisplayNames[normalizedName] ?? normalizedName
-            var tag = Tag(name: displayName)
-            tag.usageCount = count
-            newTagsByName[normalizedName] = tag
-        }
-        
-        self.tagsByName = newTagsByName
-        
-        // Create sorted array for UI
-        self.sortedTags = Array(newTagsByName.values).sorted { tag1, tag2 in
-            // Sort by usage count (descending), then by display name (ascending)
-            if tag1.usageCount != tag2.usageCount {
-                return tag1.usageCount > tag2.usageCount
+            
+            // Build Tag objects
+            var newTagsByName: [String: Tag] = [:]
+            for (normalizedName, count) in tagCounts {
+                let displayName = tagDisplayNames[normalizedName] ?? normalizedName
+                var tag = Tag(name: displayName)
+                tag.usageCount = count
+                newTagsByName[normalizedName] = tag
             }
-            return tag1.displayName < tag2.displayName
+            
+            // Prepare immutable values to avoid capturing mutable vars across await
+            let finalTagCounts = tagCounts
+            let finalTagsByName = newTagsByName
+            let finalSortedTags = Array(finalTagsByName.values).sorted { t1, t2 in
+                if t1.usageCount != t2.usageCount { return t1.usageCount > t2.usageCount }
+                return t1.displayName < t2.displayName
+            }
+            
+            // Publish on main
+            await MainActor.run {
+                self.tagUsageCounts = finalTagCounts
+                self.tagsByName = finalTagsByName
+                self.sortedTags = finalSortedTags
+            }
         }
     }
     
@@ -135,22 +141,14 @@ class TagStore: ObservableObject {
         updateTagsImmediately(from: notes)
     }
     
-    /// Helper to find original case of a tag in text
+    /// Single-scan extractor that returns mapping normalized->display and the set of unique normalized tags
+    private static func extractNormalizedAndDisplay(from text: String) -> ([String: String], Set<String>) {
+        // moved to TagParser to avoid @MainActor isolation issues
+        return TagParser.extractNormalizedAndDisplay(from: text)
+    }
+    
+    /// Helper to find original case of a tag in text (no longer used)
     private func findOriginalTagCase(_ normalizedTag: String, in text: String) -> String? {
-        let pattern = "#([a-zA-Z0-9_]+)"
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else { return nil }
-        
-        let range = NSRange(text.startIndex..., in: text)
-        let matches = regex.matches(in: text, options: [], range: range)
-        
-        for match in matches {
-            if let tagRange = Range(match.range(at: 1), in: text) {
-                let foundTag = String(text[tagRange])
-                if foundTag.lowercased() == normalizedTag {
-                    return foundTag
-                }
-            }
-        }
         return nil
     }
     

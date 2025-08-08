@@ -170,7 +170,7 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
                 throw NoteError.fileSystemError("NoteStore was deallocated during loading")
             }
             
-            // Perform file operations on background thread
+            // Perform file operations on background thread (preview-only scan)
             return try await self.performFileSystemScan()
         }.value
         
@@ -179,9 +179,23 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
             self.archivedNotes = result
             self.tagStore.updateTagsImmediately(from: result)
         }
+        
+        // After UI is responsive, build tag index from full contents in background
+        Task.detached { [weak self] in
+            guard let self else { return }
+            do {
+                let fullNotes = try await self.performFullContentScan()
+                await MainActor.run {
+                    self.tagStore.updateTagsImmediately(from: fullNotes)
+                }
+            } catch {
+                // Best-effort; ignore errors
+                print("Background full-content scan failed: \(error)")
+            }
+        }
     }
     
-    /// Performs the actual file system scanning on a background thread
+    /// Performs the actual file system scanning on a background thread (preview-only)
     private func performFileSystemScan() async throws -> [Note] {
         // Debug: Add sleep to test loading screen
         // try await Task.sleep(nanoseconds: 8_000_000_000) // 3 seconds
@@ -206,7 +220,8 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
             for fileURL in fileURLs where fileURL.pathExtension == "md" {
                 // Check if file is downloaded (not just a cloud stub)
                 if await isFileDownloaded(fileURL) {
-                    if let content = try? String(contentsOf: fileURL, encoding: .utf8) {
+                    do {
+                        let previewContent = try readFilePreview(fileURL, maxBytes: 16 * 1024)
                         // Get filename without extension as fallback title
                         let filenameWithoutExtension = fileURL.deletingPathExtension().lastPathComponent
                         
@@ -214,8 +229,17 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
                         let creationDate = getFileCreationDate(fileURL) ?? Date()
                         let modificationDate = getFileModificationDate(fileURL) ?? Date()
                         
-                        // Create note with file metadata
-                        let note = Note.fromSerializedContent(content, fallbackTitle: filenameWithoutExtension, createdAt: creationDate, modifiedAt: modificationDate)
+                        // Create note with file metadata (preview-only content)
+                        let note = Note.fromSerializedContent(previewContent, fallbackTitle: filenameWithoutExtension, createdAt: creationDate, modifiedAt: modificationDate)
+                        notes.append(note)
+                    } catch {
+                        // If preview fails, fallback to empty content for robustness
+                        let filenameWithoutExtension = fileURL.deletingPathExtension().lastPathComponent
+                        let creationDate = getFileCreationDate(fileURL) ?? Date()
+                        let modificationDate = getFileModificationDate(fileURL) ?? Date()
+                        var note = Note(title: filenameWithoutExtension, content: "")
+                        note.createdAt = creationDate
+                        note.modifiedAt = modificationDate
                         notes.append(note)
                     }
                 } else {
@@ -247,6 +271,52 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
             print("Error loading archived notes: \(error)")
             throw NoteError.fileSystemError("Failed to load notes: \(error.localizedDescription)")
         }
+    }
+    
+    /// Performs a full-content scan for background tag indexing
+    private func performFullContentScan() async throws -> [Note] {
+        let didStartAccessing = storageDirectory.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                storageDirectory.stopAccessingSecurityScopedResource()
+            }
+        }
+        
+        let fileURLs = try FileManager.default.contentsOfDirectory(
+            at: storageDirectory,
+            includingPropertiesForKeys: [.creationDateKey, .contentModificationDateKey],
+            options: [.skipsHiddenFiles]
+        )
+        
+        var notes: [Note] = []
+        for fileURL in fileURLs where fileURL.pathExtension == "md" {
+            // Skip undownloaded cloud stubs
+            if !(await isFileDownloaded(fileURL)) { continue }
+            if let content = try? String(contentsOf: fileURL, encoding: .utf8) {
+                let filenameWithoutExtension = fileURL.deletingPathExtension().lastPathComponent
+                let creationDate = getFileCreationDate(fileURL) ?? Date()
+                let modificationDate = getFileModificationDate(fileURL) ?? Date()
+                let note = Note.fromSerializedContent(content, fallbackTitle: filenameWithoutExtension, createdAt: creationDate, modifiedAt: modificationDate)
+                notes.append(note)
+            }
+        }
+        return notes.sorted { $0.modifiedAt > $1.modifiedAt }
+    }
+    
+    /// Reads a small utf8-safe preview of a file up to maxBytes
+    private func readFilePreview(_ url: URL, maxBytes: Int) throws -> String {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        let data = try handle.read(upToCount: maxBytes) ?? Data()
+        if let s = String(data: data, encoding: .utf8) { return s }
+        // If cut mid-codepoint, drop a few bytes until decode succeeds
+        var mutable = data
+        for _ in 0..<4 {
+            guard !mutable.isEmpty else { break }
+            mutable.removeLast()
+            if let s = String(data: mutable, encoding: .utf8) { return s }
+        }
+        return ""
     }
     
     // MARK: - Shortcut Integration
@@ -504,8 +574,16 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
                 }
             }
         } else {
-            // Load the note for editing (keeping all properties including ID)
-            currentNote = note
+            // Load full content from disk to ensure editor has the complete file
+            let fileURL = storageDirectory.appendingPathComponent(note.filename)
+            if let content = try? String(contentsOf: fileURL, encoding: .utf8) {
+                var fullNote = note
+                fullNote.updateContent(content)
+                currentNote = fullNote
+            } else {
+                // Fallback to existing note object if read fails
+                currentNote = note
+            }
         }
     }
     
@@ -768,31 +846,45 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     
     // MARK: - NSFilePresenter
     
+    // Debounce support for refreshes
+    private var refreshWorkItem: DispatchWorkItem?
+    private let refreshDebounceInterval: TimeInterval = 0.4
+    
+    private func scheduleDebouncedRefresh() {
+        refreshWorkItem?.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            self.refreshArchivedNotes()
+        }
+        refreshWorkItem = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + refreshDebounceInterval, execute: work)
+    }
+    
     nonisolated func presentedSubitemDidChange(at url: URL) {
         // A file in our directory changed
         Task { @MainActor in
-            refreshArchivedNotes()
+            scheduleDebouncedRefresh()
         }
     }
     
     nonisolated func presentedItemDidChange() {
         // The directory itself changed
         Task { @MainActor in
-            refreshArchivedNotes()
+            scheduleDebouncedRefresh()
         }
     }
     
     nonisolated func presentedSubitemDidAppear(at url: URL) {
         // A new file appeared
         Task { @MainActor in
-            refreshArchivedNotes()
+            scheduleDebouncedRefresh()
         }
     }
     
     nonisolated func presentedSubitem(at oldURL: URL, didMoveTo newURL: URL) {
         // A file was renamed
         Task { @MainActor in
-            refreshArchivedNotes()
+            scheduleDebouncedRefresh()
         }
     }
     

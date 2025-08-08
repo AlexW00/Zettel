@@ -23,6 +23,30 @@ class TagParser {
     private static let hashtagPattern = #"#[a-zA-Z0-9_]+(?![a-zA-Z0-9_])"#
     private static let regex = try! NSRegularExpression(pattern: hashtagPattern, options: [])
     
+    // Internal accessors for performance (used by TagStore)
+    static var hashtagPatternInternal: String { hashtagPattern }
+    static var regexInternal: NSRegularExpression { regex }
+    
+    /// Single-scan extractor returning mapping normalized->display and the set of unique normalized tags
+    static func extractNormalizedAndDisplay(from text: String) -> ([String: String], Set<String>) {
+        let range = NSRange(text.startIndex..., in: text)
+        let matches = regex.matches(in: text, options: [], range: range)
+        var normalizedToDisplay: [String: String] = [:]
+        var unique: Set<String> = []
+        for match in matches {
+            if let r = Range(match.range, in: text) {
+                let hashtag = String(text[r])
+                if let tag = Tag.fromHashtag(hashtag) {
+                    unique.insert(tag.id)
+                    if normalizedToDisplay[tag.id] == nil {
+                        normalizedToDisplay[tag.id] = tag.displayName
+                    }
+                }
+            }
+        }
+        return (normalizedToDisplay, unique)
+    }
+    
     /**
      * Extracts all unique tags from the given text (normalized to lowercase).
      * 
