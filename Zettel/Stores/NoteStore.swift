@@ -555,21 +555,22 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
             placeholderNote.content = "Loading from iCloud..."
             currentNote = placeholderNote
             
-            // Download the file asynchronously
-            Task {
+            // Download the file asynchronously off the main actor
+            Task.detached { [weak self] in
+                guard let self else { return }
                 do {
-                    try await downloadCloudFile(for: note)
+                    try await self.downloadCloudFile(for: note)
                     // After successful download, load the updated note
-                    if let updatedNote = archivedNotes.first(where: { $0.id == note.id }) {
-                        await MainActor.run {
-                            currentNote = updatedNote
+                    await MainActor.run {
+                        if let updatedNote = self.archivedNotes.first(where: { $0.id == note.id }) {
+                            self.currentNote = updatedNote
                         }
                     }
                 } catch {
                     await MainActor.run {
                         var errorNote = note
                         errorNote.content = "Failed to load from iCloud: \(error.localizedDescription)"
-                        currentNote = errorNote
+                        self.currentNote = errorNote
                     }
                 }
             }
@@ -848,7 +849,7 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     
     // Debounce support for refreshes
     private var refreshWorkItem: DispatchWorkItem?
-    private let refreshDebounceInterval: TimeInterval = 0.4
+    private let refreshDebounceInterval: TimeInterval = 1.0
     
     private func scheduleDebouncedRefresh() {
         refreshWorkItem?.cancel()
@@ -973,7 +974,7 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     // MARK: - Cloud File Support
     
     /// Checks if a file is downloaded locally (not just a cloud stub)
-    private func isFileDownloaded(_ url: URL) async -> Bool {
+    nonisolated private func isFileDownloaded(_ url: URL) async -> Bool {
         do {
             let resourceValues = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
             
@@ -998,7 +999,7 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     }
     
     /// Downloads a cloud file asynchronously in the background
-    private func downloadCloudFileInBackground(fileURL: URL, noteId: String) async {
+    nonisolated private func downloadCloudFileInBackground(fileURL: URL, noteId: String) async {
         do {
             // Start accessing the security-scoped resource
             let didStartAccessing = fileURL.startAccessingSecurityScopedResource()
@@ -1024,7 +1025,7 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
             
             // Check if download succeeded
             if await isFileDownloaded(fileURL) {
-                // Read the file content
+                // Read the file content off-main
                 let content = try String(contentsOf: fileURL, encoding: .utf8)
                 
                 // Update the note in the archived notes list on main thread
@@ -1066,7 +1067,7 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     }
     
     /// Downloads a cloud file asynchronously
-    func downloadCloudFile(for note: Note) async throws {
+    nonisolated func downloadCloudFile(for note: Note) async throws {
         guard note.isCloudStub, let cloudURL = note.cloudURL else {
             throw NoteError.fileSystemError("Note is not a cloud stub or missing cloud URL")
         }
@@ -1096,19 +1097,23 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
             
             // Check if download succeeded
             if await isFileDownloaded(cloudURL) {
+                // Read content off-main
+                let content = try String(contentsOf: cloudURL, encoding: .utf8)
+                
                 // Update the note in the archived notes list
-                if let index = archivedNotes.firstIndex(where: { $0.id == note.id }) {
-                    let content = try String(contentsOf: cloudURL, encoding: .utf8)
-                    var updatedNote = Note.fromSerializedContent(content, 
-                                                                fallbackTitle: note.title, 
-                                                                createdAt: note.createdAt, 
-                                                                modifiedAt: note.modifiedAt)
-                    updatedNote.isCloudStub = false
-                    updatedNote.cloudURL = nil
-                    archivedNotes[index] = updatedNote
-                    
-                    // Update tags
-                    tagStore.updateTagsImmediately(from: archivedNotes)
+                await MainActor.run {
+                    if let index = archivedNotes.firstIndex(where: { $0.id == note.id }) {
+                        var updatedNote = Note.fromSerializedContent(content, 
+                                                                    fallbackTitle: note.title, 
+                                                                    createdAt: note.createdAt, 
+                                                                    modifiedAt: note.modifiedAt)
+                        updatedNote.isCloudStub = false
+                        updatedNote.cloudURL = nil
+                        archivedNotes[index] = updatedNote
+                        
+                        // Update tags
+                        tagStore.updateTagsImmediately(from: archivedNotes)
+                    }
                 }
             } else {
                 throw NoteError.fileSystemError("Failed to download file within timeout period")
