@@ -43,6 +43,8 @@
 "settings.view_on_github" = "GitHubで表示";
 "settings.font_size" = "フォントサイズ";
 "settings.font_size_description" = "ノートコンテンツテキストのフォントサイズを調整";
+"settings.font_size_small_label" = "A";
+"settings.font_size_large_label" = "A";
 
 // Theme Options
 "theme.system" = "システム";
@@ -86,6 +88,15 @@
 "loading.loading_subtitle" = "メモを読み込んでいます。しばらくお待ちください...";
 "loading.loading_error" = "メモの読み込みに失敗しました";
 "loading.retry_button" = "再試行";
+"loading.downloading" = "ダウンロード中...";
+"loading.tap_to_download" = "タップしてダウンロード";
+
+// Debug / Dev-only
+"debug.shortcuts.title" = "ショートカットのデバッグテスト";
+"debug.shortcuts.trigger_simulate" = "ショートカットをトリガー (シミュレート)";
+"debug.localization_test.title" = "ローカライズテストビュー";
+"debug.localization_test.force_update" = "ローカライズ更新を強制";
+"debug.localization_test.current_id" = "現在のLanguage Update ID: %@";
 
 // Welcome Note
 "welcome.title" = "Zettelへようこそ";

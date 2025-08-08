@@ -10,10 +10,10 @@ import SwiftUI
 struct DebugShortcutView: View {
     var body: some View {
         VStack(spacing: 20) {
-            Text("Debug Shortcut Testing")
+            Text("debug.shortcuts.title".localized)
                 .font(.title)
             
-            Button("Trigger Shortcut (Simulate)") {
+            Button("debug.shortcuts.trigger_simulate".localized) {
                 // This simulates what the shortcut does
                 NotificationCenter.default.post(
                     name: .createNewNoteFromShortcut,

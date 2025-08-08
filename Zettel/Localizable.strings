@@ -43,6 +43,8 @@
 "settings.view_on_github" = "View on GitHub";
 "settings.font_size" = "Font Size";
 "settings.font_size_description" = "Adjust the font size for note content text";
+"settings.font_size_small_label" = "A";
+"settings.font_size_large_label" = "A";
 
 // Theme Options
 "theme.system" = "System";
@@ -86,6 +88,15 @@
 "loading.loading_subtitle" = "Please wait while we load your notes...";
 "loading.loading_error" = "Failed to Load Notes";
 "loading.retry_button" = "Retry";
+"loading.downloading" = "Downloading...";
+"loading.tap_to_download" = "Tap to download";
+
+// Debug / Dev-only
+"debug.shortcuts.title" = "Debug Shortcut Testing";
+"debug.shortcuts.trigger_simulate" = "Trigger Shortcut (Simulate)";
+"debug.localization_test.title" = "Localization Test View";
+"debug.localization_test.force_update" = "Force Localization Update";
+"debug.localization_test.current_id" = "Current Language Update ID: %@";
 
 // Welcome Note
 "welcome.title" = "Welcome to Zettel";

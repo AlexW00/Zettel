@@ -43,6 +43,8 @@
 "settings.view_on_github" = "Auf GitHub anzeigen";
 "settings.font_size" = "Schriftgröße";
 "settings.font_size_description" = "Passen Sie die Schriftgröße für den Notizinhalt an";
+"settings.font_size_small_label" = "A";
+"settings.font_size_large_label" = "A";
 
 // Theme Options
 "theme.system" = "System";
@@ -86,6 +88,15 @@
 "loading.loading_subtitle" = "Bitte warten Sie, während Ihre Notizen geladen werden...";
 "loading.loading_error" = "Fehler beim Laden der Notizen";
 "loading.retry_button" = "Erneut versuchen";
+"loading.downloading" = "Wird geladen...";
+"loading.tap_to_download" = "Zum Laden tippen";
+
+// Debug / Dev-only
+"debug.shortcuts.title" = "Debug Shortcut Test";
+"debug.shortcuts.trigger_simulate" = "Shortcut auslösen (simulieren)";
+"debug.localization_test.title" = "Lokalisierungs-Testansicht";
+"debug.localization_test.force_update" = "Lokalisierung aktualisieren erzwingen";
+"debug.localization_test.current_id" = "Aktuelle Language Update ID: %@";
 
 // Welcome Note
 "welcome.title" = "Willkommen bei Zettel";

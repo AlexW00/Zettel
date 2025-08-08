@@ -90,7 +90,7 @@ struct SettingsView: View {
                         }
                         
                         HStack {
-                            Text("A")
+                            Text("settings.font_size_small_label".localized)
                                 .font(.system(size: 12))
                                 .foregroundColor(.secondary)
                             
@@ -101,7 +101,7 @@ struct SettingsView: View {
                             )
                             .accentColor(.iconTint)
                             
-                            Text("A")
+                            Text("settings.font_size_large_label".localized)
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundColor(.secondary)
                         }

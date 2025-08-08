@@ -15,7 +15,7 @@ struct TagChipView: View {
     }
     
     var body: some View {
-        Text("#\(tagName)")
+        Text("tags.hashtag_prefix".localized(tagName))
             .font(.system(size: compact ? LayoutConstants.FontSize.caption : LayoutConstants.FontSize.small, weight: .medium, design: .monospaced))
             .foregroundColor(.secondaryText)
             .lineLimit(1)

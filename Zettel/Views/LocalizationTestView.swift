@@ -15,7 +15,7 @@ struct LocalizationTestView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("Localization Test View")
+            Text("debug.localization_test.title".localized)
                 .font(.title)
             
             VStack(alignment: .leading, spacing: 10) {
@@ -26,7 +26,7 @@ struct LocalizationTestView: View {
                 LocalizedText("note.title_placeholder")
             }
             
-            Button("Force Localization Update") {
+            Button("debug.localization_test.force_update".localized) {
                 localizationManager.forceUpdate()
             }
             .padding()
@@ -34,7 +34,7 @@ struct LocalizationTestView: View {
             .foregroundColor(.white)
             .cornerRadius(8)
             
-            Text("Current Language Update ID: \(localizationManager.languageUpdateId.uuidString.prefix(8))")
+            Text(String(format: "debug.localization_test.current_id".localized, String(localizationManager.languageUpdateId.uuidString.prefix(8))))
                 .font(.caption)
                 .foregroundColor(.secondary)
         }

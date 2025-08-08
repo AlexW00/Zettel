@@ -267,7 +267,7 @@ struct NoteCard: View {
                                 ProgressView()
                                     .scaleEffect(0.8)
                                     .padding(.bottom, 4)
-                                Text("Downloading...")
+                                Text("loading.downloading".localized)
                                     .font(.system(size: 10, weight: .regular, design: .monospaced))
                                     .foregroundColor(.secondaryText.opacity(0.8))
                             } else {
@@ -275,7 +275,7 @@ struct NoteCard: View {
                                 Image(systemName: "icloud.and.arrow.down")
                                     .font(.system(size: 24))
                                     .foregroundColor(.secondaryText.opacity(0.6))
-                                Text("Tap to download")
+                                Text("loading.tap_to_download".localized)
                                     .font(.system(size: 10, weight: .regular, design: .monospaced))
                                     .foregroundColor(.secondaryText.opacity(0.6))
                             }
@@ -503,11 +503,11 @@ struct TagFilterBar: View {
                                     }
                                 }) {
                                     HStack(spacing: 4) {
-                                        Text("#\(tag.name)")
+                                        Text("tags.hashtag_prefix".localized(tag.name))
                                             .font(.system(size: 14, weight: .medium, design: .monospaced))
                                         
                                         if tag.usageCount > 1 {
-                                            Text("(\(tag.usageCount))")
+                                            Text(String(format: "overview.tag_count".localized, tag.usageCount))
                                                 .font(.system(size: 12, weight: .regular))
                                                 .opacity(0.7)
                                         }
