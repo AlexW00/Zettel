@@ -72,6 +72,7 @@
 
 // Accessibility
 "accessibility.tear_zone" = "切り取り領域";
+"accessibility.tear_zone_hint" = "ノート上で右方向にスワイプして切り取り、アーカイブします。";
 "accessibility.settings_button" = "設定";
 "accessibility.selection_mode" = "選択モード";
 "accessibility.note_card" = "ノートカード";

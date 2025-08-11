@@ -72,6 +72,7 @@
 
 // Accessibility
 "accessibility.tear_zone" = "Tear zone";
+"accessibility.tear_zone_hint" = "Swipe right anywhere on the note to tear off and archive it.";
 "accessibility.settings_button" = "Settings";
 "accessibility.selection_mode" = "Selection mode";
 "accessibility.note_card" = "Note card";
