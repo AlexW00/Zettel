@@ -4,7 +4,7 @@
 
 ## App Store
 
-You can download Zettel on the App Store for free: [link](https://apps.apple.com/de/app/zettel-quick-notes/id6748525244)
+You can download Zettel on the App Store for free: [link](https://apps.apple.com/app/zettel-quick-notes/id6748525244)
 
 ## Features
 
