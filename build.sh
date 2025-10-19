@@ -1,18 +1,32 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Configure project with environment variables
 ./configure.sh
 
-# Load environment variables
-if [ -f .env ]; then
-    set -o allexport
-    source .env
-    set +o allexport
-fi
-
 # Set defaults if not provided
 CONFIGURATION=${CONFIGURATION:-Debug}
-SIMULATOR_DEVICE=${SIMULATOR_DEVICE:-"iPhone 16"}
+SCHEME=${SCHEME:-Zettel}
+SIMULATOR_DEVICE=${SIMULATOR_DEVICE:-"iPhone 17"}
+INCLUDE_SIMULATOR=${INCLUDE_SIMULATOR:-0}
 
-# Build the project
-xcodebuild -project Zettel.xcodeproj -scheme Zettel -configuration "$CONFIGURATION" build -destination "platform=iOS Simulator,name=$SIMULATOR_DEVICE"
+echo "Building Zettel for device (iphoneos)..."
+xcodebuild -project Zettel.xcodeproj \
+    -scheme "$SCHEME" \
+    -configuration "$CONFIGURATION" \
+    -derivedDataPath build/DerivedData \
+    -destination "generic/platform=iOS" \
+    build
+
+case "$INCLUDE_SIMULATOR" in
+    1|true|TRUE|yes|YES)
+        echo "Building Zettel for simulator ($SIMULATOR_DEVICE)..."
+    xcodebuild -project Zettel.xcodeproj \
+        -scheme "$SCHEME" \
+        -configuration "$CONFIGURATION" \
+        -derivedDataPath build/DerivedData \
+        -destination "platform=iOS Simulator,name=$SIMULATOR_DEVICE" \
+        build
+        ;;
+esac
