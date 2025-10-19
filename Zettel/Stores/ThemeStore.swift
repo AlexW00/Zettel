@@ -152,4 +152,29 @@ extension Color {
             }
         })
     }
+
+    static var dictationIdleForeground: Color {
+        Color(UIColor { trait in
+            if trait.userInterfaceStyle == .dark {
+                return UIColor(white: 1.0, alpha: 0.92)
+            } else {
+                return UIColor.label.withAlphaComponent(0.85)
+            }
+        })
+    }
+
+    static var dictationBusyForeground: Color {
+        Color(UIColor.secondaryLabel)
+    }
+
+    static var dictationRecordingForeground: Color {
+        Color(UIColor { trait in
+            let base = UIColor.systemRed
+            if trait.userInterfaceStyle == .dark {
+                return base.withAlphaComponent(0.95)
+            } else {
+                return base.withAlphaComponent(0.8)
+            }
+        })
+    }
 }

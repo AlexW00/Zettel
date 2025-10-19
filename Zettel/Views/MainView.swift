@@ -183,7 +183,7 @@ struct MainView: View {
                 )
                 .padding(.horizontal, LayoutConstants.Padding.large)
                 .padding(.top, LayoutConstants.Padding.medium)
-                .padding(.bottom, LayoutConstants.Padding.large + LayoutConstants.Size.dictationButton)
+                .padding(.bottom, LayoutConstants.Padding.large)
 
                 DictationControlButton(
                     state: dictationController.state,
@@ -191,7 +191,7 @@ struct MainView: View {
                     action: handleDictationButtonTap
                 )
                 .padding(.trailing, LayoutConstants.Padding.large)
-                .padding(.bottom, LayoutConstants.Padding.medium)
+                .padding(.bottom, LayoutConstants.Padding.large)
             }
             .background(Color.noteBackground)
             .opacity(max(0.25, 1.0 - (tearProgress * ThemeConstants.Opacity.veryHeavy)))
@@ -473,38 +473,51 @@ private struct DictationControlButton: View {
         }) {
             ZStack {
                 Circle()
-                    .fill(backgroundColor)
-                    .frame(width: LayoutConstants.Size.dictationButton, height: LayoutConstants.Size.dictationButton)
-                    .shadow(color: Color.black.opacity(0.18), radius: 6, x: 0, y: 3)
+                    .strokeBorder(Color.clear, lineWidth: 0.25)
+                    .background(Circle().fill(.clear))
+                    .glassEffect(isRecording ? .regular : .clear, in: Circle())
 
-                if isDownloading || (isBusy && !isRecording) {
+                if shouldShowSpinner {
                     ProgressView()
                         .progressViewStyle(.circular)
-                        .tint(.white)
-                } else {
-                    Image(systemName: isRecording ? "stop.fill" : "mic.fill")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(foregroundColor)
-                        .transition(.opacity)
+                        .tint(Color.dictationBusyForeground)
+                        .scaleEffect(0.8)
+                } else if let iconName = iconName {
+                    Image(systemName: iconName)
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(iconColor)
+                        .symbolRenderingMode(.monochrome)
+                        .transition(.opacity.combined(with: .scale))
                 }
             }
+            .frame(width: LayoutConstants.Size.dictationButton, height: LayoutConstants.Size.dictationButton)
         }
         .buttonStyle(.plain)
+        .contentShape(Circle())
+        .animation(.easeInOut(duration: 0.2), value: state)
         .accessibilityLabel(Text(isRecording ? StringConstants.Dictation.stopButton.localized : StringConstants.Dictation.startButton.localized))
         .accessibilityAddTraits(.isButton)
     }
 
-    private var backgroundColor: Color {
-        if isRecording {
-            return Color.red.opacity(0.9)
-        } else if isDownloading || isBusy {
-            return Color.primaryText.opacity(0.35)
+    private var iconName: String? {
+        shouldShowSpinner ? nil : (isRecording ? "stop.fill" : "mic.fill")
+    }
+
+    private var shouldShowSpinner: Bool {
+        isDownloading || isFinishing
+    }
+
+    private var iconColor: Color {
+        if isFinishing {
+            return .dictationBusyForeground
+        } else if isRecording {
+            return .dictationRecordingForeground
         } else {
-            return Color.primaryText.opacity(0.18)
+            return .dictationIdleForeground
         }
     }
 
-    private var foregroundColor: Color {
-        isRecording ? .white : .primaryText
+    private var isFinishing: Bool {
+        state == .finishing
     }
 }

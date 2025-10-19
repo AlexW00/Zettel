@@ -322,6 +322,10 @@ final class NoteDictationController: ObservableObject {
         if result.isFinal {
             committedTranscription = newText
             interimTranscription = ""
+            updateNoteContent(noteStore: noteStore)
+            baseContent += committedTranscription
+            startLocationUTF16 = baseContent.utf16.count
+            committedTranscription = ""
         } else {
             if newText.hasPrefix(committedTranscription) {
                 let suffixIndex = newText.index(newText.startIndex, offsetBy: committedTranscription.count)
@@ -330,8 +334,8 @@ final class NoteDictationController: ObservableObject {
                 committedTranscription = ""
                 interimTranscription = newText
             }
+            updateNoteContent(noteStore: noteStore)
         }
-        updateNoteContent(noteStore: noteStore)
     }
 
     @MainActor
