@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import UIKit
 import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @ObservedObject var noteStore: NoteStore
     @EnvironmentObject var themeStore: ThemeStore
     @EnvironmentObject var localizationManager: LocalizationManager
+    @EnvironmentObject var dictationLocaleManager: DictationLocaleManager
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
     @State private var showingFolderPicker = false
@@ -168,6 +170,79 @@ struct SettingsView: View {
                     Text("settings.system_description".localized)
                 }
                 
+                // Dictation Locale Selection
+                Section {
+                    HStack(alignment: .center, spacing: 12) {
+                        Image(systemName: "mic.circle")
+                            .foregroundColor(.iconTint)
+                            .frame(width: 24)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(StringConstants.Settings.dictationSection.localized)
+                                .font(.system(size: 16, weight: .medium))
+
+                            Text(StringConstants.Settings.dictationSectionDescription.localized)
+                                .font(.system(size: 12))
+                                .foregroundColor(.secondary)
+                                .lineLimit(2)
+                        }
+
+                        Spacer()
+
+                        if dictationLocaleManager.isLoadingLocales {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .tint(.iconTint)
+                                .frame(width: 24, height: 24)
+                                .accessibilityLabel(Text(StringConstants.Settings.dictationLocaleMenuLoading.localized))
+                        } else if let currentOption = dictationLocaleManager.localeOption() {
+                            Menu {
+                                ForEach(dictationLocaleManager.localeOptions) { option in
+                                    Button {
+                                        dictationLocaleManager.updateSelectedLocale(option)
+                                    } label: {
+                                        HStack {
+                                            Text(option.displayName)
+                                            Spacer()
+                                            Text(option.isInstalled ? StringConstants.Dictation.localeCellInstalled.localized : StringConstants.Dictation.localeCellPending.localized)
+                                                .font(.system(size: 12))
+                                                .foregroundColor(option.isInstalled ? .secondary : .orange)
+                                            if dictationLocaleManager.selectedLocaleIdentifier == option.id {
+                                                Image(systemName: "checkmark")
+                                            }
+                                        }
+                                    }
+                                }
+                            } label: {
+                                HStack {
+                                    Text(currentOption.displayName)
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(.primary)
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
+                                    Image(systemName: "chevron.up.chevron.down")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 6)
+                                .background(Color(UIColor.secondarySystemFill))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                            }
+                        } else {
+                            Text("--")
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+                header: {
+                    Text(StringConstants.Settings.dictationSection.localized)
+                } footer: {
+                    Text(StringConstants.Settings.dictationSectionDescription.localized)
+                }
+
                 // Storage Section
                 Section {
                     HStack {
@@ -274,6 +349,9 @@ struct SettingsView: View {
                     .font(.system(size: 16, weight: .medium))
                 }
             }
+            .task {
+                await dictationLocaleManager.loadLocalesIfNeeded()
+            }
         }
         .preferredColorScheme(themeStore.currentTheme.colorScheme)
         .alert(
@@ -309,5 +387,6 @@ struct SettingsView_Previews: PreviewProvider {
         SettingsView(noteStore: NoteStore())
             .environmentObject(ThemeStore())
             .environmentObject(LocalizationManager.shared)
+            .environmentObject(DictationLocaleManager.shared)
     }
 }

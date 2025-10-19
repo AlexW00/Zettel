@@ -59,6 +59,7 @@ enum LayoutConstants {
         static let maxContentWidth: CGFloat = 600
         static let tagSuggestionBarHeight: CGFloat = 50
         static let tagRowHeight: CGFloat = 32
+        static let dictationButton: CGFloat = 52
     }
 }
 

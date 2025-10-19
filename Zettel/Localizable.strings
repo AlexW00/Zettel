@@ -51,6 +51,9 @@
 "settings.default_title_template_info_title" = "Template Format";
 "settings.default_title_template_info_message" = "Available placeholders:\n%@\n\nLeave the field empty to reset to the default template (%@).";
 "settings.default_title_template_info_button" = "Show template format help";
+"dictation.settings.section_title" = "Dictation";
+"dictation.settings.section_description" = "Select which speech language to use when dictating notes.";
+"dictation.locale.download.in_progress" = "Downloading…";
 
 // Theme Options
 "theme.system" = "System";
@@ -102,6 +105,23 @@
 "loading.retry_button" = "Retry";
 "loading.downloading" = "Downloading...";
 "loading.tap_to_download" = "Tap to download";
+
+// Dictation
+"dictation.button.start" = "Start Dictation";
+"dictation.button.stop" = "Stop Dictation";
+"dictation.error.permission_denied.title" = "Microphone Access Needed";
+"dictation.error.permission_denied.message" = "Enable microphone access in Settings to use dictation.";
+"dictation.error.locale_missing.title" = "Language Pack Needed";
+"dictation.error.locale_missing.message" = "Download the selected language pack before starting dictation.";
+"dictation.error.analyzer_unavailable.title" = "Dictation Not Available";
+"dictation.error.analyzer_unavailable.message" = "This feature requires iOS 26 with the SpeechTranscriber SDK.";
+"dictation.error.transcription_failed.title" = "Dictation Failed";
+"dictation.error.download_failed.title" = "Download Failed";
+"dictation.locale.download.title" = "Download Language Pack";
+"dictation.locale.download.message" = "Download speech assets for %@?";
+"dictation.locale.download.confirm" = "Download";
+"dictation.locale.installed" = "Installed";
+"dictation.locale.pending" = "Not Installed";
 
 // Debug / Dev-only
 "debug.shortcuts.title" = "Debug Shortcut Testing";

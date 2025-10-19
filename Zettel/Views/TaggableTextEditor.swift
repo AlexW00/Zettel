@@ -14,13 +14,19 @@ struct TaggableTextEditor: View {
 
     let font: UIFont
     let foregroundColor: Color
+    let isEditingEnabled: Bool
+    let highlightRange: NSRange?
     
-    init(text: Binding<String>, 
+    init(text: Binding<String>,
          font: UIFont = UIFont.monospacedSystemFont(ofSize: 16, weight: .regular),
-         foregroundColor: Color = .primaryText) {
+         foregroundColor: Color = .primaryText,
+         isEditingEnabled: Bool = true,
+         highlightRange: NSRange? = nil) {
         self._text = text
         self.font = font
         self.foregroundColor = foregroundColor
+        self.isEditingEnabled = isEditingEnabled
+        self.highlightRange = highlightRange
     }
     
     var body: some View {
@@ -28,7 +34,9 @@ struct TaggableTextEditor: View {
             text: $text,
             font: font,
             foregroundColor: foregroundColor,
-            noteStore: noteStore
+            noteStore: noteStore,
+            isEditingEnabled: isEditingEnabled,
+            highlightRange: highlightRange
         )
     }
 }
@@ -39,6 +47,8 @@ struct TagTextViewRepresentable: UIViewRepresentable {
     let font: UIFont
     let foregroundColor: Color
     let noteStore: NoteStore
+    let isEditingEnabled: Bool
+    let highlightRange: NSRange?
     
     func makeUIView(context: Context) -> TagTextView {
         let textView = TagTextView()
@@ -47,11 +57,13 @@ struct TagTextViewRepresentable: UIViewRepresentable {
         textView.textColor = UIColor(foregroundColor)
         textView.backgroundColor = UIColor.clear
         textView.isScrollEnabled = true
-        textView.isEditable = true
+        textView.isEditable = isEditingEnabled
+        textView.isSelectable = isEditingEnabled
         textView.isUserInteractionEnabled = true
         textView.textContainer.lineFragmentPadding = 0
         textView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         textView.noteStore = noteStore
+        textView.highlightedRange = highlightRange
         
         // Disable autocorrect and other automatic text features
         textView.autocorrectionType = .no
@@ -84,6 +96,15 @@ struct TagTextViewRepresentable: UIViewRepresentable {
         let newColor = UIColor(foregroundColor)
         if uiView.textColor != newColor {
             uiView.textColor = newColor
+        }
+
+        if uiView.isEditable != isEditingEnabled {
+            uiView.isEditable = isEditingEnabled
+            uiView.isSelectable = isEditingEnabled
+        }
+
+        if uiView.highlightedRange != highlightRange {
+            uiView.highlightedRange = highlightRange
         }
     }
     
@@ -124,6 +145,10 @@ class TagTextView: UITextView {
     var noteStore: NoteStore?
     private var tagSuggestionBar: TagSuggestionBar?
     private var shouldShowSuggestions = false
+    var highlightedRange: NSRange? {
+        didSet { applyHighlight() }
+    }
+    private let highlightColor = UIColor.systemYellow.withAlphaComponent(0.24)
     
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
@@ -205,6 +230,17 @@ class TagTextView: UITextView {
         shouldShowSuggestions = false
         inputAccessoryView = nil
         reloadInputViews()
+    }
+
+    private func applyHighlight() {
+        let fullRange = NSRange(location: 0, length: textStorage.length)
+        textStorage.removeAttribute(.backgroundColor, range: fullRange)
+
+        guard let highlightRange = highlightedRange,
+              highlightRange.length > 0,
+              NSMaxRange(highlightRange) <= textStorage.length else { return }
+
+        textStorage.addAttribute(.backgroundColor, value: highlightColor, range: highlightRange)
     }
     
     override func resignFirstResponder() -> Bool {

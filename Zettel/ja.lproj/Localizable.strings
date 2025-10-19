@@ -51,6 +51,9 @@
 "settings.default_title_template_info_title" = "テンプレート形式";
 "settings.default_title_template_info_message" = "使用できるプレースホルダ:\n%@\n\nフィールドを空にすると既定のテンプレート (%@) に戻ります。";
 "settings.default_title_template_info_button" = "テンプレート形式の説明を表示";
+"dictation.settings.section_title" = "音声入力";
+"dictation.settings.section_description" = "音声入力に使用する言語を選択します。";
+"dictation.locale.download.in_progress" = "ダウンロード中…";
 
 // Theme Options
 "theme.system" = "システム";
@@ -102,6 +105,23 @@
 "loading.retry_button" = "再試行";
 "loading.downloading" = "ダウンロード中...";
 "loading.tap_to_download" = "タップしてダウンロード";
+
+// 音声入力
+"dictation.button.start" = "音声入力を開始";
+"dictation.button.stop" = "音声入力を停止";
+"dictation.error.permission_denied.title" = "マイクへのアクセスが必要です";
+"dictation.error.permission_denied.message" = "設定でマイクアクセスを有効にすると音声入力を利用できます。";
+"dictation.error.locale_missing.title" = "言語パックが必要です";
+"dictation.error.locale_missing.message" = "音声入力を始める前に選択した言語パックをダウンロードしてください。";
+"dictation.error.analyzer_unavailable.title" = "音声入力を利用できません";
+"dictation.error.analyzer_unavailable.message" = "この機能を利用するには iOS 26 と SpeechTranscriber SDK が必要です。";
+"dictation.error.transcription_failed.title" = "音声入力に失敗しました";
+"dictation.error.download_failed.title" = "ダウンロードに失敗しました";
+"dictation.locale.download.title" = "言語パックをダウンロード";
+"dictation.locale.download.message" = "%@ の音声リソースをダウンロードしますか？";
+"dictation.locale.download.confirm" = "ダウンロード";
+"dictation.locale.installed" = "インストール済み";
+"dictation.locale.pending" = "未インストール";
 
 // Debug / Dev-only
 "debug.shortcuts.title" = "ショートカットのデバッグテスト";
