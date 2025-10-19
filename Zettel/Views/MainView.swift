@@ -471,6 +471,7 @@ private struct DictationControlButton: View {
     let state: NoteDictationController.State
     let isDownloading: Bool
     let action: () -> Void
+    @EnvironmentObject private var dictationLocaleManager: DictationLocaleManager
 
     private var isRecording: Bool { state == .recording }
     private var isBusy: Bool {
@@ -483,10 +484,30 @@ private struct DictationControlButton: View {
     }
 
     var body: some View {
-        Button(action: {
-            guard !(isBusy && !isRecording) else { return }
-            action()
-        }) {
+        Menu {
+            // Long-press language switcher — mirrors SettingsView
+            if !dictationLocaleManager.isLoadingLocales {
+                ForEach(dictationLocaleManager.localeOptions) { option in
+                    Button {
+                        dictationLocaleManager.updateSelectedLocale(option)
+                    } label: {
+                        HStack {
+                            Text(option.displayName)
+                            Spacer()
+                            Text(option.isInstalled ? StringConstants.Dictation.localeCellInstalled.localized : StringConstants.Dictation.localeCellPending.localized)
+                                .font(.system(size: 12))
+                                .foregroundColor(option.isInstalled ? .secondary : .orange)
+                            if dictationLocaleManager.selectedLocaleIdentifier == option.id {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Lightweight loading indicator within the menu
+                Text(StringConstants.Settings.dictationLocaleMenuLoading.localized)
+            }
+        } label: {
             ZStack {
                 Circle()
                     .fill(Color.dictationBackgroundTint)
@@ -506,9 +527,11 @@ private struct DictationControlButton: View {
                 }
             }
             .frame(width: LayoutConstants.Size.dictationButton, height: LayoutConstants.Size.dictationButton)
+            .contentShape(Circle())
+        } primaryAction: {
+            guard !(isBusy && !isRecording) else { return }
+            action()
         }
-        .buttonStyle(.plain)
-        .contentShape(Circle())
         .animation(.easeInOut(duration: 0.2), value: state)
         .accessibilityLabel(Text(isRecording ? StringConstants.Dictation.stopButton.localized : StringConstants.Dictation.startButton.localized))
         .accessibilityAddTraits(.isButton)
