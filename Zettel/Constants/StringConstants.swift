@@ -139,6 +139,7 @@ enum StringConstants {
         static let permissionDeniedMessage = "dictation.error.permission_denied.message"
         static let localeMissingTitle = "dictation.error.locale_missing.title"
         static let localeMissingMessage = "dictation.error.locale_missing.message"
+        static let localeUnsupportedMessage = "dictation.error.locale_unsupported.message"
         static let analyzerUnavailableTitle = "dictation.error.analyzer_unavailable.title"
         static let analyzerUnavailableMessage = "dictation.error.analyzer_unavailable.message"
         static let transcriptionFailedTitle = "dictation.error.transcription_failed.title"

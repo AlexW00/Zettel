@@ -9,6 +9,7 @@
 //
 
 import Foundation
+import OSLog
 @preconcurrency import Speech
 
 @MainActor
@@ -45,6 +46,7 @@ final class DictationLocaleManager: ObservableObject {
 
     private let defaultsKey = "dictation.selectedLocaleIdentifier"
     private let userDefaults: UserDefaults
+    private let logger = Logger(subsystem: "com.zettel.note", category: "Dictation.LocaleManager")
 
     private init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
@@ -67,8 +69,8 @@ final class DictationLocaleManager: ObservableObject {
         lastError = nil
         let currentLocale = Locale.current
 
-        let supportedLocales = await SpeechTranscriber.supportedLocales
-        let installedLocales = await SpeechTranscriber.installedLocales
+        let supportedLocales = await DictationTranscriber.supportedLocales
+        let installedLocales = await DictationTranscriber.installedLocales
         let installed = Set(installedLocales.map { $0.identifier })
         installedLocaleIdentifiers = installed
 
@@ -90,15 +92,18 @@ final class DictationLocaleManager: ObservableObject {
     }
 
     func ensureSelectionIsValid() {
-        if localeOptions.first(where: { $0.id == selectedLocaleIdentifier }) == nil,
-           let fallback = localeOptions.first {
+        if let _ = localeOptions.first(where: { $0.id == selectedLocaleIdentifier }) {
+            // selection remains valid
+        } else if let fallback = localeOptions.first {
             selectedLocaleIdentifier = fallback.id
             persistSelection()
+        } else {
+            // nothing to select
         }
     }
 
     func refreshInstalledLocales() async {
-        let installedLocales = await SpeechTranscriber.installedLocales
+        let installedLocales = await DictationTranscriber.installedLocales
         installedLocaleIdentifiers = Set(installedLocales.map { $0.identifier })
         updateInstallationFlags()
     }

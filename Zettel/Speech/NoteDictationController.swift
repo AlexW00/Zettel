@@ -88,11 +88,37 @@ final class NoteDictationController: ObservableObject {
     private let localeManager: DictationLocaleManager
     private let logger = Logger(subsystem: "com.zettel.note", category: "Dictation")
     nonisolated private static let audioLogger = Logger(subsystem: "com.zettel.note", category: "Dictation.Audio")
+    private static let preferredPresets: [DictationTranscriber.Preset] = [
+        DictationTranscriber.Preset(
+            contentHints: [],
+            transcriptionOptions: [.punctuation],
+            reportingOptions: [.volatileResults, .frequentFinalization],
+            attributeOptions: [.audioTimeRange, .transcriptionConfidence]
+        ),
+        DictationTranscriber.Preset(
+            contentHints: [],
+            transcriptionOptions: [.punctuation],
+            reportingOptions: [.volatileResults],
+            attributeOptions: [.audioTimeRange]
+        ),
+        DictationTranscriber.Preset(
+            contentHints: [.shortForm],
+            transcriptionOptions: [.punctuation],
+            reportingOptions: [.frequentFinalization],
+            attributeOptions: [.audioTimeRange]
+        ),
+        DictationTranscriber.Preset(
+            contentHints: [],
+            transcriptionOptions: [],
+            reportingOptions: [],
+            attributeOptions: []
+        )
+    ]
 
     // Speech pipeline
     private var micCapturer: MicAudioCapturer?
     private var analyzer: SpeechAnalyzer?
-    private var transcriber: SpeechTranscriber?
+    private var transcriber: DictationTranscriber?
     private var analyzerInputContinuation: AsyncStream<AnalyzerInput>.Continuation?
     private var analyzerInputTask: Task<Void, Never>?
     private var resultsTask: Task<Void, Error>?
@@ -119,33 +145,133 @@ final class NoteDictationController: ObservableObject {
 
     // MARK: - Locale asset management
 
-    func ensureLocaleInstalled(_ locale: Locale) async {
+    @discardableResult
+    func ensureLocaleInstalled(_ locale: Locale) async -> Bool {
         await localeManager.refreshInstalledLocales()
-        if !localeManager.localeRequiresDownload(locale) {
-            return
+        let needsDownload = localeManager.localeRequiresDownload(locale)
+
+        let candidate = await resolveModuleForDownload(locale: locale)
+        if let candidate {
+            if candidate.status == .installed {
+                localeManager.markLocaleInstalled(locale)
+                return true
+            }
+        } else {
+            // No compatible module, nothing to install
         }
-        await downloadLocaleAssets(locale)
+        let success = await downloadLocaleAssets(locale)
+        await localeManager.refreshInstalledLocales()
+        let remaining = localeManager.localeRequiresDownload(locale)
+        if success && !remaining {
+            return true
+        }
+        return false
     }
 
-    private func downloadLocaleAssets(_ locale: Locale) async {
-        guard !isDownloadingLocale else { return }
+    private func downloadLocaleAssets(_ locale: Locale) async -> Bool {
+        guard !isDownloadingLocale else {
+            logger.debug("Locale asset download already in progress for \(locale.identifier, privacy: .public)")
+            return false
+        }
         isDownloadingLocale = true
         downloadProgress = 0
+        var success = false
+        defer {
+            self.isDownloadingLocale = false
+        }
+
         do {
-            let module = SpeechTranscriber(
-                locale: locale,
-                preset: .timeIndexedProgressiveTranscription
-            )
-            if let request = try await AssetInventory.assetInstallationRequest(supporting: [module]) {
-                try await request.downloadAndInstall()
+            guard let candidate = await resolveModuleForDownload(locale: locale) else {
+                let displayName = Locale.current.localizedString(forIdentifier: locale.identifier) ?? locale.identifier
+                let message = String(format: StringConstants.Dictation.localeUnsupportedMessage.localized, displayName)
+                activeError = .downloadFailed(message)
+                return false
             }
-            localeManager.markLocaleInstalled(locale)
-            downloadProgress = 1
+
+            switch candidate.status {
+            case .installed:
+                await localeManager.refreshInstalledLocales()
+                downloadProgress = 1
+                return true
+            case .supported, .downloading:
+                if let request = try await AssetInventory.assetInstallationRequest(supporting: [candidate.module]) {
+                    try await request.downloadAndInstall()
+                } else {
+                    // No request available
+                }
+                await localeManager.refreshInstalledLocales()
+                downloadProgress = 1
+                success = true
+            case .unsupported:
+                // This case should be filtered by resolveModuleForDownload, but handle defensively.
+                let displayName = Locale.current.localizedString(forIdentifier: locale.identifier) ?? locale.identifier
+                let message = String(format: StringConstants.Dictation.localeUnsupportedMessage.localized, displayName)
+                activeError = .downloadFailed(message)
+            @unknown default:
+                activeError = .downloadFailed(StringConstants.Dictation.analyzerUnavailableMessage.localized)
+            }
         } catch {
             logger.error("Locale download failed: \(error.localizedDescription)")
             activeError = .downloadFailed(error.localizedDescription)
         }
-        isDownloadingLocale = false
+        return success
+    }
+
+    // MARK: - Module resolution
+
+    private func resolveModuleForDownload(locale: Locale) async -> (module: DictationTranscriber, status: AssetInventory.Status, preset: DictationTranscriber.Preset)? {
+        for preset in Self.preferredPresets {
+            let module = DictationTranscriber(locale: locale, preset: preset)
+            let status = await AssetInventory.status(forModules: [module])
+            switch status {
+            case .unsupported:
+                continue
+            case .installed, .supported, .downloading:
+                return (module, status, preset)
+            @unknown default:
+                continue
+            }
+        }
+        return nil
+    }
+
+    private func resolveModuleForAnalysis(locale: Locale) async -> (module: DictationTranscriber, format: AVAudioFormat, preset: DictationTranscriber.Preset)? {
+        for preset in Self.preferredPresets {
+            let module = DictationTranscriber(locale: locale, preset: preset)
+            let status = await AssetInventory.status(forModules: [module])
+            guard status == .installed else { continue }
+            if let format = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [module], considering: nil) {
+                return (module, format, preset)
+            } else {
+                // try next preset
+            }
+        }
+        return nil
+    }
+
+    private func releaseStaleReservations(targetLocale: Locale) async {
+        let reserved = await AssetInventory.reservedLocales
+        let maxReservations = AssetInventory.maximumReservedLocales
+        for locale in reserved {
+            if locale.identifier == targetLocale.identifier {
+                logger.debug("Releasing stale reservation for \(locale.identifier, privacy: .public)")
+                await AssetInventory.release(reservedLocale: locale)
+            }
+        }
+        if reserved.count >= maxReservations {
+            for locale in reserved where locale.identifier != targetLocale.identifier {
+                logger.debug("Releasing reservation for \(locale.identifier, privacy: .public) to honor maximum reservations")
+                await AssetInventory.release(reservedLocale: locale)
+            }
+        }
+    }
+
+    private func releaseAllReservations(except targetLocale: Locale) async {
+        let reserved = await AssetInventory.reservedLocales
+        for locale in reserved where locale.identifier != targetLocale.identifier {
+            logger.debug("Force-releasing reservation for \(locale.identifier, privacy: .public)")
+            await AssetInventory.release(reservedLocale: locale)
+        }
     }
 
     // MARK: - Dictation lifecycle
@@ -172,8 +298,15 @@ final class NoteDictationController: ObservableObject {
             return
         }
 
-        if localeManager.localeRequiresDownload(locale) {
+        let installed = await ensureLocaleInstalled(locale)
+        let stillMissing = localeManager.localeRequiresDownload(locale)
+        if !installed || stillMissing {
+            state = .failed
             activeError = .localeAssetsMissing
+            highlightedRange = nil
+            interimTranscription = ""
+            localeInUse = nil
+            state = .idle
             return
         }
 
@@ -198,6 +331,15 @@ final class NoteDictationController: ObservableObject {
             interimTranscription = ""
             localeInUse = nil
             state = .idle
+        } catch DictationError.localeAssetsMissing {
+            state = .failed
+            activeError = .localeAssetsMissing
+            logger.error("Locale assets missing when starting dictation for \(locale.identifier, privacy: .public)")
+            await teardownPipeline()
+            highlightedRange = nil
+            interimTranscription = ""
+            localeInUse = nil
+            state = .idle
         } catch {
             state = .failed
             logger.error("Failed to start dictation: \(error.localizedDescription)")
@@ -212,6 +354,7 @@ final class NoteDictationController: ObservableObject {
 
     func stopDictation() async {
         guard isDictationRunning else { return }
+        logger.debug("Stopping dictation pipeline")
         state = .finishing
         await teardownPipeline()
         state = .idle
@@ -245,24 +388,26 @@ final class NoteDictationController: ObservableObject {
     }
 
     private func preparePipeline(locale: Locale) async throws {
-        guard try await AssetInventory.reserve(locale: locale) else {
-            throw DictationError.analyzerUnavailable
+        guard let (transcriber, format, preset) = await resolveModuleForAnalysis(locale: locale) else {
+            throw DictationError.localeAssetsMissing
+        }
+
+        await releaseStaleReservations(targetLocale: locale)
+        if !(try await AssetInventory.reserve(locale: locale)) {
+            await releaseAllReservations(except: locale)
+            guard try await AssetInventory.reserve(locale: locale) else {
+                let currentReservations = await AssetInventory.reservedLocales
+                logger.error("Failed to reserve assets for locale \(locale.identifier, privacy: .public). Currently reserved: \(currentReservations.map { $0.identifier }.joined(separator: ", "), privacy: .public)")
+                throw DictationError.analyzerUnavailable
+            }
         }
         reservedLocale = locale
-
-        let transcriber = SpeechTranscriber(
-            locale: locale,
-            preset: .timeIndexedProgressiveTranscription
-        )
         self.transcriber = transcriber
+        captureFormat = format
 
         let analyzer = SpeechAnalyzer(modules: [transcriber])
         self.analyzer = analyzer
 
-        guard let format = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [transcriber], considering: nil) else {
-            throw DictationError.analyzerUnavailable
-        }
-        captureFormat = format
         try await analyzer.prepareToAnalyze(in: format)
 
         let stream = AsyncStream<AnalyzerInput> { continuation in
@@ -275,7 +420,6 @@ final class NoteDictationController: ObservableObject {
         guard analyzer != nil, let transcriber, let captureFormat else {
             throw DictationError.analyzerUnavailable
         }
-
         let capturer = MicAudioCapturer()
         let micStream = try capturer.start()
         micCapturer = capturer
@@ -309,6 +453,7 @@ final class NoteDictationController: ObservableObject {
                     await self.handleTranscriptionResult(result, noteStore: noteStore)
                 }
             } catch {
+                NoteDictationController.audioLogger.error("Results task error: \(error.localizedDescription, privacy: .public)")
                 await self.handleTranscriptionError(error)
             }
         }
@@ -317,8 +462,9 @@ final class NoteDictationController: ObservableObject {
     // MARK: - Result handling
 
     @MainActor
-    private func handleTranscriptionResult(_ result: SpeechTranscriber.Result, noteStore: NoteStore) {
+    private func handleTranscriptionResult(_ result: DictationTranscriber.Result, noteStore: NoteStore) {
         let newText = String(result.text.characters)
+        logger.debug("Received transcription result. isFinal=\(result.isFinal, privacy: .public) text=\(newText, privacy: .public)")
         if result.isFinal {
             committedTranscription = newText
             interimTranscription = ""

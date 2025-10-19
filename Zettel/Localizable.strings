@@ -112,6 +112,7 @@
 "dictation.error.permission_denied.message" = "Enable microphone access in Settings to use dictation.";
 "dictation.error.locale_missing.title" = "Language Pack Needed";
 "dictation.error.locale_missing.message" = "Download the selected language pack before starting dictation.";
+"dictation.error.locale_unsupported.message" = "Dictation is not available for %@ on this device yet.";
 "dictation.error.analyzer_unavailable.title" = "Dictation Not Available";
 "dictation.error.analyzer_unavailable.message" = "This feature requires iOS 26 with the SpeechTranscriber SDK.";
 "dictation.error.transcription_failed.title" = "Dictation Failed";

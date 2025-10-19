@@ -112,6 +112,7 @@
 "dictation.error.permission_denied.message" = "Aktiviere den Mikrofonzugriff in den Einstellungen, um diktieren zu können.";
 "dictation.error.locale_missing.title" = "Sprachpaket erforderlich";
 "dictation.error.locale_missing.message" = "Lade das ausgewählte Sprachpaket herunter, bevor du diktierst.";
+"dictation.error.locale_unsupported.message" = "Diktieren ist auf diesem Gerät für %@ nicht verfügbar.";
 "dictation.error.analyzer_unavailable.title" = "Diktieren nicht verfügbar";
 "dictation.error.analyzer_unavailable.message" = "Diese Funktion benötigt iOS 26 mit dem SpeechTranscriber-SDK.";
 "dictation.error.transcription_failed.title" = "Diktat fehlgeschlagen";

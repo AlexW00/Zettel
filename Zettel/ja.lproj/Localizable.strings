@@ -112,6 +112,7 @@
 "dictation.error.permission_denied.message" = "設定でマイクアクセスを有効にすると音声入力を利用できます。";
 "dictation.error.locale_missing.title" = "言語パックが必要です";
 "dictation.error.locale_missing.message" = "音声入力を始める前に選択した言語パックをダウンロードしてください。";
+"dictation.error.locale_unsupported.message" = "このデバイスでは%@の音声入力は利用できません。";
 "dictation.error.analyzer_unavailable.title" = "音声入力を利用できません";
 "dictation.error.analyzer_unavailable.message" = "この機能を利用するには iOS 26 と SpeechTranscriber SDK が必要です。";
 "dictation.error.transcription_failed.title" = "音声入力に失敗しました";

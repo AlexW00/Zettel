@@ -519,7 +519,7 @@ private struct DictationControlButton: View {
     }
 
     private var shouldShowSpinner: Bool {
-        isDownloading || isFinishing
+        isDownloading || isPreparing || isFinishing
     }
 
     private var iconColor: Color {
@@ -532,7 +532,6 @@ private struct DictationControlButton: View {
         }
     }
 
-    private var isFinishing: Bool {
-        state == .finishing
-    }
+    private var isFinishing: Bool { state == .finishing }
+    private var isPreparing: Bool { state == .preparing }
 }
