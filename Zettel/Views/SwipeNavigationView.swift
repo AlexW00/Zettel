@@ -1,22 +1,25 @@
-//
-//  SwipeNavigationView.swift
-//  Zettel
-//
-//  Created by Claude on 24.06.25.
-//
-
 import SwiftUI
+import UIKit
+
+private enum NavigationDragDirection {
+    case toOverview
+    case toMain
+}
 
 struct SwipeNavigationView<MainContent: View, OverviewContent: View>: View {
     @Binding var showOverview: Bool
     let mainContent: MainContent
     let overviewContent: OverviewContent
-    
+
     @State private var dragOffset: CGFloat = 0
-    @State private var previousDragOffset: CGFloat = 0
-    @GestureState private var isDragging: Bool = false
+    @State private var activeDirection: NavigationDragDirection?
     @Environment(\.scenePhase) private var scenePhase
-    
+
+    private let activationDistance: CGFloat = 12
+    private let completionRatio: CGFloat = 0.28
+    private let velocityThreshold: CGFloat = 520
+    private let verticalDominanceFactor: CGFloat = 1.15
+
     init(showOverview: Binding<Bool>,
          @ViewBuilder mainContent: () -> MainContent,
          @ViewBuilder overviewContent: () -> OverviewContent) {
@@ -24,82 +27,133 @@ struct SwipeNavigationView<MainContent: View, OverviewContent: View>: View {
         self.mainContent = mainContent()
         self.overviewContent = overviewContent()
     }
-    
+
     var body: some View {
         GeometryReader { geometry in
+            let containerWidth = max(1, geometry.size.width)
+            let navigationDrag = DragGesture(minimumDistance: activationDistance, coordinateSpace: .local)
+                .onChanged { value in
+                    handleDragChanged(value: value, containerWidth: containerWidth)
+                }
+                .onEnded { value in
+                    handleDragEnded(value: value, containerWidth: containerWidth)
+                }
+
             HStack(spacing: 0) {
                 mainContent
-                    .frame(width: geometry.size.width)
-                
+                    .frame(width: containerWidth)
+
                 overviewContent
-                    .frame(width: geometry.size.width)
+                    .frame(width: containerWidth)
             }
-            .offset(x: showOverview ? -geometry.size.width + dragOffset : dragOffset)
-            .gesture(
-                DragGesture()
-                    .updating($isDragging) { _, state, _ in
-                        state = true
-                    }
-                    .onChanged { value in
-                        let translation = value.translation.width
-                        
-                        if showOverview {
-                            // When overview is shown, only allow dragging right (to go back)
-                            if translation > 0 {
-                                dragOffset = translation
-                            }
-                        } else {
-                            // When main view is shown, only allow dragging left (to show overview)
-                            if translation < 0 {
-                                dragOffset = translation
-                            }
-                        }
-                    }
-                    .onEnded { value in
-                        let translation = value.translation.width
-                        let velocity = value.predictedEndTranslation.width - translation
-                        let threshold = geometry.size.width.safeMultiply(by: 0.3, fallback: 100)
-                        let velocityThreshold: CGFloat = 500
-                        
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                            if showOverview {
-                                // Decide whether to stay on overview or go back to main
-                                if translation > threshold || velocity > velocityThreshold {
-                                    showOverview = false
-                                }
-                            } else {
-                                // Decide whether to show overview or stay on main
-                                if -translation > threshold || -velocity > velocityThreshold {
-                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                                    showOverview = true
-                                }
-                            }
-                            dragOffset = 0
-                        }
-                    }
-            )
-            .animation(.spring(response: 0.35, dampingFraction: 0.8), value: showOverview)
-            .onChange(of: showOverview) { _, newValue in
-                if newValue {
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                }
+            .contentShape(Rectangle())
+            .offset(x: contentOffset(for: containerWidth))
+            .animation(.spring(response: 0.32, dampingFraction: 0.86), value: showOverview)
+            .simultaneousGesture(navigationDrag, including: .all)
+            .onChange(of: showOverview) { _, _ in
+                resetDragState()
             }
             .onChange(of: scenePhase) { _, newPhase in
-                // Reset drag offset when app becomes active to prevent stuck states
                 if newPhase == .active {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        dragOffset = 0
-                    }
+                    resetDragState(animated: true)
                 }
             }
-            .onChange(of: isDragging) { _, dragging in
-                // If drag gesture is cancelled (e.g., by app backgrounding), reset offset
-                if !dragging && dragOffset != 0 {
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                        dragOffset = 0
-                    }
-                }
+        }
+    }
+
+    private func contentOffset(for width: CGFloat) -> CGFloat {
+        let base = showOverview ? -width : 0
+        return base + dragOffset
+    }
+
+    private func handleDragChanged(value: DragGesture.Value, containerWidth: CGFloat) {
+        let translation = value.translation
+        let absX = abs(translation.width)
+        let absY = abs(translation.height)
+
+        if activeDirection == nil {
+            guard absX > activationDistance || absY > activationDistance else {
+                dragOffset = 0
+                return
             }
+
+            // If the drag is mostly vertical, ignore it completely and allow subviews to handle it.
+            if absY > absX * verticalDominanceFactor {
+                resetDragState()
+                return
+            }
+
+            if translation.width < 0, !showOverview {
+                activeDirection = .toOverview
+            } else if translation.width > 0, showOverview {
+                activeDirection = .toMain
+            } else {
+                resetDragState()
+                return
+            }
+        }
+
+        guard let direction = activeDirection else {
+            dragOffset = 0
+            return
+        }
+
+        switch direction {
+        case .toOverview:
+            dragOffset = max(-containerWidth, min(0, translation.width))
+        case .toMain:
+            dragOffset = min(containerWidth, max(0, translation.width))
+        }
+    }
+
+    private func handleDragEnded(value: DragGesture.Value, containerWidth: CGFloat) {
+        guard let direction = activeDirection else {
+            resetDragState(animated: true)
+            return
+        }
+
+        let translation = value.translation.width
+        let predicted = value.predictedEndTranslation.width
+        let velocity = predicted - translation
+        let distanceThreshold = containerWidth * completionRatio
+
+        let shouldNavigate: Bool
+        let targetShowsOverview = direction == .toOverview
+
+        switch direction {
+        case .toOverview:
+            let travel = -translation
+            shouldNavigate = travel > distanceThreshold || velocity < -velocityThreshold
+        case .toMain:
+            let travel = translation
+            shouldNavigate = travel > distanceThreshold || velocity > velocityThreshold
+        }
+
+        withAnimation(.spring(response: 0.32, dampingFraction: 0.86)) {
+            if shouldNavigate {
+                if targetShowsOverview {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+                showOverview = targetShowsOverview
+            }
+            dragOffset = 0
+        }
+
+        activeDirection = nil
+    }
+
+    private func resetDragState(animated: Bool = false) {
+        let resetAction = {
+            dragOffset = 0
+            activeDirection = nil
+        }
+
+        if animated {
+            withAnimation(.spring(response: 0.25, dampingFraction: 0.88)) {
+                resetAction()
+            }
+        } else {
+            resetAction()
         }
     }
 }
