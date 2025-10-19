@@ -13,6 +13,7 @@ struct OverviewGrid: View {
     @State private var selectedNote: Note?
     @State private var isSelectionMode = false
     @State private var selectedNotes = Set<String>()
+    @State private var searchText = ""
     
     // Tag filtering
     @State private var selectedTagFilters: Set<String> = []
@@ -47,22 +48,54 @@ struct OverviewGrid: View {
         return screenWidth > 600 ? 24 : 16
     }
     
+    private var trimmedSearchText: String {
+        searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    private var searchTokens: [String] {
+        trimmedSearchText
+            .folding(options: [.diacriticInsensitive], locale: .current)
+            .lowercased()
+            .components(separatedBy: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters))
+            .filter { !$0.isEmpty }
+    }
+    
+    private var isSearching: Bool {
+        !searchTokens.isEmpty
+    }
+    
+    private var popularSearchTags: [Tag] {
+        noteStore.tagStore.getMostPopularTags(limit: 6)
+    }
+
     // Filtered notes based on selected tags
     private var filteredNotes: [Note] {
-        guard !selectedTagFilters.isEmpty else {
-            return noteStore.archivedNotes
-        }
-        let filtered = noteStore.getNotesWithAllTags(selectedTagFilters)
-        
-        // Auto-clear filters if no notes match
-        if filtered.isEmpty && !selectedTagFilters.isEmpty {
-            DispatchQueue.main.async {
-                selectedTagFilters.removeAll()
+        let tagFilteredNotes: [Note]
+        if selectedTagFilters.isEmpty {
+            tagFilteredNotes = noteStore.archivedNotes
+        } else {
+            let activeTags = selectedTagFilters
+            let filtered = noteStore.getNotesWithAllTags(activeTags)
+            
+            // Auto-clear filters if no notes match and search is inactive
+            if filtered.isEmpty && !activeTags.isEmpty && !isSearching {
+                DispatchQueue.main.async {
+                    if selectedTagFilters == activeTags {
+                        selectedTagFilters.removeAll()
+                    }
+                }
             }
+            
+            tagFilteredNotes = filtered.sorted { $0.modifiedAt > $1.modifiedAt }
         }
         
-        // Sort filtered notes by last edit timestamp (most recent first)
-        return filtered.sorted { $0.modifiedAt > $1.modifiedAt }
+        guard isSearching else {
+            return tagFilteredNotes
+        }
+        
+        return tagFilteredNotes.filter { note in
+            matchesSearch(note: note, tokens: searchTokens)
+        }
     }
     
     // Available tags for selection based on current filter state
@@ -123,10 +156,15 @@ struct OverviewGrid: View {
                             )
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                         } else if filteredNotes.isEmpty {
-                            // Empty state view
-                            EmptyStateView()
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .background(Color.overviewBackground)
+                            if isSearching {
+                                SearchEmptyStateView(query: trimmedSearchText)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .background(Color.overviewBackground)
+                            } else {
+                                EmptyStateView()
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .background(Color.overviewBackground)
+                            }
                         } else {
                             ScrollView {
                                 LazyVGrid(
@@ -234,6 +272,17 @@ struct OverviewGrid: View {
                 }
                 } // VStack
             } // NavigationStack
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: Text(StringConstants.Search.prompt.localized))
+            .textInputAutocapitalization(.never)
+            .disableAutocorrection(true)
+            .searchSuggestions {
+                if !isSearching {
+                    ForEach(popularSearchTags) { tag in
+                        Text("#\(tag.displayName)")
+                            .searchCompletion("#\(tag.displayName)")
+                    }
+                }
+            }
         } // GeometryReader
     }
 
@@ -384,6 +433,32 @@ struct EmptyStateView: View {
     }
 }
 
+struct SearchEmptyStateView: View {
+    let query: String
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "text.magnifyingglass")
+                .font(.system(size: 48, weight: .light))
+                .foregroundColor(.tertiaryText)
+            
+            Text(StringConstants.Search.noResultsTitle.localized(query))
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(.tertiaryText)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            Text(StringConstants.Search.noResultsMessage.localized)
+                .font(.system(size: 14, weight: .regular))
+                .foregroundColor(.tertiaryText.opacity(0.8))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .contentShape(Rectangle())
+    }
+}
+
 // MARK: - Scroll Fade Functions
 
 extension OverviewGrid {
@@ -391,6 +466,32 @@ extension OverviewGrid {
         // Calculate if content is scrolled beyond natural boundaries
         // Top fade appears when content has scrolled down (negative y offset)
         showTopFade = contentFrame.minY < -5
+    }
+}
+
+// MARK: - Search Helpers
+
+extension OverviewGrid {
+    private func matchesSearch(note: Note, tokens: [String]) -> Bool {
+        guard !tokens.isEmpty else { return true }
+        
+        let normalizedTitle = normalizeForSearch(note.title)
+        let normalizedContent = normalizeForSearch(note.content)
+        let normalizedFilename = normalizeForSearch(note.filename)
+        let normalizedTags = note.extractedTags.map { normalizeForSearch($0) }
+        
+        return tokens.allSatisfy { token in
+            normalizedTitle.contains(token) ||
+            normalizedContent.contains(token) ||
+            normalizedFilename.contains(token) ||
+            normalizedTags.contains(where: { $0.contains(token) })
+        }
+    }
+    
+    private func normalizeForSearch(_ value: String) -> String {
+        value
+            .folding(options: [.diacriticInsensitive], locale: .current)
+            .lowercased()
     }
 }
 
