@@ -134,11 +134,11 @@ extension Color {
             if traitCollection.userInterfaceStyle == .dark {
                 return UIColor.secondarySystemBackground
             } else {
-                return UIColor.systemBackground // Pure white in light mode
+                return UIColor.white
             }
         })
     }
-    
+
     static var overviewBackground: Color {
         Color(UIColor.systemGroupedBackground)
     }
@@ -149,6 +149,41 @@ extension Color {
                 return UIColor.secondarySystemBackground.withAlphaComponent(0.65)
             } else {
                 return UIColor.white
+            }
+        })
+    }
+
+    static var dictationIdleForeground: Color {
+        Color(UIColor { trait in
+            if trait.userInterfaceStyle == .dark {
+                return UIColor(white: 1.0, alpha: 0.92)
+            } else {
+                return UIColor.label.withAlphaComponent(0.85)
+            }
+        })
+    }
+
+    static var dictationBusyForeground: Color {
+        Color(UIColor.secondaryLabel)
+    }
+
+    static var dictationRecordingForeground: Color {
+        Color(UIColor { trait in
+            let base = UIColor.systemRed
+            if trait.userInterfaceStyle == .dark {
+                return base.withAlphaComponent(0.95)
+            } else {
+                return base.withAlphaComponent(0.8)
+            }
+        })
+    }
+
+    static var dictationBackgroundTint: Color {
+        Color(UIColor { trait in
+            if trait.userInterfaceStyle == .dark {
+                return UIColor(white: 0.18, alpha: 0.32)
+            } else {
+                return UIColor(white: 0.0, alpha: 0.08)
             }
         })
     }

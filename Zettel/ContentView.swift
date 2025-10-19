@@ -19,4 +19,5 @@ struct ContentView: View {
         .environmentObject(NoteStore())
         .environmentObject(ThemeStore())
         .environmentObject(LocalizationManager.shared)
+        .environmentObject(DictationLocaleManager.shared)
 }

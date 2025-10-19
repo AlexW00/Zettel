@@ -13,6 +13,7 @@ struct ZettelApp: App {
     @StateObject private var noteStore = NoteStore()
     @StateObject private var themeStore = ThemeStore()
     @StateObject private var localizationManager = LocalizationManager.shared
+    @StateObject private var dictationLocaleManager = DictationLocaleManager.shared
     
     init() {
         // Register app shortcuts
@@ -25,6 +26,7 @@ struct ZettelApp: App {
                 .environmentObject(noteStore)
                 .environmentObject(themeStore)
                 .environmentObject(localizationManager)
+                .environmentObject(dictationLocaleManager)
                 .preferredColorScheme(themeStore.currentTheme.colorScheme)
                 .onOpenURL { url in
                     handleOpenURL(url)

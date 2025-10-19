@@ -17,11 +17,13 @@
 			</array>
 		</dict>
 	</array>
-	<key>UIFileSharingEnabled</key>
-	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Dictation requires microphone access to capture audio.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>CreateNewNoteIntent</string>
 	</array>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>

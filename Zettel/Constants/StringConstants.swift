@@ -58,6 +58,9 @@ enum StringConstants {
         static let defaultTitleTemplateInfoTitle = "settings.default_title_template_info_title"
         static let defaultTitleTemplateInfoMessage = "settings.default_title_template_info_message"
         static let defaultTitleTemplateInfoButton = "settings.default_title_template_info_button"
+        static let dictationSection = "dictation.settings.section_title"
+        static let dictationSectionDescription = "dictation.settings.section_description"
+        static let dictationLocaleMenuLoading = "dictation.locale.download.in_progress"
     }
     
     // MARK: - Overview & Archive
@@ -126,5 +129,25 @@ enum StringConstants {
         static let loadingSubtitle = "loading.loading_subtitle"
         static let loadingError = "loading.loading_error"
         static let retryButton = "loading.retry_button"
+    }
+
+    // MARK: - Dictation & Speech
+    enum Dictation {
+        static let startButton = "dictation.button.start"
+        static let stopButton = "dictation.button.stop"
+        static let permissionDeniedTitle = "dictation.error.permission_denied.title"
+        static let permissionDeniedMessage = "dictation.error.permission_denied.message"
+        static let localeMissingTitle = "dictation.error.locale_missing.title"
+        static let localeMissingMessage = "dictation.error.locale_missing.message"
+        static let analyzerUnavailableTitle = "dictation.error.analyzer_unavailable.title"
+        static let analyzerUnavailableMessage = "dictation.error.analyzer_unavailable.message"
+        static let transcriptionFailedTitle = "dictation.error.transcription_failed.title"
+        static let downloadFailedTitle = "dictation.error.download_failed.title"
+        static let localeDownloadTitle = "dictation.locale.download.title"
+        static let localeDownloadMessage = "dictation.locale.download.message"
+        static let localeDownloadConfirm = "dictation.locale.download.confirm"
+        static let localeDownloadInProgress = "dictation.locale.download.in_progress"
+        static let localeCellInstalled = "dictation.locale.installed"
+        static let localeCellPending = "dictation.locale.pending"
     }
 }

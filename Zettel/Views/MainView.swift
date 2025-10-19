@@ -11,6 +11,7 @@ struct MainView: View {
     @EnvironmentObject var noteStore: NoteStore
     @EnvironmentObject var themeStore: ThemeStore
     @EnvironmentObject var localizationManager: LocalizationManager
+    @EnvironmentObject var dictationLocaleManager: DictationLocaleManager
     @State private var showSettings = false
     @State private var showArchive = false
     @State private var dragOffset: CGFloat = 0
@@ -22,7 +23,10 @@ struct MainView: View {
     @State private var isAnimating = false
     @State private var animationID = UUID()
     @State private var isTearGestureActive = false
-    
+    @StateObject private var dictationController = NoteDictationController()
+    @State private var showLocaleDownloadPrompt = false
+    @State private var pendingLocaleOption: DictationLocaleManager.LocaleOption?
+
     private let tearThreshold: CGFloat = GestureConstants.tearThreshold
     private let tearZoneHeight: CGFloat = LayoutConstants.Size.tearZoneHeight
     private let horizontalLockThreshold: CGFloat = 12 // pixels of horizontal movement before we "lock" into tear gesture
@@ -92,6 +96,7 @@ struct MainView: View {
                 }
                 .sheet(isPresented: $showSettings) {
                     SettingsView(noteStore: noteStore)
+                        .environmentObject(dictationLocaleManager)
                 }
                 .alert(StringConstants.Shortcuts.confirmationTitle.localized, isPresented: $showNewNoteConfirmation) {
                     Button(StringConstants.Actions.cancel.localized, role: .cancel) { }
@@ -108,12 +113,43 @@ struct MainView: View {
         .environmentObject(noteStore)
         .onAppear {
             setupNotificationListeners()
+            dictationController.attach(noteStore: noteStore)
+            Task { await dictationLocaleManager.loadLocalesIfNeeded() }
+        }
+        .onDisappear {
+            dictationController.detachNoteStore()
         }
         .onChange(of: noteStore.shouldShowMainView) { _, newValue in
             if newValue {
                 showArchive = false
                 noteStore.shouldShowMainView = false
             }
+        }
+        .confirmationDialog(
+            StringConstants.Dictation.localeDownloadTitle.localized,
+            isPresented: $showLocaleDownloadPrompt,
+            presenting: pendingLocaleOption
+        ) { option in
+            Button(StringConstants.Dictation.localeDownloadConfirm.localized) {
+                confirmLocaleDownload(option)
+            }
+            Button(StringConstants.Actions.cancel.localized, role: .cancel) {
+                pendingLocaleOption = nil
+            }
+        } message: { option in
+            Text(String(format: StringConstants.Dictation.localeDownloadMessage.localized, option.displayName))
+        }
+        .alert(item: Binding(
+            get: { dictationController.activeError },
+            set: { dictationController.activeError = $0 }
+        )) { error in
+            Alert(
+                title: Text(error.errorDescription ?? StringConstants.Dictation.transcriptionFailedTitle.localized),
+                message: Text(error.recoverySuggestion ?? ""),
+                dismissButton: .default(Text(StringConstants.Actions.ok.localized)) {
+                    dictationController.activeError = nil
+                }
+            )
         }
     }
     
@@ -136,16 +172,29 @@ struct MainView: View {
             )
             .frame(height: tearZoneHeight)
             
-            TaggableTextEditor(
-                text: Binding(
-                    get: { noteStore.currentNote.content },
-                    set: { noteStore.updateCurrentNoteContent($0) }
-                ),
-                font: UIFont.monospacedSystemFont(ofSize: themeStore.contentFontSize, weight: .regular),
-                foregroundColor: .primaryText
-            )
-            .padding(.horizontal, LayoutConstants.Padding.large)
-            .padding(.bottom, LayoutConstants.Padding.large)
+            ZStack(alignment: .bottomTrailing) {
+                TaggableTextEditor(
+                    text: Binding(
+                        get: { noteStore.currentNote.content },
+                        set: { noteStore.updateCurrentNoteContent($0) }
+                    ),
+                    font: UIFont.monospacedSystemFont(ofSize: themeStore.contentFontSize, weight: .regular),
+                    foregroundColor: .primaryText,
+                    isEditingEnabled: !dictationController.isDictationRunning,
+                    highlightRange: dictationController.highlightedRange
+                )
+                .padding(.horizontal, LayoutConstants.Padding.large)
+                .padding(.top, LayoutConstants.Padding.medium)
+                .padding(.bottom, LayoutConstants.Padding.large)
+
+                DictationControlButton(
+                    state: dictationController.state,
+                    isDownloading: dictationController.isDownloadingLocale,
+                    action: handleDictationButtonTap
+                )
+                .padding(.trailing, LayoutConstants.Padding.large)
+                .padding(.bottom, LayoutConstants.Padding.large)
+            }
             .background(Color.noteBackground)
             .opacity(max(0.25, 1.0 - (tearProgress * ThemeConstants.Opacity.veryHeavy)))
             .toolbar {
@@ -272,7 +321,42 @@ struct MainView: View {
             showNewNoteConfirmation = true
         }
     }
-    
+
+    private func handleDictationButtonTap() {
+        guard let option = dictationLocaleManager.localeOption() else { return }
+        let locale = option.locale
+
+        if dictationController.isDictationRunning {
+            dictationController.toggleDictation(with: locale, noteStore: noteStore)
+            return
+        }
+
+        if dictationController.isDownloadingLocale {
+            return
+        }
+
+        if dictationLocaleManager.localeRequiresDownload(locale) {
+            pendingLocaleOption = option
+            showLocaleDownloadPrompt = true
+        } else {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            dictationController.toggleDictation(with: locale, noteStore: noteStore)
+        }
+    }
+
+    private func confirmLocaleDownload(_ option: DictationLocaleManager.LocaleOption) {
+        pendingLocaleOption = nil
+        showLocaleDownloadPrompt = false
+        Task {
+            await dictationController.ensureLocaleInstalled(option.locale)
+            await dictationLocaleManager.refreshInstalledLocales()
+            if !dictationLocaleManager.localeRequiresDownload(option.locale) {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                dictationController.toggleDictation(with: option.locale, noteStore: noteStore)
+            }
+        }
+    }
+
     private func shareNote() {
         let note = noteStore.currentNote
 
@@ -380,4 +464,75 @@ struct TearAnimationModifier: ViewModifier, Animatable {
         .environmentObject(NoteStore())
         .environmentObject(ThemeStore())
         .environmentObject(LocalizationManager.shared)
+        .environmentObject(DictationLocaleManager.shared)
+}
+
+private struct DictationControlButton: View {
+    let state: NoteDictationController.State
+    let isDownloading: Bool
+    let action: () -> Void
+
+    private var isRecording: Bool { state == .recording }
+    private var isBusy: Bool {
+        switch state {
+        case .preparing, .finishing:
+            return true
+        case .idle, .recording, .failed:
+            return false
+        }
+    }
+
+    var body: some View {
+        Button(action: {
+            guard !(isBusy && !isRecording) else { return }
+            action()
+        }) {
+            ZStack {
+                Circle()
+                    .fill(Color.dictationBackgroundTint)
+                    .glassEffect(.clear, in: Circle())
+
+                if shouldShowSpinner {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .tint(Color.dictationBusyForeground)
+                        .scaleEffect(0.8)
+                } else if let iconName = iconName {
+                    Image(systemName: iconName)
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(iconColor)
+                        .symbolRenderingMode(.monochrome)
+                        .transition(.opacity.combined(with: .scale))
+                }
+            }
+            .frame(width: LayoutConstants.Size.dictationButton, height: LayoutConstants.Size.dictationButton)
+        }
+        .buttonStyle(.plain)
+        .contentShape(Circle())
+        .animation(.easeInOut(duration: 0.2), value: state)
+        .accessibilityLabel(Text(isRecording ? StringConstants.Dictation.stopButton.localized : StringConstants.Dictation.startButton.localized))
+        .accessibilityAddTraits(.isButton)
+    }
+
+    private var iconName: String? {
+        shouldShowSpinner ? nil : (isRecording ? "stop.fill" : "mic.fill")
+    }
+
+    private var shouldShowSpinner: Bool {
+        isDownloading || isFinishing
+    }
+
+    private var iconColor: Color {
+        if isFinishing {
+            return .dictationBusyForeground
+        } else if isRecording {
+            return .dictationRecordingForeground
+        } else {
+            return .dictationIdleForeground
+        }
+    }
+
+    private var isFinishing: Bool {
+        state == .finishing
+    }
 }
