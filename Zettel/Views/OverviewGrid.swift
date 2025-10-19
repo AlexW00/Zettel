@@ -59,7 +59,7 @@ struct OverviewGrid: View {
     }
     
     private var popularSearchTags: [Tag] {
-        noteStore.tagStore.getMostPopularTags(limit: 6)
+        noteStore.tagStore.getMostPopularTags(limit: 10)
     }
 
     // Filtered notes based on selected tags
