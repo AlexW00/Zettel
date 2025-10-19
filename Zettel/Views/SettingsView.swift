@@ -164,8 +164,6 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
                 } header: {
                     Text("settings.display".localized)
-                } footer: {
-                    Text("settings.system_description".localized)
                 }
                 
                 // Storage Section

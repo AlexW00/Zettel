@@ -33,7 +33,6 @@
 "settings.storage" = "Speicher";
 "settings.about" = "Über";
 "settings.theme_description" = "Wählen Sie Ihr bevorzugtes Design";
-"settings.system_description" = "System folgt den Darstellungseinstellungen Ihres Geräts.";
 "settings.storage_location" = "Speicherort";
 "settings.storage_description" = "Notizen werden als .md-Dateien im ausgewählten Ordner gespeichert.";
 "settings.app_name" = "Zettel";

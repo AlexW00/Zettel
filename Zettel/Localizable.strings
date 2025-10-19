@@ -33,7 +33,6 @@
 "settings.storage" = "Storage";
 "settings.about" = "About";
 "settings.theme_description" = "Choose your preferred theme";
-"settings.system_description" = "System follows your device's appearance settings.";
 "settings.storage_location" = "Storage Location";
 "settings.storage_description" = "Notes are saved as .md files in the selected folder.";
 "settings.app_name" = "Zettel";

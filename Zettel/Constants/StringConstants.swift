@@ -47,7 +47,6 @@ enum StringConstants {
         static let storageDescription = "settings.storage_description"
         static let appName = "settings.app_name"
         static let appDescription = "settings.app_description"
-        static let systemThemeDescription = "settings.system_description"
         static let developer = "settings.developer"
         static let developerDescription = "settings.developer_description"
         static let viewOnGitHub = "settings.view_on_github"

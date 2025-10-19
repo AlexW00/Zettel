@@ -33,7 +33,6 @@
 "settings.storage" = "ストレージ";
 "settings.about" = "概要";
 "settings.theme_description" = "お好みのテーマを選択してください";
-"settings.system_description" = "システム設定はデバイスの外観設定に従います。";
 "settings.storage_location" = "保存場所";
 "settings.storage_description" = "ノートは選択したフォルダに.mdファイルとして保存されます。";
 "settings.app_name" = "Zettel";
