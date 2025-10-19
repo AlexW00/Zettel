@@ -65,7 +65,8 @@ enum LayoutConstants {
 // MARK: - Gesture Constants
 
 enum GestureConstants {
-    static let tearThreshold: CGFloat = 0.55
+    // Require near-full progress to archive; prevents accidental saves on partial drags
+    static let tearThreshold: CGFloat = 0.95
     static let minimumDragDistance: CGFloat = 10
     static let hapticInterval: CGFloat = 0.04
     static let tearProgressMultiplier: CGFloat = 200

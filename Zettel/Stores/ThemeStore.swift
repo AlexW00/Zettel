@@ -142,4 +142,14 @@ extension Color {
     static var overviewBackground: Color {
         Color(UIColor.systemGroupedBackground)
     }
+    
+    static var tagBackground: Color {
+        Color(UIColor { traitCollection in
+            if traitCollection.userInterfaceStyle == .dark {
+                return UIColor.secondarySystemBackground.withAlphaComponent(0.65)
+            } else {
+                return UIColor.white
+            }
+        })
+    }
 }

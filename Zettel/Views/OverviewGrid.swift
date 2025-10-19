@@ -14,18 +14,12 @@ struct OverviewGrid: View {
     @State private var isSelectionMode = false
     @State private var selectedNotes = Set<String>()
     @State private var searchText = ""
-    
-    // Tag filtering
-    @State private var selectedTagFilters: Set<String> = []
-    @State private var showTagFilter = false
-    
-    // Scroll fade effects
-    @State private var showTopFade = false
+    @Environment(\.navigationGestureActive) private var navigationGestureActive
 
     // Design system constants
     private let cardCornerRadius: CGFloat = 14
     private let shadowRadius: CGFloat = 3
-    private let fadeHeight: CGFloat = 24
+    private let verticalStackSpacing: CGFloat = 24
 
     // Dynamic sizing based on screen width
 
@@ -70,103 +64,41 @@ struct OverviewGrid: View {
 
     // Filtered notes based on selected tags
     private var filteredNotes: [Note] {
-        let tagFilteredNotes: [Note]
-        if selectedTagFilters.isEmpty {
-            tagFilteredNotes = noteStore.archivedNotes
-        } else {
-            let activeTags = selectedTagFilters
-            let filtered = noteStore.getNotesWithAllTags(activeTags)
-            
-            // Auto-clear filters if no notes match and search is inactive
-            if filtered.isEmpty && !activeTags.isEmpty && !isSearching {
-                DispatchQueue.main.async {
-                    if selectedTagFilters == activeTags {
-                        selectedTagFilters.removeAll()
-                    }
-                }
-            }
-            
-            tagFilteredNotes = filtered.sorted { $0.modifiedAt > $1.modifiedAt }
-        }
-        
+        let baseNotes = noteStore.archivedNotes
         guard isSearching else {
-            return tagFilteredNotes
+            return baseNotes
         }
         
-        return tagFilteredNotes.filter { note in
+        return baseNotes.filter { note in
             matchesSearch(note: note, tokens: searchTokens)
         }
     }
     
-    // Available tags for selection based on current filter state
-    private var availableTags: [Tag] {
-        let currentNotes = selectedTagFilters.isEmpty ? noteStore.archivedNotes : noteStore.getNotesWithAllTags(selectedTagFilters)
-        
-        if selectedTagFilters.isEmpty {
-            // No filters applied, show most popular tags
-            return noteStore.tagStore.getMostPopularTags(limit: 10)
-        } else if currentNotes.isEmpty {
-            // Filters applied but no matching notes - this will trigger filter clearing
-            return []
-        } else {
-            // Get all tags that appear in the currently filtered notes
-            var availableTagNames: Set<String> = []
-            for note in currentNotes {
-                availableTagNames.formUnion(note.extractedTags)
-            }
-            
-            // Convert to Tag objects and sort by usage count
-            let availableTagObjects = availableTagNames.compactMap { tagName in
-                noteStore.tagStore.getTag(byName: tagName)
-            }.sorted { tag1, tag2 in
-                if tag1.usageCount != tag2.usageCount {
-                    return tag1.usageCount > tag2.usageCount
-                }
-                return tag1.displayName < tag2.displayName
-            }
-            
-            return Array(availableTagObjects.prefix(10))
-        }
-    }
-
     var body: some View {
         GeometryReader { geometry in
             NavigationStack {
-                VStack(spacing: 0) {
-                    // Tag filter bar
-                    if !noteStore.tagStore.allTags.isEmpty {
-                        TagFilterBar(
-                            availableTags: availableTags,
-                            selectedTags: $selectedTagFilters
-                        )
-                        .padding(.horizontal)
-                        .padding(.top, 16)
-                        .padding(.bottom, 12)
-                        .background(Color.overviewBackground)
-                    }
-                    
-                    ZStack {
-                        if noteStore.isInitialLoadingNotes {
-                            // Show loading indicator during initial load
-                            LoadingStateView(
-                                error: noteStore.loadingError,
-                                retryAction: noteStore.loadingError != nil ? {
-                                    noteStore.retryNoteLoading()
-                                } : nil
-                            )
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        } else if filteredNotes.isEmpty {
-                            if isSearching {
-                                SearchEmptyStateView(query: trimmedSearchText)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .background(Color.overviewBackground)
+                ZStack(alignment: .top) {
+                    Color.appBackground
+                        .ignoresSafeArea()
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: verticalStackSpacing) {
+                            if noteStore.isInitialLoadingNotes {
+                                LoadingStateView(
+                                    error: noteStore.loadingError,
+                                    retryAction: noteStore.loadingError != nil ? {
+                                        noteStore.retryNoteLoading()
+                                    } : nil
+                                )
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            } else if filteredNotes.isEmpty {
+                                if isSearching {
+                                    SearchEmptyStateView(query: trimmedSearchText)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                } else {
+                                    EmptyStateView()
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                }
                             } else {
-                                EmptyStateView()
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .background(Color.overviewBackground)
-                            }
-                        } else {
-                            ScrollView {
                                 LazyVGrid(
                                     columns: [
                                         GridItem(.flexible(), spacing: gridSpacing(for: geometry.size.width)),
@@ -175,104 +107,74 @@ struct OverviewGrid: View {
                                     spacing: gridSpacing(for: geometry.size.width)
                                 ) {
                                     ForEach(filteredNotes) { note in
-                                        NoteCard(note: note, isSelected: selectedNotes.contains(note.filename), isSelectionMode: isSelectionMode)
-                                            .frame(height: cardHeight(for: geometry.size.width))
-                                            .contextMenu {
-                                                if !isSelectionMode {
-                                                    Button(role: .destructive) {
-                                                        withAnimation(.easeInOut(duration: 0.2)) {
-                                                            noteStore.deleteArchivedNote(note)
-                                                        }
-                                                    } label: {
-                                                        Label(StringConstants.Actions.delete.localized, systemImage: "trash")
+                                        NoteCard(
+                                            note: note,
+                                            isSelected: selectedNotes.contains(note.filename),
+                                            isSelectionMode: isSelectionMode
+                                        )
+                                        .frame(height: cardHeight(for: geometry.size.width))
+                                        .contextMenu {
+                                            if !isSelectionMode {
+                                                Button(role: .destructive) {
+                                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                                        noteStore.deleteArchivedNote(note)
                                                     }
+                                                } label: {
+                                                    Label(StringConstants.Actions.delete.localized, systemImage: "trash")
                                                 }
                                             }
-                                            .onTapGesture {
-                                                if isSelectionMode {
-                                                    toggleNoteSelection(note)
-                                                } else if !note.isDownloading {
-                                                    // Only allow tapping if note is not currently downloading
-                                                    noteStore.loadArchivedNoteAsCurrent(note)
-                                                    showArchive = false
-                                                }
-                                                // If note is downloading, do nothing
+                                        }
+                                        .onTapGesture {
+                                            if isSelectionMode {
+                                                toggleNoteSelection(note)
+                                            } else if !note.isDownloading {
+                                                noteStore.loadArchivedNoteAsCurrent(note)
+                                                showArchive = false
                                             }
+                                        }
                                     }
                                 }
-                                .padding(.horizontal, 24) // 3x base unit
-                                .padding(.top, 20)
-                                .animation(.easeInOut(duration: 0.15), value: filteredNotes.count)
-                                .background(
-                                    GeometryReader { scrollProxy in
-                                        Color.clear
-                                            .onAppear {
-                                                updateScrollFadeVisibility(
-                                                    contentFrame: scrollProxy.frame(in: .named("scrollContainer")),
-                                                    containerHeight: geometry.size.height
-                                                )
-                                            }
-                                            .onChange(of: scrollProxy.frame(in: .named("scrollContainer"))) { _, frame in
-                                                updateScrollFadeVisibility(
-                                                    contentFrame: frame,
-                                                    containerHeight: geometry.size.height
-                                                )
-                                            }
-                                    }
-                                )
-                            }
-                            .coordinateSpace(name: "scrollContainer")
-                            .navigationTitle("")
-                            .navigationBarTitleDisplayMode(.inline)
-                            .background(Color.overviewBackground)
-                        }
-                        
-                        // Top fade gradient (only show when not in empty state or loading)
-                        if showTopFade && !filteredNotes.isEmpty && !noteStore.isInitialLoadingNotes {
-                            VStack {
-                                LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color.overviewBackground,
-                                        Color.overviewBackground.opacity(0.8),
-                                        Color.overviewBackground.opacity(0)
-                                    ]),
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                )
-                                .frame(height: fadeHeight)
-                                .allowsHitTesting(false)
-                                Spacer()
+                                .padding(.top, LayoutConstants.Padding.small)
                             }
                         }
-                        
+                        .padding(.horizontal, 24)
+                        .padding(.top, LayoutConstants.Padding.large)
+                        .padding(.bottom, LayoutConstants.Padding.extraLarge)
                     }
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            if isSelectionMode {
-                                HStack {
-                                    Button(action: deleteSelectedNotes) {
-                                        Image(systemName: "trash")
-                                            .foregroundColor(.primaryText)
-                                    }
-                                    .disabled(selectedNotes.isEmpty)
-
-                                    Button(StringConstants.Actions.cancel.localized) {
-                                        exitSelectionMode()
-                                    }
-                                    .foregroundColor(.primaryText)
-                                }
-                            } else {
-                                Button(action: enterSelectionMode) {
-                                    Image(systemName: "checkmark.circle")
+                    .disabled(navigationGestureActive)
+                    .scrollContentBackground(.hidden)
+                    .navigationTitle("")
+                    .navigationBarTitleDisplayMode(.inline)
+                }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        if isSelectionMode {
+                            HStack {
+                                Button(action: deleteSelectedNotes) {
+                                    Image(systemName: "trash")
                                         .foregroundColor(.primaryText)
                                 }
+                                .disabled(selectedNotes.isEmpty)
+
+                                Button(StringConstants.Actions.cancel.localized) {
+                                    exitSelectionMode()
+                                }
+                                .foregroundColor(.primaryText)
+                            }
+                        } else {
+                            Button(action: enterSelectionMode) {
+                                Image(systemName: "checkmark.circle")
+                                    .foregroundColor(.primaryText)
                             }
                         }
                     }
                 }
-                } // VStack
+                .toolbarBackground(.hidden, for: .navigationBar)
+                .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
             } // NavigationStack
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: Text(StringConstants.Search.prompt.localized))
+            .searchable(text: $searchText,
+                        placement: .navigationBarDrawer(displayMode: .automatic),
+                        prompt: Text(StringConstants.Search.prompt.localized))
             .textInputAutocapitalization(.never)
             .disableAutocorrection(true)
             .searchSuggestions {
@@ -285,6 +187,7 @@ struct OverviewGrid: View {
             }
         } // GeometryReader
     }
+}
 
 struct NoteCard: View {
     let note: Note
@@ -459,16 +362,6 @@ struct SearchEmptyStateView: View {
     }
 }
 
-// MARK: - Scroll Fade Functions
-
-extension OverviewGrid {
-    private func updateScrollFadeVisibility(contentFrame: CGRect, containerHeight: CGFloat) {
-        // Calculate if content is scrolled beyond natural boundaries
-        // Top fade appears when content has scrolled down (negative y offset)
-        showTopFade = contentFrame.minY < -5
-    }
-}
-
 // MARK: - Search Helpers
 
 extension OverviewGrid {
@@ -494,7 +387,6 @@ extension OverviewGrid {
             .lowercased()
     }
 }
-
 
 // MARK: - Selection Actions Extension
 
@@ -557,150 +449,5 @@ struct OverviewGrid_Previews: PreviewProvider {
         noteStore.archivedNotes = sampleNotes
         
         return OverviewGrid(noteStore: noteStore, showArchive: .constant(true))
-    }
-}
-
-struct TagFilterBar: View {
-    let availableTags: [Tag]
-    @Binding var selectedTags: Set<String>
-    @State private var showTrailingFade = false
-    @State private var showLeadingFade = false
-    
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                ScrollViewReader { reader in
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            // "All" button
-                            Button(action: {
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    selectedTags.removeAll()
-                                }
-                            }) {
-                                Text("overview.all_notes".localized)
-                                    .font(.system(size: 14, weight: .medium))
-                                    .foregroundColor(selectedTags.isEmpty ? .white : .primaryText)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(selectedTags.isEmpty ? Color.accentColor : Color.noteBackground)
-                                    .cornerRadius(16)
-                                    .shadow(color: Color.accentColor.opacity(selectedTags.isEmpty ? Color.mediumOpacity : 0), 
-                                           radius: 2, x: 0, y: 1)
-                            }
-                            .animation(.easeInOut(duration: 0.2), value: selectedTags.isEmpty)
-                            .buttonStyle(TagButtonStyle())
-                            .id("allButton")
-                            
-                            // Tag filter buttons
-                            ForEach(availableTags) { tag in
-                                Button(action: {
-                                    withAnimation(.easeInOut(duration: 0.2)) {
-                                        if selectedTags.contains(tag.name) {
-                                            selectedTags.remove(tag.name)
-                                        } else {
-                                            selectedTags.insert(tag.name)
-                                        }
-                                    }
-                                }) {
-                                    HStack(spacing: 4) {
-                                        Text("tags.hashtag_prefix".localized(tag.name))
-                                            .font(.system(size: 14, weight: .medium, design: .monospaced))
-                                        
-                                        if tag.usageCount > 1 {
-                                            Text(String(format: "overview.tag_count".localized, tag.usageCount))
-                                                .font(.system(size: 12, weight: .regular))
-                                                .opacity(0.7)
-                                        }
-                                    }
-                                    .foregroundColor(selectedTags.contains(tag.name) ? .white : .primaryText)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(selectedTags.contains(tag.name) ? Color.accentColor : Color.noteBackground)
-                                    .cornerRadius(16)
-                                    .shadow(color: Color.accentColor.opacity(selectedTags.contains(tag.name) ? Color.mediumOpacity : 0), 
-                                           radius: 2, x: 0, y: 1)
-                                }
-                                .animation(.easeInOut(duration: 0.2), value: selectedTags.contains(tag.name))
-                                .buttonStyle(TagButtonStyle())
-                                .id("tag_\(tag.name)")
-                            }
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(
-                            GeometryReader { scrollProxy in
-                                Color.clear
-                                    .onAppear {
-                                        checkForOverflow(contentWidth: scrollProxy.size.width, containerWidth: geometry.size.width)
-                                    }
-                                    .onChange(of: availableTags) { _, _ in
-                                        checkForOverflow(contentWidth: scrollProxy.size.width, containerWidth: geometry.size.width)
-                                    }
-                                    .onChange(of: scrollProxy.frame(in: .named("scrollContainer")).origin.x) { _, offset in
-                                        updateFadeVisibility(scrollOffset: offset)
-                                    }
-                            }
-                        )
-                    }
-                    .coordinateSpace(name: "scrollContainer")
-                }
-                
-                // Leading fade gradient
-                if showLeadingFade {
-                    LinearGradient(
-                        gradient: Gradient(colors: [
-                            Color.overviewBackground,
-                            Color.overviewBackground.opacity(0.8),
-                            Color.overviewBackground.opacity(0)
-                        ]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                    .frame(width: 24)
-                    .allowsHitTesting(false)
-                }
-                
-                // Trailing fade gradient
-                if showTrailingFade {
-                    HStack {
-                        Spacer()
-                        LinearGradient(
-                            gradient: Gradient(colors: [
-                                Color.overviewBackground.opacity(0),
-                                Color.overviewBackground.opacity(0.8),
-                                Color.overviewBackground
-                            ]),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                        .frame(width: 24)
-                        .allowsHitTesting(false)
-                    }
-                }
-            }
-        }
-        .frame(height: 48) // Adjusted height for consistent layout with smaller shadows
-    }
-    
-    private func checkForOverflow(contentWidth: CGFloat, containerWidth: CGFloat) {
-        showTrailingFade = contentWidth > containerWidth
-    }
-    
-    private func updateFadeVisibility(scrollOffset: CGFloat) {
-        // Show leading fade when scrolled to the right
-        // When scrolled right, the content moves left, so the origin.x becomes negative
-        showLeadingFade = scrollOffset < -5
-    }
-}
-
-// MARK: - Custom Button Styles
-
-struct TagButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
-            .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }

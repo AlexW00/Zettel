@@ -1,0 +1,5 @@
+{
+	"scripts": {
+		"run": "./build.sh && ./run.sh"
+	}
+}

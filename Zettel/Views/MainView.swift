@@ -21,9 +21,11 @@ struct MainView: View {
     @State private var lastHapticStep: Int = 0
     @State private var isAnimating = false
     @State private var animationID = UUID()
+    @State private var isTearGestureActive = false
     
     private let tearThreshold: CGFloat = GestureConstants.tearThreshold
     private let tearZoneHeight: CGFloat = LayoutConstants.Size.tearZoneHeight
+    private let horizontalLockThreshold: CGFloat = 12 // pixels of horizontal movement before we "lock" into tear gesture
     
     var body: some View {
         SwipeNavigationView(showOverview: $showArchive) {
@@ -164,69 +166,81 @@ struct MainView: View {
         .simultaneousGesture(
             DragGesture(minimumDistance: GestureConstants.minimumDragDistance)
                 .onChanged { value in
-                    let translation = value.translation.width
-                    
-                    // Only respond to left-to-right swipes (positive translation)
-                    if translation > 0 && !isAnimating {
-                        if !isDragging {
+                    guard !isAnimating else { return }
+                    let translation = value.translation
+                    let absX = abs(translation.width)
+                    let absY = abs(translation.height)
+
+                    // Decide once whether this drag is a horizontal tear attempt
+                    if !isTearGestureActive && !isDragging {
+                        // Only start if it's a clearly horizontal rightward drag
+                        if translation.width > 0 && absX > absY && absX > horizontalLockThreshold {
+                            isTearGestureActive = true
                             isDragging = true
                             tearDirection = .rightward
                             lastHapticStep = 0
+                        } else {
+                            // Not our gesture (likely vertical scroll or leftward), ignore
+                            return
                         }
-                        
-                        dragOffset = translation
-                        tearProgress = min(1, translation / GestureConstants.tearProgressMultiplier)
-                        
-                        // Simplified haptic feedback system using steps
-                        let hapticStep = Int(tearProgress * 10) // 10 steps from 0 to 1
-                        
-                        if hapticStep > lastHapticStep && hapticStep > 0 {
-                            let mediumFeedback = UIImpactFeedbackGenerator(style: .medium)
-                            mediumFeedback.impactOccurred(intensity: 0.5)
-                            lastHapticStep = hapticStep
-                        }
+                    }
+
+                    guard isTearGestureActive else { return }
+
+                    let dx = translation.width
+                    dragOffset = dx
+                    tearProgress = min(1, dx / GestureConstants.tearProgressMultiplier)
+
+                    // Simplified haptic feedback system using steps
+                    let hapticStep = Int(tearProgress * 10) // 10 steps from 0 to 1
+                    if hapticStep > lastHapticStep && hapticStep > 0 {
+                        let mediumFeedback = UIImpactFeedbackGenerator(style: .medium)
+                        mediumFeedback.impactOccurred(intensity: 0.5)
+                        lastHapticStep = hapticStep
                     }
                 }
                 .onEnded { value in
-                    guard !isAnimating else { return }
-                    
+                    // If we never activated the tear gesture, do nothing so scrolling isn't disturbed
+                    guard isTearGestureActive, !isAnimating else {
+                        isTearGestureActive = false
+                        return
+                    }
+
+                    // Recompute progress strictly from final translation to avoid stale state
                     let translation = value.translation.width
-                    let shouldTear = translation > 0 && tearProgress >= GestureConstants.tearThreshold
-                    
-                    // Reset haptic step and start animation
+                    let endProgress = max(0, min(1, translation / GestureConstants.tearProgressMultiplier))
+                    let shouldTear = endProgress >= GestureConstants.tearThreshold
+
+                    // Reset haptic step and start animation only for active tear drags
                     lastHapticStep = 0
                     isAnimating = true
-                    
-                    // Generate new animation ID to force fresh animation state
-                    animationID = UUID()
-                    
+                    animationID = UUID() // Force view refresh only when we actually handled the gesture
+
                     if shouldTear {
                         let impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
                         impactFeedback.impactOccurred()
-                        
-                        // Use explicit animation with completion
+
                         withAnimation(.easeOut(duration: 0.2)) {
                             dragOffset = 0
                             tearProgress = 0
                         }
-                        
-                        // Reset state and archive after animation completes
+
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                             isDragging = false
                             isAnimating = false
+                            isTearGestureActive = false
                             noteStore.archiveCurrentNote()
                         }
                     } else {
-                        // Use explicit animation with completion
                         withAnimation(.spring(response: 0.2, dampingFraction: 0.8, blendDuration: 0)) {
                             dragOffset = 0
                             tearProgress = 0
                         }
-                        
-                        // Reset state after animation
+
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                             isDragging = false
                             isAnimating = false
+                            isTearGestureActive = false
                         }
                     }
                 }
@@ -296,7 +310,7 @@ struct TearIndicatorView: View {
                     if isDragging {
                         HStack {
                             Rectangle()
-                                .fill(tearProgress >= 1 ? Color.tearIndicatorActive : Color.tearIndicator)
+                                .fill(tearProgress >= GestureConstants.tearThreshold ? Color.tearIndicatorActive : Color.tearIndicator)
                                 .frame(height: 2)
                                 .frame(width: geometry.size.width * min(1.0, tearProgress))
                             Spacer(minLength: 0)
@@ -307,7 +321,7 @@ struct TearIndicatorView: View {
             }
         }
         .accessibilityLabel(StringConstants.Accessibility.tearZone.localized)
-        .accessibilityHint("Swipe left to right anywhere on the note to tear off and archive it.")
+        .accessibilityHint(StringConstants.Accessibility.tearZoneHint.localized)
     }
 }
 

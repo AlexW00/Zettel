@@ -100,6 +100,7 @@ enum StringConstants {
     // MARK: - Accessibility
     enum Accessibility {
         static let tearZone = "accessibility.tear_zone"
+    static let tearZoneHint = "accessibility.tear_zone_hint"
         static let settingsButton = "accessibility.settings_button"
         static let selectionMode = "accessibility.selection_mode"
         static let noteCard = "accessibility.note_card"

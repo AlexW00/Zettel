@@ -10,6 +10,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 import UIKit
 import UniformTypeIdentifiers
 import AppIntents
@@ -65,6 +66,9 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     private var fileCoordinator: NSFileCoordinator?
     private nonisolated(unsafe) var _presentedItemURL: URL?
     
+    // Combine cancellables
+    private var cancellables = Set<AnyCancellable>()
+    
     // NSFilePresenter properties
     nonisolated var presentedItemURL: URL? {
         return _presentedItemURL
@@ -111,6 +115,14 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
         // Don't load notes synchronously - defer to async method
         // Initialize tag store with empty notes for now
         tagStore.updateTagsImmediately(from: [])
+
+        // Forward TagStore changes so Views observing NoteStore react to tag updates immediately
+        tagStore.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
 
         // Start monitoring file system changes
         startMonitoringFileSystem()

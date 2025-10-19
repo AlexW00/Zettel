@@ -77,6 +77,7 @@
 
 // Accessibility
 "accessibility.tear_zone" = "Reißbereich";
+"accessibility.tear_zone_hint" = "Wische rechts über die Notiz, um sie abzureißen und zu archivieren.";
 "accessibility.settings_button" = "Einstellungen";
 "accessibility.selection_mode" = "Auswahlmodus";
 "accessibility.note_card" = "Notizkarte";
