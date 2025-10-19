@@ -63,6 +63,11 @@
 "overview.tag_count" = "(%d)";
 "overview.additional_tags" = "+%d";
 
+// Search
+"search.prompt" = "Search notes";
+"search.no_results_title" = "No results for \"%@\"";
+"search.no_results_message" = "Try a different keyword or clear filters.";
+
 // Tags
 "tags.hashtag_prefix" = "#%@";
 "tags.no_tags" = "No tags";

@@ -63,6 +63,11 @@
 "overview.tag_count" = "(%d)";
 "overview.additional_tags" = "+%d";
 
+// Search
+"search.prompt" = "ノートを検索";
+"search.no_results_title" = "\"%@\" の結果は見つかりませんでした";
+"search.no_results_message" = "別のキーワードを試すかフィルターを解除してください。";
+
 // Tags
 "tags.hashtag_prefix" = "#%@";
 "tags.no_tags" = "タグなし";

@@ -69,6 +69,13 @@ enum StringConstants {
         static let additionalTags = "overview.additional_tags"
     }
     
+    // MARK: - Search
+    enum Search {
+        static let prompt = "search.prompt"
+        static let noResultsTitle = "search.no_results_title"
+        static let noResultsMessage = "search.no_results_message"
+    }
+
     // MARK: - Theme Options
     enum Theme {
         static let system = "theme.system"

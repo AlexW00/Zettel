@@ -13,9 +13,7 @@ struct OverviewGrid: View {
     @State private var selectedNote: Note?
     @State private var isSelectionMode = false
     @State private var selectedNotes = Set<String>()
-    
-    // Tag filtering
-    @State private var selectedTagFilters: Set<String> = []
+    @State private var searchText = ""
     @Environment(\.navigationGestureActive) private var navigationGestureActive
 
     // Design system constants
@@ -44,52 +42,35 @@ struct OverviewGrid: View {
         return screenWidth > 600 ? 24 : 16
     }
     
-    // Filtered notes based on selected tags
-    private var filteredNotes: [Note] {
-        guard !selectedTagFilters.isEmpty else {
-            return noteStore.archivedNotes
-        }
-        let filtered = noteStore.getNotesWithAllTags(selectedTagFilters)
-        
-        // Auto-clear filters if no notes match
-        if filtered.isEmpty && !selectedTagFilters.isEmpty {
-            DispatchQueue.main.async {
-                selectedTagFilters.removeAll()
-            }
-        }
-        
-        // Sort filtered notes by last edit timestamp (most recent first)
-        return filtered.sorted { $0.modifiedAt > $1.modifiedAt }
+    private var trimmedSearchText: String {
+        searchText.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
-    // Available tags for selection based on current filter state
-    private var availableTags: [Tag] {
-        let currentNotes = selectedTagFilters.isEmpty ? noteStore.archivedNotes : noteStore.getNotesWithAllTags(selectedTagFilters)
+    private var searchTokens: [String] {
+        trimmedSearchText
+            .folding(options: [.diacriticInsensitive], locale: .current)
+            .lowercased()
+            .components(separatedBy: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters))
+            .filter { !$0.isEmpty }
+    }
+    
+    private var isSearching: Bool {
+        !searchTokens.isEmpty
+    }
+    
+    private var popularSearchTags: [Tag] {
+        noteStore.tagStore.getMostPopularTags(limit: 6)
+    }
+
+    // Filtered notes based on selected tags
+    private var filteredNotes: [Note] {
+        let baseNotes = noteStore.archivedNotes
+        guard isSearching else {
+            return baseNotes
+        }
         
-        if selectedTagFilters.isEmpty {
-            // No filters applied, show most popular tags
-            return noteStore.tagStore.getMostPopularTags(limit: 50)
-        } else if currentNotes.isEmpty {
-            // Filters applied but no matching notes - this will trigger filter clearing
-            return []
-        } else {
-            // Get all tags that appear in the currently filtered notes
-            var availableTagNames: Set<String> = []
-            for note in currentNotes {
-                availableTagNames.formUnion(note.extractedTags)
-            }
-            
-            // Convert to Tag objects and sort by usage count
-            let availableTagObjects = availableTagNames.compactMap { tagName in
-                noteStore.tagStore.getTag(byName: tagName)
-            }.sorted { tag1, tag2 in
-                if tag1.usageCount != tag2.usageCount {
-                    return tag1.usageCount > tag2.usageCount
-                }
-                return tag1.displayName < tag2.displayName
-            }
-            
-            return Array(availableTagObjects.prefix(50))
+        return baseNotes.filter { note in
+            matchesSearch(note: note, tokens: searchTokens)
         }
     }
     
@@ -99,17 +80,8 @@ struct OverviewGrid: View {
                 ZStack(alignment: .top) {
                     Color.appBackground
                         .ignoresSafeArea()
-                    
                     ScrollView {
                         VStack(alignment: .leading, spacing: verticalStackSpacing) {
-                            if !noteStore.tagStore.allTags.isEmpty {
-                                TagFilterBar(
-                                    availableTags: availableTags,
-                                    selectedTags: $selectedTagFilters
-                                )
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                            
                             if noteStore.isInitialLoadingNotes {
                                 LoadingStateView(
                                     error: noteStore.loadingError,
@@ -119,8 +91,13 @@ struct OverviewGrid: View {
                                 )
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                             } else if filteredNotes.isEmpty {
-                                EmptyStateView()
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                if isSearching {
+                                    SearchEmptyStateView(query: trimmedSearchText)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                } else {
+                                    EmptyStateView()
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                }
                             } else {
                                 LazyVGrid(
                                     columns: [
@@ -166,7 +143,6 @@ struct OverviewGrid: View {
                     }
                     .disabled(navigationGestureActive)
                     .scrollContentBackground(.hidden)
-                    .coordinateSpace(name: "scrollContainer")
                     .navigationTitle("")
                     .navigationBarTitleDisplayMode(.inline)
                 }
@@ -177,14 +153,14 @@ struct OverviewGrid: View {
                                 Button(action: deleteSelectedNotes) {
                                     Image(systemName: "trash")
                                         .foregroundColor(.primaryText)
-                                    }
-                                    .disabled(selectedNotes.isEmpty)
-
-                                    Button(StringConstants.Actions.cancel.localized) {
-                                        exitSelectionMode()
-                                    }
-                                    .foregroundColor(.primaryText)
                                 }
+                                .disabled(selectedNotes.isEmpty)
+
+                                Button(StringConstants.Actions.cancel.localized) {
+                                    exitSelectionMode()
+                                }
+                                .foregroundColor(.primaryText)
+                            }
                         } else {
                             Button(action: enterSelectionMode) {
                                 Image(systemName: "checkmark.circle")
@@ -196,6 +172,19 @@ struct OverviewGrid: View {
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
             } // NavigationStack
+            .searchable(text: $searchText,
+                        placement: .navigationBarDrawer(displayMode: .automatic),
+                        prompt: Text(StringConstants.Search.prompt.localized))
+            .textInputAutocapitalization(.never)
+            .disableAutocorrection(true)
+            .searchSuggestions {
+                if !isSearching {
+                    ForEach(popularSearchTags) { tag in
+                        Text("#\(tag.displayName)")
+                            .searchCompletion("#\(tag.displayName)")
+                    }
+                }
+            }
         } // GeometryReader
     }
 }
@@ -347,6 +336,58 @@ struct EmptyStateView: View {
     }
 }
 
+struct SearchEmptyStateView: View {
+    let query: String
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "text.magnifyingglass")
+                .font(.system(size: 48, weight: .light))
+                .foregroundColor(.tertiaryText)
+            
+            Text(StringConstants.Search.noResultsTitle.localized(query))
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(.tertiaryText)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            Text(StringConstants.Search.noResultsMessage.localized)
+                .font(.system(size: 14, weight: .regular))
+                .foregroundColor(.tertiaryText.opacity(0.8))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .contentShape(Rectangle())
+    }
+}
+
+// MARK: - Search Helpers
+
+extension OverviewGrid {
+    private func matchesSearch(note: Note, tokens: [String]) -> Bool {
+        guard !tokens.isEmpty else { return true }
+        
+        let normalizedTitle = normalizeForSearch(note.title)
+        let normalizedContent = normalizeForSearch(note.content)
+        let normalizedFilename = normalizeForSearch(note.filename)
+        let normalizedTags = note.extractedTags.map { normalizeForSearch($0) }
+        
+        return tokens.allSatisfy { token in
+            normalizedTitle.contains(token) ||
+            normalizedContent.contains(token) ||
+            normalizedFilename.contains(token) ||
+            normalizedTags.contains(where: { $0.contains(token) })
+        }
+    }
+    
+    private func normalizeForSearch(_ value: String) -> String {
+        value
+            .folding(options: [.diacriticInsensitive], locale: .current)
+            .lowercased()
+    }
+}
+
 // MARK: - Selection Actions Extension
 
 extension OverviewGrid {
@@ -408,103 +449,5 @@ struct OverviewGrid_Previews: PreviewProvider {
         noteStore.archivedNotes = sampleNotes
         
         return OverviewGrid(noteStore: noteStore, showArchive: .constant(true))
-    }
-}
-
-struct TagFilterBar: View {
-    let availableTags: [Tag]
-    @Binding var selectedTags: Set<String>
-    @Environment(\.navigationGestureActive) private var navigationGestureActive
-    
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                // "All" button
-                Button(action: {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        selectedTags.removeAll()
-                    }
-                }) {
-                    TagFilterChipLabel(
-                        title: "overview.all_notes".localized,
-                        detail: nil,
-                        isSelected: selectedTags.isEmpty
-                    )
-                }
-                .animation(.easeInOut(duration: 0.2), value: selectedTags.isEmpty)
-                .buttonStyle(TagButtonStyle())
-                
-                // Tag filter buttons
-                ForEach(availableTags) { tag in
-                    Button(action: {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            if selectedTags.contains(tag.name) {
-                                selectedTags.remove(tag.name)
-                            } else {
-                                selectedTags.insert(tag.name)
-                            }
-                        }
-                    }) {
-                        TagFilterChipLabel(
-                            title: "tags.hashtag_prefix".localized(tag.name),
-                            detail: tag.usageCount > 1 ? String(format: "overview.tag_count".localized, tag.usageCount) : nil,
-                            isSelected: selectedTags.contains(tag.name)
-                        )
-                    }
-                    .animation(.easeInOut(duration: 0.2), value: selectedTags.contains(tag.name))
-                    .buttonStyle(TagButtonStyle())
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-        }
-        .horizontalScrollFades(color: Color.appBackground)
-        .disabled(navigationGestureActive)
-        .scrollContentBackground(.hidden)
-        .background(Color.clear)
-        .frame(height: 48) // Adjusted height for consistent layout with smaller shadows
-    }
-    
-}
-
-// MARK: - Custom Button Styles
-
-private struct TagFilterChipLabel: View {
-    let title: String
-    let detail: String?
-    let isSelected: Bool
-    
-    var body: some View {
-        let shape = Capsule(style: .continuous)
-        
-        HStack(spacing: 4) {
-            Text(title)
-                .font(.system(size: 14, weight: .medium, design: .monospaced))
-                .foregroundStyle(Color.primaryText)
-            
-            if let detail {
-                Text(detail)
-                    .font(.system(size: 12, weight: .regular))
-                    .foregroundStyle(Color.primaryText.opacity(0.65))
-            }
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 7)
-        .background(shape.fill(Color.tagBackground))
-        .overlay(
-            shape
-                .stroke(isSelected ? Color.accentColor : Color.separator.opacity(0.2), lineWidth: isSelected ? 1.4 : 1)
-        )
-        .shadow(color: Color.black.opacity(0.08), radius: 4, x: 0, y: 2)
-        .contentShape(shape)
-    }
-}
-
-struct TagButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
-            .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }
