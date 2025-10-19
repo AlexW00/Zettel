@@ -134,11 +134,11 @@ extension Color {
             if traitCollection.userInterfaceStyle == .dark {
                 return UIColor.secondarySystemBackground
             } else {
-                return UIColor.systemBackground // Pure white in light mode
+                return UIColor.white
             }
         })
     }
-    
+
     static var overviewBackground: Color {
         Color(UIColor.systemGroupedBackground)
     }
@@ -174,6 +174,16 @@ extension Color {
                 return base.withAlphaComponent(0.95)
             } else {
                 return base.withAlphaComponent(0.8)
+            }
+        })
+    }
+
+    static var dictationBackgroundTint: Color {
+        Color(UIColor { trait in
+            if trait.userInterfaceStyle == .dark {
+                return UIColor(white: 0.18, alpha: 0.32)
+            } else {
+                return UIColor(white: 0.0, alpha: 0.08)
             }
         })
     }

@@ -473,9 +473,8 @@ private struct DictationControlButton: View {
         }) {
             ZStack {
                 Circle()
-                    .strokeBorder(Color.clear, lineWidth: 0.25)
-                    .background(Circle().fill(.clear))
-                    .glassEffect(isRecording ? .regular : .clear, in: Circle())
+                    .fill(Color.dictationBackgroundTint)
+                    .glassEffect(.clear, in: Circle())
 
                 if shouldShowSpinner {
                     ProgressView()
