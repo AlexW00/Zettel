@@ -50,6 +50,9 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     
     // Tag support
     @Published var tagStore = TagStore()
+    
+    /// Indicates that the user currently has a text selection active in an editor
+    @Published var isTextSelectionActive: Bool = false
 
     /// User-configurable template for automatically generated note titles
     @Published var defaultTitleTemplate: String = DefaultTitleTemplateManager.shared.savedTemplate() ?? "" {

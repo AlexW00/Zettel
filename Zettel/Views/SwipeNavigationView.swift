@@ -22,6 +22,8 @@ struct SwipeNavigationView<MainContent: View, OverviewContent: View>: View {
     let mainContent: MainContent
     let overviewContent: OverviewContent
 
+    @EnvironmentObject private var noteStore: NoteStore
+
     @State private var dragOffset: CGFloat = 0
     @State private var activeDirection: NavigationDragDirection?
     @State private var dragStartLocation: CGPoint?
@@ -62,7 +64,7 @@ struct SwipeNavigationView<MainContent: View, OverviewContent: View>: View {
             .contentShape(Rectangle())
             .offset(x: contentOffset(for: containerWidth))
             .animation(.spring(response: 0.32, dampingFraction: 0.86), value: showOverview)
-            .simultaneousGesture(navigationDrag, including: .all)
+            .simultaneousGesture(navigationDrag, including: noteStore.isTextSelectionActive ? .subviews : .all)
             .environment(\.navigationGestureActive, activeDirection != nil)
             .onChange(of: showOverview) { _, _ in
                 resetDragState()
@@ -81,6 +83,11 @@ struct SwipeNavigationView<MainContent: View, OverviewContent: View>: View {
     }
 
     private func handleDragChanged(value: DragGesture.Value, containerWidth: CGFloat) {
+        if noteStore.isTextSelectionActive {
+            cancelNavigationGesture()
+            return
+        }
+
         let translation = value.translation
         let absX = abs(translation.width)
         let absY = abs(translation.height)
@@ -140,6 +147,11 @@ struct SwipeNavigationView<MainContent: View, OverviewContent: View>: View {
     }
 
     private func handleDragEnded(value: DragGesture.Value, containerWidth: CGFloat) {
+        if noteStore.isTextSelectionActive {
+            resetDragState()
+            return
+        }
+
         guard let direction = activeDirection else {
             resetDragState(animated: true)
             return

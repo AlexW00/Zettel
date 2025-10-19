@@ -103,6 +103,27 @@ struct TagTextViewRepresentable: UIViewRepresentable {
                 self.parent.text = textView.text
             }
         }
+        
+        func textViewDidChangeSelection(_ textView: UITextView) {
+            updateSelectionState(for: textView)
+        }
+        
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            updateSelectionState(for: textView)
+        }
+        
+        func textViewDidEndEditing(_ textView: UITextView) {
+            Task { @MainActor in
+                self.parent.noteStore.isTextSelectionActive = false
+            }
+        }
+        
+        private func updateSelectionState(for textView: UITextView) {
+            let hasSelection = textView.selectedRange.length > 0
+            Task { @MainActor in
+                self.parent.noteStore.isTextSelectionActive = hasSelection
+            }
+        }
     }
 }
 

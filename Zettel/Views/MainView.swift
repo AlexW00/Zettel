@@ -119,14 +119,16 @@ struct MainView: View {
     
     private var noteCard: some View {
         VStack(spacing: 0) {
-            TextField(StringConstants.Note.titlePlaceholder.localized, text: $noteStore.currentNote.title)
-                .font(.system(size: 17, weight: .semibold, design: .monospaced))
-                .monospacedDigit()
-                .foregroundColor(.primaryText)
-                .textFieldStyle(.plain)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 20)
-                .padding(.top, 18)
+            SelectableTextField(
+                StringConstants.Note.titlePlaceholder.localized,
+                text: $noteStore.currentNote.title,
+                font: UIFont.monospacedSystemFont(ofSize: 17, weight: .semibold),
+                foregroundColor: .primaryText,
+                textAlignment: .center,
+                autocapitalizationType: .sentences
+            )
+            .padding(.horizontal, 20)
+            .padding(.top, 18)
             
             TearIndicatorView(
                 tearProgress: $tearProgress,
@@ -166,6 +168,13 @@ struct MainView: View {
         .simultaneousGesture(
             DragGesture(minimumDistance: GestureConstants.minimumDragDistance)
                 .onChanged { value in
+                    guard !noteStore.isTextSelectionActive else {
+                        dragOffset = 0
+                        tearProgress = 0
+                        isDragging = false
+                        isTearGestureActive = false
+                        return
+                    }
                     guard !isAnimating else { return }
                     let translation = value.translation
                     let absX = abs(translation.width)
@@ -200,6 +209,13 @@ struct MainView: View {
                     }
                 }
                 .onEnded { value in
+                    if noteStore.isTextSelectionActive {
+                        dragOffset = 0
+                        tearProgress = 0
+                        isDragging = false
+                        isTearGestureActive = false
+                        return
+                    }
                     // If we never activated the tear gesture, do nothing so scrolling isn't disturbed
                     guard isTearGestureActive, !isAnimating else {
                         isTearGestureActive = false
