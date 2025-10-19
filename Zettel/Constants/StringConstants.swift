@@ -53,6 +53,12 @@ enum StringConstants {
         static let viewOnGitHub = "settings.view_on_github"
         static let fontSize = "settings.font_size"
         static let fontSizeDescription = "settings.font_size_description"
+        static let defaultTitleTemplate = "settings.default_title_template"
+        static let defaultTitleTemplateDescription = "settings.default_title_template_description"
+        static let defaultTitleTemplatePlaceholder = "settings.default_title_template_placeholder"
+        static let defaultTitleTemplateInfoTitle = "settings.default_title_template_info_title"
+        static let defaultTitleTemplateInfoMessage = "settings.default_title_template_info_message"
+        static let defaultTitleTemplateInfoButton = "settings.default_title_template_info_button"
     }
     
     // MARK: - Overview & Archive

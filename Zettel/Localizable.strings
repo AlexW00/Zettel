@@ -45,6 +45,12 @@
 "settings.font_size_description" = "Adjust the font size for note content text";
 "settings.font_size_small_label" = "A";
 "settings.font_size_large_label" = "A";
+"settings.default_title_template" = "Default Title Template";
+"settings.default_title_template_description" = "Customize how new note titles are generated.";
+"settings.default_title_template_placeholder" = "Example: {{time}} – {{date}}";
+"settings.default_title_template_info_title" = "Template Format";
+"settings.default_title_template_info_message" = "Available placeholders:\n%@\n\nLeave the field empty to reset to the default template (%@).";
+"settings.default_title_template_info_button" = "Show template format help";
 
 // Theme Options
 "theme.system" = "System";

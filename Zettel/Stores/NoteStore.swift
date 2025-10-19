@@ -50,6 +50,15 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     
     // Tag support
     @Published var tagStore = TagStore()
+
+    /// User-configurable template for automatically generated note titles
+    @Published var defaultTitleTemplate: String = DefaultTitleTemplateManager.shared.savedTemplate() ?? "" {
+        didSet {
+            if defaultTitleTemplate != oldValue {
+                DefaultTitleTemplateManager.shared.saveTemplate(defaultTitleTemplate)
+            }
+        }
+    }
     
     // Localization support
     private let localizationManager = LocalizationManager.shared

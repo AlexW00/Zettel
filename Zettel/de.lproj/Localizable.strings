@@ -45,6 +45,12 @@
 "settings.font_size_description" = "Passen Sie die Schriftgröße für den Notizinhalt an";
 "settings.font_size_small_label" = "A";
 "settings.font_size_large_label" = "A";
+"settings.default_title_template" = "Standardtitel-Vorlage";
+"settings.default_title_template_description" = "Passe an, wie neue Notiztitel erstellt werden.";
+"settings.default_title_template_placeholder" = "Beispiel: {{time}} – {{date}}";
+"settings.default_title_template_info_title" = "Vorlagenformat";
+"settings.default_title_template_info_message" = "Verfügbare Platzhalter:\n%@\n\nLasse das Feld leer, um die Standardvorlage zurückzusetzen (%@).";
+"settings.default_title_template_info_button" = "Vorlagenformat-Hilfe anzeigen";
 
 // Theme Options
 "theme.system" = "System";

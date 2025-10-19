@@ -15,7 +15,19 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
     @State private var showingFolderPicker = false
+    @State private var showingTemplateInfo = false
     
+    private var templateInfoMessage: String {
+        let manager = DefaultTitleTemplateManager.shared
+        let examples = manager.placeholderExamples()
+        let fallback = manager.fallbackTemplate
+        let format = StringConstants.Settings.defaultTitleTemplateInfoMessage.localized
+        let exampleList = examples
+            .map { "- \($0.token): \($0.example)" }
+            .joined(separator: "\n")
+        return String(format: format, exampleList, fallback)
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -106,6 +118,48 @@ struct SettingsView: View {
                                 .foregroundColor(.secondary)
                         }
                         .padding(.leading, 32) // Align with icon
+                    }
+                    .padding(.vertical, 4)
+
+                    // Default Title Template
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(alignment: .top) {
+                            Image(systemName: "textformat.alt")
+                                .foregroundColor(.iconTint)
+                                .frame(width: 24)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                HStack(spacing: 6) {
+                                    Text(StringConstants.Settings.defaultTitleTemplate.localized)
+                                        .font(.system(size: 16, weight: .medium))
+
+                                    Button(action: {
+                                        showingTemplateInfo = true
+                                    }) {
+                                        Image(systemName: "info.circle")
+                                            .font(.system(size: 14))
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                    .accessibilityLabel(Text(StringConstants.Settings.defaultTitleTemplateInfoButton.localized))
+                                }
+
+                                Text(StringConstants.Settings.defaultTitleTemplateDescription.localized)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                            }
+
+                            Spacer()
+                        }
+
+                        TextField(
+                            StringConstants.Settings.defaultTitleTemplatePlaceholder.localized,
+                            text: $noteStore.defaultTitleTemplate
+                        )
+                        .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.never)
+                        .font(.system(size: 14, weight: .regular, design: .monospaced))
+                        .padding(.leading, 32)
                     }
                     .padding(.vertical, 4)
                 } header: {
@@ -222,6 +276,14 @@ struct SettingsView: View {
             }
         }
         .preferredColorScheme(themeStore.currentTheme.colorScheme)
+        .alert(
+            StringConstants.Settings.defaultTitleTemplateInfoTitle.localized,
+            isPresented: $showingTemplateInfo
+        ) {
+            Button(StringConstants.Actions.ok.localized, role: .cancel) { }
+        } message: {
+            Text(templateInfoMessage)
+        }
         .fileImporter(
             isPresented: $showingFolderPicker,
             allowedContentTypes: [.folder],

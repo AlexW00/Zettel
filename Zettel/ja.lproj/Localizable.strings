@@ -45,6 +45,12 @@
 "settings.font_size_description" = "ノートコンテンツテキストのフォントサイズを調整";
 "settings.font_size_small_label" = "A";
 "settings.font_size_large_label" = "A";
+"settings.default_title_template" = "デフォルトタイトルテンプレート";
+"settings.default_title_template_description" = "新しいノートタイトルの生成方法をカスタマイズします。";
+"settings.default_title_template_placeholder" = "例: {{time}} – {{date}}";
+"settings.default_title_template_info_title" = "テンプレート形式";
+"settings.default_title_template_info_message" = "使用できるプレースホルダ:\n%@\n\nフィールドを空にすると既定のテンプレート (%@) に戻ります。";
+"settings.default_title_template_info_button" = "テンプレート形式の説明を表示";
 
 // Theme Options
 "theme.system" = "システム";
