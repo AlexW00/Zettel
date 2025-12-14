@@ -25,7 +25,7 @@
 "note.title_placeholder" = "Note Title";
 "note.untitled" = "Untitled";
 "note.empty" = "Empty note";
-"note.tear_zone_accessibility" = "Tear zone";
+"note.clear_zone_accessibility" = "Clear zone";
 
 // Settings
 "settings.appearance" = "Appearance";
@@ -78,12 +78,16 @@
 "error.corrupted_file" = "The note file is corrupted and cannot be read.";
 "error.file_system_error" = "File system error: %@";
 "error.encoding_error" = "Unable to encode or decode the note content.";
+"error.cloud_save_timeout" = "Timed out waiting for iCloud file to download. Please try again.";
+"error.save_failed" = "Failed to save the note. Please try again.";
 "error.title_too_long" = "Title is too long (%d characters). Maximum allowed: %d characters.";
 "error.content_too_long" = "Content is too long (%d characters). Maximum allowed: %d characters.";
 "error.too_many_tags" = "Too many tags (%d tags). Maximum allowed: %d tags.";
 "error.tag_too_long" = "Tag '%@' is too long. Maximum allowed: %d characters.";
 
 // Accessibility
+"accessibility.clear_zone" = "Clear zone";
+"accessibility.clear_zone_hint" = "Swipe right anywhere on the note to save and create a new note.";
 "accessibility.tear_zone" = "Tear zone";
 "accessibility.tear_zone_hint" = "Swipe right anywhere on the note to tear off and archive it.";
 "accessibility.settings_button" = "Settings";
@@ -132,4 +136,4 @@
 
 // Welcome Note
 "welcome.title" = "Welcome to Zettel";
-"welcome.content" = "In Zettel, you can:\n\n* swipe ← to see your notes\n* swipe → to save\n\nHappy #notetaking ^^";
+"welcome.content" = "In Zettel, you can:\n\n* swipe ← to see your notes\n* swipe → to create a new note\n\nHappy #notetaking ^^";

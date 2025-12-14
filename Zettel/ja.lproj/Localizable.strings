@@ -25,7 +25,7 @@
 "note.title_placeholder" = "ノートのタイトル";
 "note.untitled" = "無題";
 "note.empty" = "空のノート";
-"note.tear_zone_accessibility" = "切り取り領域";
+"note.clear_zone_accessibility" = "クリア領域";
 
 // Settings
 "settings.appearance" = "外観";
@@ -78,12 +78,16 @@
 "error.corrupted_file" = "ノートファイルが破損しており、読み取ることができません。";
 "error.file_system_error" = "ファイルシステムエラー: %@";
 "error.encoding_error" = "ノートの内容をエンコードまたはデコードできません。";
+"error.cloud_save_timeout" = "iCloudファイルのダウンロードがタイムアウトしました。もう一度お試しください。";
+"error.save_failed" = "ノートを保存できませんでした。もう一度お試しください。";
 "error.title_too_long" = "タイトルが長すぎます（%d文字）。最大許可文字数: %d文字。";
 "error.content_too_long" = "内容が長すぎます（%d文字）。最大許可文字数: %d文字。";
 "error.too_many_tags" = "タグが多すぎます（%dタグ）。最大許可数: %dタグ。";
 "error.tag_too_long" = "タグ「%@」が長すぎます。最大許可文字数: %d文字。";
 
 // Accessibility
+"accessibility.clear_zone" = "クリア領域";
+"accessibility.clear_zone_hint" = "右にスワイプして保存し、新しいノートを作成します。";
 "accessibility.tear_zone" = "切り取り領域";
 "accessibility.tear_zone_hint" = "ノート上で右方向にスワイプして切り取り、アーカイブします。";
 "accessibility.settings_button" = "設定";
@@ -132,4 +136,4 @@
 
 // Welcome Note
 "welcome.title" = "Zettelへようこそ";
-"welcome.content" = "Zettelでは:\n\n* ←スワイプでメモを表示\n* →スワイプで保存\n\n楽しい#メモライフを ^^";
+"welcome.content" = "Zettelでは:\n\n* ←スワイプでメモを表示\n* →スワイプで新しいメモを作成\n\n楽しい#メモライフを ^^";

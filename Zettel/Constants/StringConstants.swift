@@ -35,7 +35,7 @@ enum StringConstants {
         static let titlePlaceholder = "note.title_placeholder"
         static let untitled = "note.untitled"
         static let emptyNote = "note.empty"
-        static let tearZoneAccessibility = "note.tear_zone_accessibility"
+        static let clearZoneAccessibility = "note.clear_zone_accessibility"
     }
     
     // MARK: - Settings Screen
@@ -97,6 +97,8 @@ enum StringConstants {
         static let corruptedFile = "error.corrupted_file"
         static let fileSystemError = "error.file_system_error"
         static let encodingError = "error.encoding_error"
+        static let cloudSaveTimeout = "error.cloud_save_timeout"
+        static let saveFailed = "error.save_failed"
         
         // Validation Errors
         static let titleTooLong = "error.title_too_long"
@@ -107,8 +109,8 @@ enum StringConstants {
     
     // MARK: - Accessibility
     enum Accessibility {
-        static let tearZone = "accessibility.tear_zone"
-    static let tearZoneHint = "accessibility.tear_zone_hint"
+        static let clearZone = "accessibility.clear_zone"
+        static let clearZoneHint = "accessibility.clear_zone_hint"
         static let settingsButton = "accessibility.settings_button"
         static let selectionMode = "accessibility.selection_mode"
         static let noteCard = "accessibility.note_card"

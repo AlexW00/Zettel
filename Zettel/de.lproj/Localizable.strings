@@ -25,7 +25,7 @@
 "note.title_placeholder" = "Notiztitel";
 "note.untitled" = "Ohne Titel";
 "note.empty" = "Leere Notiz";
-"note.tear_zone_accessibility" = "Reißbereich";
+"note.clear_zone_accessibility" = "Löschbereich";
 
 // Settings
 "settings.appearance" = "Erscheinungsbild";
@@ -78,12 +78,16 @@
 "error.corrupted_file" = "Die Notizdatei ist beschädigt und kann nicht gelesen werden.";
 "error.file_system_error" = "Dateisystemfehler: %@";
 "error.encoding_error" = "Der Notizinhalt kann nicht codiert oder decodiert werden.";
+"error.cloud_save_timeout" = "Zeitüberschreitung beim Herunterladen der iCloud-Datei. Bitte erneut versuchen.";
+"error.save_failed" = "Die Notiz konnte nicht gespeichert werden. Bitte erneut versuchen.";
 "error.title_too_long" = "Titel ist zu lang (%d Zeichen). Maximal erlaubt: %d Zeichen.";
 "error.content_too_long" = "Inhalt ist zu lang (%d Zeichen). Maximal erlaubt: %d Zeichen.";
 "error.too_many_tags" = "Zu viele Tags (%d Tags). Maximal erlaubt: %d Tags.";
 "error.tag_too_long" = "Tag '%@' ist zu lang. Maximal erlaubt: %d Zeichen.";
 
 // Accessibility
+"accessibility.clear_zone" = "Löschbereich";
+"accessibility.clear_zone_hint" = "Wische nach rechts, um zu speichern und eine neue Notiz zu erstellen.";
 "accessibility.tear_zone" = "Reißbereich";
 "accessibility.tear_zone_hint" = "Wische rechts über die Notiz, um sie abzureißen und zu archivieren.";
 "accessibility.settings_button" = "Einstellungen";
@@ -132,4 +136,4 @@
 
 // Welcome Note
 "welcome.title" = "Willkommen bei Zettel";
-"welcome.content" = "In Zettel kannst du:\n\n* nach ← wischen um alle Zettel zu sehen\n* nach → wischen um zu speichern\n\nViel Spaß beim #notieren ^^";
+"welcome.content" = "In Zettel kannst du:\n\n* nach ← wischen um alle Zettel zu sehen\n* nach → wischen um einen neuen Zettel zu erstellen\n\nViel Spaß beim #notieren ^^";

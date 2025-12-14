@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 import AppIntents
 
-enum TearDirection {
+enum ClearGestureDirection {
     case rightward
     case leftward
 }
@@ -16,20 +16,20 @@ struct MainView: View {
     @State private var showArchive = false
     @State private var dragOffset: CGFloat = 0
     @State private var isDragging = false
-    @State private var tearProgress: CGFloat = 0
-    @State private var tearDirection: TearDirection = .rightward
+    @State private var clearProgress: CGFloat = 0
+    @State private var clearDirection: ClearGestureDirection = .rightward
     @State private var showNewNoteConfirmation = false
     @State private var lastHapticStep: Int = 0
     @State private var isAnimating = false
     @State private var animationID = UUID()
-    @State private var isTearGestureActive = false
+    @State private var isClearGestureActive = false
     @StateObject private var dictationController = NoteDictationController()
     @State private var showLocaleDownloadPrompt = false
     @State private var pendingLocaleOption: DictationLocaleManager.LocaleOption?
 
-    private let tearThreshold: CGFloat = GestureConstants.tearThreshold
-    private let tearZoneHeight: CGFloat = LayoutConstants.Size.tearZoneHeight
-    private let horizontalLockThreshold: CGFloat = 12 // pixels of horizontal movement before we "lock" into tear gesture
+    private let clearThreshold: CGFloat = GestureConstants.tearThreshold
+    private let clearZoneHeight: CGFloat = LayoutConstants.Size.tearZoneHeight
+    private let horizontalLockThreshold: CGFloat = 12 // pixels of horizontal movement before we "lock" into clear gesture
     
     var body: some View {
         SwipeNavigationView(showOverview: $showArchive) {
@@ -151,13 +151,34 @@ struct MainView: View {
                 }
             )
         }
+        .alert(
+            StringConstants.Errors.saveFailed.localized,
+            isPresented: Binding(
+                get: { noteStore.saveError != nil },
+                set: { if !$0 { noteStore.saveError = nil } }
+            )
+        ) {
+            Button(StringConstants.Actions.ok.localized, role: .cancel) {
+                noteStore.saveError = nil
+            }
+            Button(StringConstants.Loading.retryButton.localized) {
+                noteStore.saveCurrentNote()
+            }
+        } message: {
+            if let error = noteStore.saveError {
+                Text(error.errorDescription ?? "")
+            }
+        }
     }
     
     private var noteCard: some View {
         VStack(spacing: 0) {
             SelectableTextField(
                 StringConstants.Note.titlePlaceholder.localized,
-                text: $noteStore.currentNote.title,
+                text: Binding(
+                    get: { noteStore.currentNote.title },
+                    set: { noteStore.updateCurrentNoteTitle($0) }
+                ),
                 font: UIFont.monospacedSystemFont(ofSize: 17, weight: .semibold),
                 foregroundColor: .primaryText,
                 textAlignment: .center,
@@ -166,11 +187,11 @@ struct MainView: View {
             .padding(.horizontal, 20)
             .padding(.top, 18)
             
-            TearIndicatorView(
-                tearProgress: $tearProgress,
+            ClearIndicatorView(
+                clearProgress: $clearProgress,
                 isDragging: $isDragging
             )
-            .frame(height: tearZoneHeight)
+            .frame(height: clearZoneHeight)
             
             ZStack(alignment: .bottomTrailing) {
                 TaggableTextEditor(
@@ -196,7 +217,7 @@ struct MainView: View {
                 .padding(.bottom, LayoutConstants.Padding.large)
             }
             .background(Color.noteBackground)
-            .opacity(max(0.25, 1.0 - (tearProgress * ThemeConstants.Opacity.veryHeavy)))
+            .opacity(max(0.25, 1.0 - (clearProgress * ThemeConstants.Opacity.veryHeavy)))
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
@@ -209,8 +230,8 @@ struct MainView: View {
         .background(Color.noteBackground)
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .shadow(color: Color.cardShadow, radius: 8, x: 0, y: 2)
-        .modifier(TearAnimationModifier(
-            tearProgress: tearProgress,
+        .modifier(ClearAnimationModifier(
+            clearProgress: clearProgress,
             dragOffset: dragOffset,
             animationID: animationID
         ))
@@ -219,9 +240,9 @@ struct MainView: View {
                 .onChanged { value in
                     guard !noteStore.isTextSelectionActive else {
                         dragOffset = 0
-                        tearProgress = 0
+                        clearProgress = 0
                         isDragging = false
-                        isTearGestureActive = false
+                        isClearGestureActive = false
                         return
                     }
                     guard !isAnimating else { return }
@@ -229,13 +250,13 @@ struct MainView: View {
                     let absX = abs(translation.width)
                     let absY = abs(translation.height)
 
-                    // Decide once whether this drag is a horizontal tear attempt
-                    if !isTearGestureActive && !isDragging {
+                    // Decide once whether this drag is a horizontal clear attempt
+                    if !isClearGestureActive && !isDragging {
                         // Only start if it's a clearly horizontal rightward drag
                         if translation.width > 0 && absX > absY && absX > horizontalLockThreshold {
-                            isTearGestureActive = true
+                            isClearGestureActive = true
                             isDragging = true
-                            tearDirection = .rightward
+                            clearDirection = .rightward
                             lastHapticStep = 0
                         } else {
                             // Not our gesture (likely vertical scroll or leftward), ignore
@@ -243,14 +264,14 @@ struct MainView: View {
                         }
                     }
 
-                    guard isTearGestureActive else { return }
+                    guard isClearGestureActive else { return }
 
                     let dx = translation.width
                     dragOffset = dx
-                    tearProgress = min(1, dx / GestureConstants.tearProgressMultiplier)
+                    clearProgress = min(1, dx / GestureConstants.tearProgressMultiplier)
 
                     // Simplified haptic feedback system using steps
-                    let hapticStep = Int(tearProgress * 10) // 10 steps from 0 to 1
+                    let hapticStep = Int(clearProgress * 10) // 10 steps from 0 to 1
                     if hapticStep > lastHapticStep && hapticStep > 0 {
                         let mediumFeedback = UIImpactFeedbackGenerator(style: .medium)
                         mediumFeedback.impactOccurred(intensity: 0.5)
@@ -260,52 +281,52 @@ struct MainView: View {
                 .onEnded { value in
                     if noteStore.isTextSelectionActive {
                         dragOffset = 0
-                        tearProgress = 0
+                        clearProgress = 0
                         isDragging = false
-                        isTearGestureActive = false
+                        isClearGestureActive = false
                         return
                     }
-                    // If we never activated the tear gesture, do nothing so scrolling isn't disturbed
-                    guard isTearGestureActive, !isAnimating else {
-                        isTearGestureActive = false
+                    // If we never activated the clear gesture, do nothing so scrolling isn't disturbed
+                    guard isClearGestureActive, !isAnimating else {
+                        isClearGestureActive = false
                         return
                     }
 
                     // Recompute progress strictly from final translation to avoid stale state
                     let translation = value.translation.width
                     let endProgress = max(0, min(1, translation / GestureConstants.tearProgressMultiplier))
-                    let shouldTear = endProgress >= GestureConstants.tearThreshold
+                    let shouldClear = endProgress >= clearThreshold
 
-                    // Reset haptic step and start animation only for active tear drags
+                    // Reset haptic step and start animation only for active clear drags
                     lastHapticStep = 0
                     isAnimating = true
                     animationID = UUID() // Force view refresh only when we actually handled the gesture
 
-                    if shouldTear {
+                    if shouldClear {
                         let impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
                         impactFeedback.impactOccurred()
 
                         withAnimation(.easeOut(duration: 0.2)) {
                             dragOffset = 0
-                            tearProgress = 0
+                            clearProgress = 0
                         }
 
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                             isDragging = false
                             isAnimating = false
-                            isTearGestureActive = false
-                            noteStore.archiveCurrentNote()
+                            isClearGestureActive = false
+                            noteStore.clearCurrentNote()
                         }
                     } else {
                         withAnimation(.spring(response: 0.2, dampingFraction: 0.8, blendDuration: 0)) {
                             dragOffset = 0
-                            tearProgress = 0
+                            clearProgress = 0
                         }
 
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                             isDragging = false
                             isAnimating = false
-                            isTearGestureActive = false
+                            isClearGestureActive = false
                         }
                     }
                 }
@@ -382,8 +403,8 @@ struct MainView: View {
     }
 }
 
-struct TearIndicatorView: View {
-    @Binding var tearProgress: CGFloat
+struct ClearIndicatorView: View {
+    @Binding var clearProgress: CGFloat
     @Binding var isDragging: Bool
     
     var body: some View {
@@ -410,9 +431,9 @@ struct TearIndicatorView: View {
                     if isDragging {
                         HStack {
                             Rectangle()
-                                .fill(tearProgress >= GestureConstants.tearThreshold ? Color.tearIndicatorActive : Color.tearIndicator)
+                                .fill(clearProgress >= GestureConstants.tearThreshold ? Color.tearIndicatorActive : Color.tearIndicator)
                                 .frame(height: 2)
-                                .frame(width: geometry.size.width * min(1.0, tearProgress))
+                                .frame(width: geometry.size.width * min(1.0, clearProgress))
                             Spacer(minLength: 0)
                         }
                     }
@@ -420,22 +441,22 @@ struct TearIndicatorView: View {
                 .frame(maxWidth: .infinity)
             }
         }
-        .accessibilityLabel(StringConstants.Accessibility.tearZone.localized)
-        .accessibilityHint(StringConstants.Accessibility.tearZoneHint.localized)
+        .accessibilityLabel(StringConstants.Accessibility.clearZone.localized)
+        .accessibilityHint(StringConstants.Accessibility.clearZoneHint.localized)
     }
 }
 
-// MARK: - Tear Animation Modifier
+// MARK: - Clear Animation Modifier
 
-struct TearAnimationModifier: ViewModifier, Animatable {
-    var tearProgress: CGFloat
+struct ClearAnimationModifier: ViewModifier, Animatable {
+    var clearProgress: CGFloat
     var dragOffset: CGFloat
     let animationID: UUID
     
     var animatableData: AnimatablePair<CGFloat, CGFloat> {
-        get { AnimatablePair(tearProgress, dragOffset) }
+        get { AnimatablePair(clearProgress, dragOffset) }
         set { 
-            tearProgress = newValue.first
+            clearProgress = newValue.first
             dragOffset = newValue.second
         }
     }
@@ -443,13 +464,13 @@ struct TearAnimationModifier: ViewModifier, Animatable {
     func body(content: Content) -> some View {
         content
             .scaleEffect(
-                x: 1.0 + (tearProgress * 0.1),
-                y: 1.0 - (tearProgress * 0.02)
+                x: 1.0 + (clearProgress * 0.1),
+                y: 1.0 - (clearProgress * 0.02)
             )
-            .offset(x: (dragOffset * 0.1) + (tearProgress * 20.0))
-            .opacity(1.0 - (tearProgress * 0.3))
+            .offset(x: (dragOffset * 0.1) + (clearProgress * 20.0))
+            .opacity(1.0 - (clearProgress * 0.3))
             .rotation3DEffect(
-                .degrees(tearProgress * 15.0),
+                .degrees(clearProgress * 15.0),
                 axis: (x: 0, y: 1, z: 0),
                 anchor: .leading,
                 perspective: 0.5
