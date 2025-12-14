@@ -137,3 +137,7 @@
 // Welcome Note
 "welcome.title" = "Willkommen bei Zettel";
 "welcome.content" = "In Zettel kannst du:\n\n* nach ← wischen um alle Zettel zu sehen\n* nach → wischen um einen neuen Zettel zu erstellen\n\nViel Spaß beim #notieren ^^";
+
+// Changelog
+"changelog.whats_new" = "Was ist neu";
+"changelog.dismiss_hint" = "Nach rechts wischen zum Schließen";

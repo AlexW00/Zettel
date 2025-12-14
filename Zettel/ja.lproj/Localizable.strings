@@ -137,3 +137,7 @@
 // Welcome Note
 "welcome.title" = "Zettelへようこそ";
 "welcome.content" = "Zettelでは:\n\n* ←スワイプでメモを表示\n* →スワイプで新しいメモを作成\n\n楽しい#メモライフを ^^";
+
+// Changelog
+"changelog.whats_new" = "新機能";
+"changelog.dismiss_hint" = "右にスワイプして閉じる";
