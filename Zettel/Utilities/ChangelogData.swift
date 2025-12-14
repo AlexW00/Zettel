@@ -23,7 +23,6 @@ enum ChangelogData {
             ## ✨ New Features
 
             - **Auto Save**: Notes are now automatically saved as you type, ensuring your work is never lost.
-            - **Swipe to Create**: Swipe now clears and creates a new note for faster note-taking; previously it also saved the current note.
             
             ---
 
