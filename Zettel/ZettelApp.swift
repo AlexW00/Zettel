@@ -35,6 +35,12 @@ struct ZettelApp: App {
                     // Start initial note loading after the UI appears
                     noteStore.startInitialNoteLoading()
                 }
+                .onChange(of: noteStore.hasCompletedInitialLoad) { _, completed in
+                    if completed {
+                        // Check for changelog after initial load completes
+                        noteStore.checkAndShowChangelog()
+                    }
+                }
         }
     }
     

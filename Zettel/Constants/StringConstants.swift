@@ -153,4 +153,10 @@ enum StringConstants {
         static let localeCellInstalled = "dictation.locale.installed"
         static let localeCellPending = "dictation.locale.pending"
     }
+    
+    // MARK: - Changelog
+    enum Changelog {
+        static let whatsNew = "changelog.whats_new"
+        static let dismissHint = "changelog.dismiss_hint"
+    }
 }

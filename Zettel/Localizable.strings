@@ -137,3 +137,7 @@
 // Welcome Note
 "welcome.title" = "Welcome to Zettel";
 "welcome.content" = "In Zettel, you can:\n\n* swipe ← to see your notes\n* swipe → to create a new note\n\nHappy #notetaking ^^";
+
+// Changelog
+"changelog.whats_new" = "What's New";
+"changelog.dismiss_hint" = "Swipe right to dismiss";

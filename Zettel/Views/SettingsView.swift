@@ -335,6 +335,38 @@ struct SettingsView: View {
                 } header: {
                     Text(StringConstants.Navigation.about.localized)
                 }
+                
+                #if DEBUG
+                // Debug Section - only visible in debug builds
+                Section {
+                    Button(action: {
+                        // Set last seen version to 1.0 to simulate an update from an older version
+                        ChangelogManager.shared.setDebugLastSeenVersion(AppVersion(major: 1, minor: 0))
+                        dismiss()
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.counterclockwise")
+                                .foregroundColor(.iconTint)
+                                .frame(width: 24)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Simulate Update from v1.0")
+                                    .font(.system(size: 16, weight: .medium))
+                                
+                                Text("Shows changelog on next app launch")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.vertical, 4)
+                } header: {
+                    Text("Debug")
+                }
+                #endif
             }
             .navigationTitle(StringConstants.Navigation.settings.localized)
             .navigationBarTitleDisplayMode(.inline)
