@@ -11,7 +11,9 @@
 import Foundation
 import SwiftUI
 import Combine
+#if canImport(UIKit)
 import UIKit
+#endif
 import UniformTypeIdentifiers
 import AppIntents
 
@@ -401,8 +403,10 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
         isCurrentNotePersisted = false
         
         // Add haptic feedback for shortcut action
+        #if os(iOS)
         let successFeedback = UINotificationFeedbackGenerator()
         successFeedback.notificationOccurred(.success)
+        #endif
         
         // Ensure we're showing the main view
         shouldShowMainView = true
@@ -432,6 +436,7 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
             }
         }
         
+        #if os(iOS)
         NotificationCenter.default.addObserver(
             forName: UIApplication.didBecomeActiveNotification,
             object: nil,
@@ -441,6 +446,7 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
                 self?.handleLocalizationChange()
             }
         }
+        #endif
     }
     
     /// Handles localization changes by updating the welcome note if it's currently displayed
@@ -578,8 +584,10 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
         originalFilename = nil
         
         // Add haptic feedback for clear action
+        #if os(iOS)
         let successFeedback = UINotificationFeedbackGenerator()
         successFeedback.notificationOccurred(.success)
+        #endif
     }
     
     /// Checks if the current note has content worth saving

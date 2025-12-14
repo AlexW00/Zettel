@@ -1,5 +1,8 @@
+#if os(iOS)
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#endif
 import AppIntents
 
 enum ClearGestureDirection {
@@ -505,54 +508,58 @@ private struct DictationControlButton: View {
     }
 
     var body: some View {
-        Menu {
-            // Long-press language switcher — mirrors SettingsView
-            if !dictationLocaleManager.isLoadingLocales {
-                ForEach(dictationLocaleManager.localeOptions) { option in
-                    Button {
-                        dictationLocaleManager.updateSelectedLocale(option)
-                    } label: {
-                        HStack {
-                            Text(option.displayName)
-                            Spacer()
-                            Text(option.isInstalled ? StringConstants.Dictation.localeCellInstalled.localized : StringConstants.Dictation.localeCellPending.localized)
-                                .font(.system(size: 12))
-                                .foregroundColor(option.isInstalled ? .secondary : .orange)
-                            if dictationLocaleManager.selectedLocaleIdentifier == option.id {
-                                Image(systemName: "checkmark")
+        Menu(
+            content: {
+                // Long-press language switcher — mirrors SettingsView
+                if !dictationLocaleManager.isLoadingLocales {
+                    ForEach(dictationLocaleManager.localeOptions) { option in
+                        Button {
+                            dictationLocaleManager.updateSelectedLocale(option)
+                        } label: {
+                            HStack {
+                                Text(option.displayName)
+                                Spacer()
+                                Text(option.isInstalled ? StringConstants.Dictation.localeCellInstalled.localized : StringConstants.Dictation.localeCellPending.localized)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(option.isInstalled ? .secondary : .orange)
+                                if dictationLocaleManager.selectedLocaleIdentifier == option.id {
+                                    Image(systemName: "checkmark")
+                                }
                             }
                         }
                     }
+                } else {
+                    // Lightweight loading indicator within the menu
+                    Text(StringConstants.Settings.dictationLocaleMenuLoading.localized)
                 }
-            } else {
-                // Lightweight loading indicator within the menu
-                Text(StringConstants.Settings.dictationLocaleMenuLoading.localized)
-            }
-        } label: {
-            ZStack {
-                Circle()
-                    .fill(Color.dictationBackgroundTint)
-                    .glassEffect(.clear, in: Circle())
+            },
+            label: {
+                ZStack {
+                    Circle()
+                        .fill(Color.dictationBackgroundTint)
+                        .glassEffect(.clear, in: Circle())
 
-                if shouldShowSpinner {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                        .tint(Color.dictationBusyForeground)
-                        .scaleEffect(0.8)
-                } else if let iconName = iconName {
-                    Image(systemName: iconName)
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(iconColor)
-                        .symbolRenderingMode(.monochrome)
-                        .transition(.opacity.combined(with: .scale))
+                    if shouldShowSpinner {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .tint(Color.dictationBusyForeground)
+                            .scaleEffect(0.8)
+                    } else if let iconName = iconName {
+                        Image(systemName: iconName)
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundStyle(iconColor)
+                            .symbolRenderingMode(.monochrome)
+                            .transition(.opacity.combined(with: .scale))
+                    }
                 }
+                .frame(width: LayoutConstants.Size.dictationButton, height: LayoutConstants.Size.dictationButton)
+                .contentShape(Circle())
+            },
+            primaryAction: {
+                guard !(isBusy && !isRecording) else { return }
+                action()
             }
-            .frame(width: LayoutConstants.Size.dictationButton, height: LayoutConstants.Size.dictationButton)
-            .contentShape(Circle())
-        } primaryAction: {
-            guard !(isBusy && !isRecording) else { return }
-            action()
-        }
+        )
         .animation(.easeInOut(duration: 0.2), value: state)
         .accessibilityLabel(Text(isRecording ? StringConstants.Dictation.stopButton.localized : StringConstants.Dictation.startButton.localized))
         .accessibilityAddTraits(.isButton)
@@ -579,3 +586,5 @@ private struct DictationControlButton: View {
     private var isFinishing: Bool { state == .finishing }
     private var isPreparing: Bool { state == .preparing }
 }
+
+    #endif

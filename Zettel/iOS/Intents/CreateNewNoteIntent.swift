@@ -49,7 +49,7 @@ struct ZettelAppShortcuts: AppShortcutsProvider {
                 "New note in \(.applicationName)",
                 "Add note in \(.applicationName)"
             ],
-            shortTitle: "shortcuts.new_note_short_title",
+            shortTitle: LocalizedStringResource("shortcuts.new_note_short_title"),
             systemImageName: "note.text.badge.plus"
         )
     }

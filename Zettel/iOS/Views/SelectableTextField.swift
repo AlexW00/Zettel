@@ -1,6 +1,9 @@
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#endif
 
+#if os(iOS)
 struct SelectableTextField: UIViewRepresentable {
     @Binding var text: String
     var placeholder: String
@@ -137,3 +140,4 @@ struct SelectableTextField: UIViewRepresentable {
         }
     }
 }
+#endif
