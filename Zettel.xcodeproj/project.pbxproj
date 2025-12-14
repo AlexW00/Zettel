@@ -17,38 +17,37 @@
 			membershipExceptions = (
 				Assets.xcassets,
 				Info.plist,
-				"iOS/Constants/LayoutConstants.swift",
-				"iOS/Constants/StringConstants.swift",
-				"iOS/Constants/ThemeConstants.swift",
-				"iOS/ContentView.swift",
+				iOS/Constants/LayoutConstants.swift,
+				iOS/Constants/StringConstants.swift,
+				iOS/Constants/ThemeConstants.swift,
+				iOS/ContentView.swift,
 				"iOS/Extensions/CGFloat+Extensions.swift",
 				"iOS/Extensions/Color+Extensions.swift",
 				"iOS/Extensions/String+Localization.swift",
-				"iOS/Intents/CreateNewNoteIntent.swift",
-				"iOS/Models/Note.swift",
-				"iOS/Models/Tag.swift",
-				"iOS/Models/TagParser.swift",
-				"iOS/Speech/DictationLocaleManager.swift",
-				"iOS/Speech/NoteDictationController.swift",
-				"iOS/Stores/NoteStore.swift",
-				"iOS/Stores/TagStore.swift",
-				"iOS/Stores/ThemeStore.swift",
-				"iOS/Utilities/DefaultTitleTemplateManager.swift",
-				"iOS/Utilities/LocalizationManager.swift",
-				"iOS/Views/DebugShortcutView.swift",
-				"iOS/Views/LoadingStateView.swift",
-				"iOS/Views/LocalizationTestView.swift",
-				"iOS/Views/MainView.swift",
-				"iOS/Views/Modifiers/ScrollFadeModifier.swift",
-				"iOS/Views/OverviewGrid.swift",
-				"iOS/Views/SelectableTextField.swift",
-				"iOS/Views/SettingsView.swift",
-				"iOS/Views/SwipeNavigationView.swift",
-				"iOS/Views/TagChipView.swift",
-				"iOS/Views/TaggableTextEditor.swift",
-				"iOS/ZettelApp.swift",
-				"macOS/Info.plist",
-				"macOS/Zettel-macOS.entitlements",
+				iOS/Intents/CreateNewNoteIntent.swift,
+				iOS/Models/Note.swift,
+				iOS/Models/Tag.swift,
+				iOS/Models/TagParser.swift,
+				iOS/Speech/DictationLocaleManager.swift,
+				iOS/Speech/NoteDictationController.swift,
+				iOS/Stores/NoteStore.swift,
+				iOS/Stores/TagStore.swift,
+				iOS/Stores/ThemeStore.swift,
+				iOS/Utilities/DefaultTitleTemplateManager.swift,
+				iOS/Utilities/LocalizationManager.swift,
+				iOS/Views/DebugShortcutView.swift,
+				iOS/Views/LoadingStateView.swift,
+				iOS/Views/LocalizationTestView.swift,
+				iOS/Views/MainView.swift,
+				iOS/Views/Modifiers/ScrollFadeModifier.swift,
+				iOS/Views/OverviewGrid.swift,
+				iOS/Views/SelectableTextField.swift,
+				iOS/Views/SettingsView.swift,
+				iOS/Views/SwipeNavigationView.swift,
+				iOS/Views/TagChipView.swift,
+				iOS/Views/TaggableTextEditor.swift,
+				iOS/ZettelApp.swift,
+				macOS/Info.plist,
 				zettel.icon,
 			);
 			target = 4B3BEB7E2EEF468500223467 /* Zettel-macOS */;
@@ -57,31 +56,30 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				"macOS/AppDelegate.swift",
-				"macOS/Assets.xcassets",
-				"macOS/CommandPaletteView.swift",
-				"macOS/ErrorBanner.swift",
-				"macOS/ErrorBannerView.swift",
-				"macOS/FileWatcher.swift",
-				"macOS/FolderAccessManager.swift",
-				"macOS/GlobalHotkeyManager.swift",
-				"macOS/Info.plist",
-				"macOS/MacContentView.swift",
-				"macOS/NoteDocument.swift",
-				"macOS/NoteEditorView.swift",
-				"macOS/NoteSession.swift",
-				"macOS/NoteWindowController.swift",
-				"macOS/NoteWindowRootView.swift",
-				"macOS/NoteWindowState.swift",
-				"macOS/NotesListPopoverView.swift",
-				"macOS/NotesStore.swift",
-				"macOS/SettingsRootView.swift",
-				"macOS/TitlebarControlsView.swift",
-				"macOS/TitlebarTitleView.swift",
-				"macOS/Zettel-macOS.entitlements",
-				"macOS/ZettelDocumentController.swift",
-				"macOS/zettel.icon",
-				"macOS/zettel_desktopApp.swift",
+				macOS/AppDelegate.swift,
+				macOS/Assets.xcassets,
+				macOS/CommandPaletteView.swift,
+				macOS/ErrorBanner.swift,
+				macOS/ErrorBannerView.swift,
+				macOS/FileWatcher.swift,
+				macOS/FolderAccessManager.swift,
+				macOS/GlobalHotkeyManager.swift,
+				macOS/Info.plist,
+				macOS/MacContentView.swift,
+				macOS/NoteDocument.swift,
+				macOS/NoteEditorView.swift,
+				macOS/NoteSession.swift,
+				macOS/NotesListPopoverView.swift,
+				macOS/NotesStore.swift,
+				macOS/NoteWindowController.swift,
+				macOS/NoteWindowRootView.swift,
+				macOS/NoteWindowState.swift,
+				macOS/SettingsRootView.swift,
+				macOS/TitlebarControlsView.swift,
+				macOS/TitlebarTitleView.swift,
+				macOS/zettel_desktopApp.swift,
+				macOS/zettel.icon,
+				macOS/ZettelDocumentController.swift,
 			);
 			target = 9ED9FFA12E09D9AF0000CCCD /* Zettel */;
 		};
@@ -264,7 +262,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Zettel/macOS/Zettel-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -272,6 +270,8 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Zettel/macOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Zettel;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -300,7 +300,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Zettel/macOS/Zettel-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -308,6 +308,8 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Zettel/macOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Zettel;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
