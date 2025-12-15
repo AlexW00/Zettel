@@ -83,6 +83,9 @@ class ChangelogManager: ObservableObject {
     /// Key for storing the last seen app version in UserDefaults
     private let lastSeenVersionKey = "lastSeenAppVersion"
     
+    /// Key used by NoteStore to track if the user has launched before (not a first-time user)
+    private let hasLaunchedBeforeKey = "hasLaunchedBefore"
+    
     /// All available changelog entries, sorted by version (newest first)
     @Published private(set) var changelogEntries: [ChangelogEntry] = []
     
@@ -158,16 +161,25 @@ class ChangelogManager: ObservableObject {
         print("[Changelog] Found changelog for current version: \(currentChangelog.title)")
         #endif
         
-        // Show changelog only if user has seen a previous version (not first-time users)
-        // First-time users (lastSeenVersion == nil) should see the welcome note instead
-        if let lastSeen = lastSeenVersion, lastSeen < currentVersion {
+        // Check if user has launched before (not a first-time user showing the tutorial)
+        let hasLaunchedBefore = UserDefaults.standard.bool(forKey: hasLaunchedBeforeKey)
+        
+        #if DEBUG
+        print("[Changelog] Has launched before: \(hasLaunchedBefore)")
+        #endif
+        
+        // Show changelog if:
+        // 1. User has launched before (not a first-time user who should see welcome note)
+        // 2. AND either lastSeenVersion is nil (upgrading from version without changelog system)
+        //    OR lastSeenVersion is lower than current version
+        if hasLaunchedBefore && (lastSeenVersion == nil || lastSeenVersion! < currentVersion) {
             #if DEBUG
-            print("[Changelog] Showing changelog (upgrade from \(lastSeen.displayString) to \(currentVersion.displayString))")
+            print("[Changelog] Showing changelog (upgrade from \(lastSeenVersion?.displayString ?? "pre-changelog version") to \(currentVersion.displayString))")
             #endif
             pendingChangelog = currentChangelog
-        } else if lastSeenVersion == nil {
+        } else if !hasLaunchedBefore {
             #if DEBUG
-            print("[Changelog] First-time user, not showing changelog")
+            print("[Changelog] First-time user, not showing changelog (will see welcome note)")
             #endif
             // First-time user - just set the current version as seen, don't show changelog
             setLastSeenVersion(currentVersion)
