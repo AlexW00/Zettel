@@ -15,6 +15,21 @@ enum ChangelogData {
     /// All changelog entries - add new versions at the TOP
     static let entries: [(version: String, title: String, content: String)] = [
         (
+            version: "2.3",
+            title: "v2.3 - What's New",
+            content: """
+            Welcome to Zettel v2.3!
+
+            ## 🛠 Improvements
+
+            - **Swipe Reliability**: Swiping to create a new note now flushes any pending auto-save first, so quick swipes won't lose last-second edits.
+            
+            ---
+
+            Thank you for using Zettel! 💛
+            """
+        ),
+        (
             version: "2.2",
             title: "v2.2 - What's New",
             content: """

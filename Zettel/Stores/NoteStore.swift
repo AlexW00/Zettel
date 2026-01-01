@@ -414,10 +414,16 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     /// Checks if current note has unsaved content that would be lost
     /// Note: With auto-save, this now checks if there are unpersisted changes
     private func hasUnsavedContent() -> Bool {
-        // If note is already persisted via auto-save, no "unsaved" content warning needed
+        // A pending debounced auto-save means there are edits not yet persisted.
+        if autoSaveWorkItem != nil {
+            return true
+        }
+        
+        // If note is already persisted and there's no pending auto-save, no warning needed.
         if isCurrentNotePersisted {
             return false
         }
+        
         return hasContentWorthSaving()
     }
     
@@ -514,6 +520,9 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
             return
         }
         
+        // If the user was mid-edit and an auto-save is pending, flush it before switching notes.
+        flushPendingAutoSaveIfNeeded()
+        
         // Create a note from the changelog content
         let changelogNote = Note(title: changelog.fullTitle, content: changelog.content)
         self.currentNote = changelogNote
@@ -527,6 +536,9 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     /// Dismisses the changelog and creates a fresh note
     func dismissChangelog() {
         guard isShowingChangelog else { return }
+        
+        // Ensure no pending auto-save can run after switching notes.
+        cancelPendingAutoSave()
         
         // Mark changelog as seen
         ChangelogManager.shared.dismissChangelog()
@@ -549,6 +561,12 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
     /// Saves the current note to disk (auto-save)
     /// This method is called automatically when the note content changes.
     func saveCurrentNote() {
+        // Never persist changelog notes.
+        guard !isShowingChangelog else { return }
+        
+        // If a debounced save is queued, cancel it so we don't save twice (or after switching notes).
+        cancelPendingAutoSave()
+        
         // Don't save if the note is empty (no content and default title)
         guard hasContentWorthSaving() else {
             return
@@ -615,10 +633,8 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
             return
         }
         
-        // Save any pending changes before clearing
-        if hasContentWorthSaving() && isCurrentNotePersisted {
-            saveCurrentNote()
-        }
+        // Save any pending changes before clearing (including debounced auto-save that hasn't fired yet).
+        flushPendingAutoSaveIfNeeded()
         
         // Create a fresh note (not persisted until user types)
         var newNote = Note(title: "", content: "")
@@ -652,12 +668,36 @@ class NoteStore: NSObject, ObservableObject, NSFilePresenter {
         // Only schedule if there's content worth saving
         guard hasContentWorthSaving() else { return }
         
-        let workItem = DispatchWorkItem { [weak self] in
-            guard let self else { return }
+        var workItem: DispatchWorkItem?
+        workItem = DispatchWorkItem { [weak self] in
+            guard let self, let workItem, !workItem.isCancelled else { return }
+            if self.autoSaveWorkItem === workItem {
+                self.autoSaveWorkItem = nil
+            }
             self.saveCurrentNote()
         }
+        
+        guard let workItem else { return }
         autoSaveWorkItem = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + autoSaveDebounceInterval, execute: workItem)
+    }
+
+    private func cancelPendingAutoSave() {
+        autoSaveWorkItem?.cancel()
+        autoSaveWorkItem = nil
+    }
+
+    /// Ensures any queued debounced save is persisted before switching/clearing the current note.
+    private func flushPendingAutoSaveIfNeeded() {
+        let hadPendingAutoSave = autoSaveWorkItem != nil
+        cancelPendingAutoSave()
+        
+        guard !isShowingChangelog else { return }
+        guard hasContentWorthSaving() else { return }
+        
+        // Save if the note hasn't been persisted yet, or if we had a debounced save pending.
+        guard !isCurrentNotePersisted || hadPendingAutoSave else { return }
+        saveCurrentNote()
     }
     
     /// Updates the current note's content and schedules auto-save
