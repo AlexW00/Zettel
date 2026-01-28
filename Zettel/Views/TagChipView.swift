@@ -37,6 +37,10 @@ struct TagListView: View {
     let maxTags: Int
     let compact: Bool
     
+    @State private var isOverflowing = false
+    @State private var contentWidth: CGFloat = 0
+    @State private var containerWidth: CGFloat = 0
+    
     init(tags: [String], maxTags: Int = 3, compact: Bool = false) {
         self.tags = tags
         self.maxTags = maxTags
@@ -45,30 +49,74 @@ struct TagListView: View {
     
     var body: some View {
         if !tags.isEmpty {
-            HStack(spacing: compact ? LayoutConstants.Padding.small : LayoutConstants.Padding.small) {
-                ForEach(Array(tags.prefix(maxTags)), id: \.self) { tag in
-                    TagChipView(tagName: tag, compact: compact)
-                        .fixedSize(horizontal: true, vertical: false)
+            GeometryReader { geometry in
+                HStack(spacing: compact ? LayoutConstants.Padding.small : LayoutConstants.Padding.small) {
+                    ForEach(Array(tags.prefix(maxTags)), id: \.self) { tag in
+                        TagChipView(tagName: tag, compact: compact)
+                    }
+                    
+                    if tags.count > maxTags {
+                        let shape = Capsule(style: .continuous)
+                        Text("overview.additional_tags".localized(tags.count - maxTags))
+                            .font(Font.system(size: compact ? LayoutConstants.FontSize.caption - 1 : LayoutConstants.FontSize.caption, weight: .medium))
+                            .foregroundStyle(Color.primaryText)
+                            .padding(.horizontal, compact ? LayoutConstants.Padding.small : LayoutConstants.Padding.small)
+                            .padding(.vertical, compact ? 1 : LayoutConstants.Padding.extraSmall)
+                            .background {
+                                shape.fill(Color.clear)
+                                    .glassEffect(.regular, in: shape)
+                            }
+                            .layoutPriority(-1)
+                    }
                 }
-                
-                if tags.count > maxTags {
-                    let shape = Capsule(style: .continuous)
-                    Text("overview.additional_tags".localized(tags.count - maxTags))
-                        .font(Font.system(size: compact ? LayoutConstants.FontSize.caption - 1 : LayoutConstants.FontSize.caption, weight: .medium))
-                        .foregroundStyle(Color.primaryText)
-                        .padding(.horizontal, compact ? LayoutConstants.Padding.small : LayoutConstants.Padding.small)
-                        .padding(.vertical, compact ? 1 : LayoutConstants.Padding.extraSmall)
-                        .background {
-                            shape.fill(Color.clear)
-                                .glassEffect(.regular, in: shape)
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
+                .background {
+                    GeometryReader { contentGeometry in
+                        Color.clear.preference(
+                            key: TagContentWidthKey.self,
+                            value: contentGeometry.size.width
+                        )
+                    }
+                }
+                .onPreferenceChange(TagContentWidthKey.self) { width in
+                    contentWidth = width
+                    isOverflowing = width > containerWidth
+                }
+                .frame(maxWidth: geometry.size.width, alignment: .leading)
+                .clipped()
+                .mask {
+                    if isOverflowing {
+                        HStack(spacing: 0) {
+                            Color.black
+                            LinearGradient(
+                                colors: [.black, .clear],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                            .frame(width: 24)
                         }
-                        .fixedSize(horizontal: true, vertical: false)
+                    } else {
+                        Color.black
+                    }
+                }
+                .onAppear {
+                    containerWidth = geometry.size.width
+                }
+                .onChange(of: geometry.size.width) { _, newWidth in
+                    containerWidth = newWidth
+                    isOverflowing = contentWidth > newWidth
                 }
             }
-            .fixedSize(horizontal: false, vertical: true)
-            .lineLimit(1)
-            .truncationMode(.tail)
+            .frame(height: compact ? 20 : 26) // Fixed height to prevent layout jumps
         }
+    }
+}
+
+private struct TagContentWidthKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
     }
 }
 
