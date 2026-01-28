@@ -77,7 +77,14 @@ class ThemeStore: ObservableObject {
 extension Color {
     // Background colors
     static var appBackground: Color {
-        Color(UIColor.systemGroupedBackground)
+        Color(UIColor { traitCollection in
+            if traitCollection.userInterfaceStyle == .dark {
+                return UIColor.systemGroupedBackground
+            } else {
+                // Slightly darker than systemGroupedBackground for better contrast with liquid glass
+                return UIColor(white: 0.9, alpha: 1.0)
+            }
+        })
     }
     
     static var primaryBackground: Color {
