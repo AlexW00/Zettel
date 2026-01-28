@@ -216,7 +216,7 @@ struct MainView: View {
                 .padding(.trailing, LayoutConstants.Padding.large)
                 .padding(.bottom, LayoutConstants.Padding.large)
             }
-            .background(Color.noteBackground)
+            .background(Color.clear)
             .opacity(max(0.25, 1.0 - (clearProgress * ThemeConstants.Opacity.veryHeavy)))
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
@@ -227,9 +227,12 @@ struct MainView: View {
                     }
                 }
         }
-        .background(Color.noteBackground)
+        .background {
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color.clear)
+                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14))
+        }
         .clipShape(RoundedRectangle(cornerRadius: 14))
-        .shadow(color: Color.cardShadow, radius: 8, x: 0, y: 2)
         .modifier(ClearAnimationModifier(
             clearProgress: clearProgress,
             dragOffset: dragOffset,
@@ -411,7 +414,7 @@ struct ClearIndicatorView: View {
         GeometryReader { geometry in
             ZStack {
                 Rectangle()
-                    .fill(Color.noteBackground)
+                    .fill(Color.clear)
                     .frame(height: geometry.size.height.safeDivide(by: 2, fallback: 20))
                     .frame(maxHeight: .infinity, alignment: .top)
 
@@ -421,7 +424,7 @@ struct ClearIndicatorView: View {
                     HStack(spacing: 8) {
                         ForEach(0..<max(0, Int(geometry.size.width.safeDivide(by: 10, fallback: 0))), id: \.self) { _ in
                             Circle()
-                                .fill(Color.tearIndicator)
+                                .fill(Color.white.opacity(0.4))
                                 .frame(width: 3, height: 3)
                         }
                     }
@@ -431,7 +434,7 @@ struct ClearIndicatorView: View {
                     if isDragging {
                         HStack {
                             Rectangle()
-                                .fill(clearProgress >= GestureConstants.tearThreshold ? Color.tearIndicatorActive : Color.tearIndicator)
+                                .fill(clearProgress >= GestureConstants.tearThreshold ? Color.tearIndicatorActive : Color.white.opacity(0.6))
                                 .frame(height: 2)
                                 .frame(width: geometry.size.width * min(1.0, clearProgress))
                             Spacer(minLength: 0)

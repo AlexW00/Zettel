@@ -195,7 +195,6 @@ struct NoteCard: View {
     var isSelectionMode: Bool = false
 
     private let cardCornerRadius: CGFloat = 14
-    private let shadowRadius: CGFloat = 3
 
     @State private var wiggleAnimation = false
 
@@ -241,21 +240,6 @@ struct NoteCard: View {
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     }
-
-                    // Gradient overlay for overflow indication (hidden in selection mode and for cloud stubs)
-                    if !isSelectionMode && !note.isCloudStub {
-                        LinearGradient(
-                            gradient: Gradient(colors: [
-                                Color.noteBackground.opacity(0),
-                                Color.noteBackground.opacity(0.8),
-                                Color.noteBackground
-                            ]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                        .frame(height: 20)
-                        .allowsHitTesting(false)
-                    }
                 }
                 .clipped()
                 
@@ -270,9 +254,12 @@ struct NoteCard: View {
             }
             .padding(12)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .background(isSelected ? Color.accentColor.opacity(Color.lightOpacity) : Color.noteBackground)
-            .cornerRadius(cardCornerRadius)
-            .shadow(color: Color.cardShadow, radius: shadowRadius, x: 0, y: 2)
+            .background {
+                RoundedRectangle(cornerRadius: cardCornerRadius)
+                    .fill(isSelected ? Color.accentColor.opacity(Color.lightOpacity) : Color.clear)
+                    .glassEffect(.regular, in: RoundedRectangle(cornerRadius: cardCornerRadius))
+            }
+            .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: cardCornerRadius)
                     .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 2)
@@ -296,7 +283,7 @@ struct NoteCard: View {
                             .padding(8)
                             .background(
                                 Circle()
-                                    .fill(Color.noteBackground)
+                                    .fill(Color.clear)
                                     .frame(width: 24, height: 24)
                             )
                     }

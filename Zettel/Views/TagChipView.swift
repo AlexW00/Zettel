@@ -19,16 +19,15 @@ struct TagChipView: View {
         
         Text("tags.hashtag_prefix".localized(tagName))
             .font(.system(size: compact ? LayoutConstants.FontSize.caption : LayoutConstants.FontSize.small, weight: .medium, design: .monospaced))
-            .foregroundStyle(Color.secondaryText)
+            .foregroundStyle(Color.primaryText)
             .lineLimit(1)
             .truncationMode(.tail)
             .padding(.horizontal, compact ? LayoutConstants.Padding.small : LayoutConstants.Padding.medium)
             .padding(.vertical, compact ? LayoutConstants.Padding.extraSmall : LayoutConstants.Padding.small)
-            .background(shape.fill(Color.tagBackground))
-            .overlay(
-                shape
-                    .stroke(Color.separator.opacity(0.2), lineWidth: compact ? 0.6 : 0.8)
-            )
+            .background {
+                shape.fill(Color.clear)
+                    .glassEffect(.regular, in: shape)
+            }
             .contentShape(shape)
     }
 }
@@ -53,18 +52,16 @@ struct TagListView: View {
                 }
                 
                 if tags.count > maxTags {
+                    let shape = Capsule(style: .continuous)
                     Text("overview.additional_tags".localized(tags.count - maxTags))
                         .font(Font.system(size: compact ? LayoutConstants.FontSize.caption - 1 : LayoutConstants.FontSize.caption, weight: .medium))
-                        .foregroundStyle(Color.tertiaryText)
+                        .foregroundStyle(Color.primaryText)
                         .padding(.horizontal, compact ? LayoutConstants.Padding.small : LayoutConstants.Padding.small)
                         .padding(.vertical, compact ? 1 : LayoutConstants.Padding.extraSmall)
-                        .background(
-                            Capsule(style: .continuous).fill(Color.tagBackground)
-                        )
-                        .overlay(
-                            Capsule(style: .continuous)
-                                .stroke(Color.separator.opacity(0.2), lineWidth: compact ? 0.6 : 0.8)
-                        )
+                        .background {
+                            shape.fill(Color.clear)
+                                .glassEffect(.regular, in: shape)
+                        }
                         .fixedSize(horizontal: true, vertical: false)
                 }
             }
