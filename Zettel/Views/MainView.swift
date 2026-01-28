@@ -424,7 +424,7 @@ struct ClearIndicatorView: View {
                     HStack(spacing: 8) {
                         ForEach(0..<max(0, Int(geometry.size.width.safeDivide(by: 10, fallback: 0))), id: \.self) { _ in
                             Circle()
-                                .fill(Color.white.opacity(0.4))
+                                .fill(Color.secondary.opacity(0.4))
                                 .frame(width: 3, height: 3)
                         }
                     }
@@ -434,7 +434,7 @@ struct ClearIndicatorView: View {
                     if isDragging {
                         HStack {
                             Rectangle()
-                                .fill(clearProgress >= GestureConstants.tearThreshold ? Color.tearIndicatorActive : Color.white.opacity(0.6))
+                                .fill(clearProgress >= GestureConstants.tearThreshold ? Color.tearIndicatorActive : Color.secondary.opacity(0.6))
                                 .frame(height: 2)
                                 .frame(width: geometry.size.width * min(1.0, clearProgress))
                             Spacer(minLength: 0)
