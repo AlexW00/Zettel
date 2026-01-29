@@ -80,6 +80,8 @@ struct LoopingVideoPlayerView: View {
     @State private var player: AVQueuePlayer?
     @State private var playerLooper: AVPlayerLooper?
     
+    @Environment(\.scenePhase) private var scenePhase
+    
     var body: some View {
         GeometryReader { geometry in
             VideoPlayerLayerView(player: player)
@@ -95,6 +97,11 @@ struct LoopingVideoPlayerView: View {
         }
         .onChange(of: volume) { newValue in
             player?.volume = Float(newValue)
+        }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                player?.play()
+            }
         }
     }
     
@@ -168,6 +175,8 @@ struct CrossfadingLoopPlayerView: View {
     // Track which player is currently "main" (the one fading out)
     @State private var currentPlayerIndex = 1
     
+    @Environment(\.scenePhase) private var scenePhase
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -204,6 +213,51 @@ struct CrossfadingLoopPlayerView: View {
         .onChange(of: backgroundStore.videoVolume) { newValue in
             // Update volumes immediately
             updateVolumes()
+        }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                // Determine which player should be playing
+                // Usually both are "ready" but one might be paused if waiting for crossfade
+                // But generally, AVPlayer pauses when backgrounded. Resuming primarily the active one is critical.
+                // Resuming the background one is also safe if it was in the middle of a crossfade (handled by timeObserver?)
+                // Safest approach: Play the active player. The background player's state is managed by the timeObserver,
+                // but if we are in a crossfade, the timeObserver loop will tick and ensure things are right.
+                // Just calling play() on the players is what's needed.
+                
+                player1?.play()
+                // If we are crossfading, play the second one too just in case it was playing
+                // Actually, just playing both is fine because `setupTimeObserver` manages `bg.pause()` if it shouldn't be playing yet.
+                // Wait, `setupTimeObserver` only pauses BG at the START of the loop.
+                // If we are mid-fade, both should be playing.
+                // If we are not fading, BG should be paused (and at zero).
+                
+                // Let's rely on the fact that if it wasn't playing, playing it might not be skipping logic, 
+                // BUT `setupTimeObserver` logic triggers `bg.play()` when fade starts.
+                // If we blindly play both, we might start the background player prematurely.
+                
+                // Correct logic:
+                // 1. Play the main active player.
+                let activePlayer = (currentPlayerIndex == 1) ? player1 : player2
+                activePlayer?.play()
+                
+                // 2. If we are in the middle of a fade (opacity2 > 0 and opacity1 < 1.0 for example),
+                //    or simply if the timeObserver says so... 
+                //    Actually, simple check: if the bg player has volume > 0, it should be playing.
+                //    Or simpler: just check if it WAS playing before backgrounding? No, we don't store that.
+                
+                //    Let's check the time.
+                if let active = activePlayer {
+                     let currentTime = active.currentTime().seconds
+                     let fadeDuration = backgroundStore.videoLoopFadeDuration
+                     let triggerTime = max(0, duration - fadeDuration)
+                     
+                     if currentTime >= triggerTime {
+                         // We should be in fade, so resume the other one too
+                         let bgPlayer = (currentPlayerIndex == 1) ? player2 : player1
+                         bgPlayer?.play()
+                     }
+                }
+            }
         }
     }
     

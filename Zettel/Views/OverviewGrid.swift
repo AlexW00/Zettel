@@ -16,6 +16,7 @@ struct OverviewGrid: View {
     @State private var selectedNotes = Set<String>()
     @State private var searchText = ""
     @Environment(\.navigationGestureActive) private var navigationGestureActive
+    @Environment(\.colorScheme) var colorScheme
 
     // Design system constants
     private let cardCornerRadius: CGFloat = 14
@@ -164,21 +165,52 @@ struct OverviewGrid: View {
                                 Button(action: deleteSelectedNotes) {
                                     Image(systemName: "trash")
                                         .foregroundColor(.primaryText)
+                                        .font(.system(size: 20))
                                 }
+                                .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
+                                .glassEffect(
+                                    .clear
+                                        .interactive()
+                                        .tint(colorScheme == .dark
+                                              ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity)
+                                              : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)),
+                                    in: Circle()
+                                )
                                 .disabled(selectedNotes.isEmpty)
 
                                 Button(StringConstants.Actions.cancel.localized) {
                                     exitSelectionMode()
                                 }
                                 .foregroundColor(.primaryText)
+                                .padding(.horizontal, 16)
+                                .frame(height: LayoutConstants.Size.toolbarButton)
+                                .glassEffect(
+                                    .clear
+                                        .interactive()
+                                        .tint(colorScheme == .dark
+                                              ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity)
+                                              : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)),
+                                    in: Capsule()
+                                )
                             }
                         } else {
                             Button(action: enterSelectionMode) {
                                 Image(systemName: "checkmark.circle")
                                     .foregroundColor(.primaryText)
+                                    .font(.system(size: 22))
                             }
+                            .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
+                            .glassEffect(
+                                .clear
+                                    .interactive()
+                                    .tint(colorScheme == .dark
+                                          ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity)
+                                          : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)),
+                                in: Circle()
+                            )
                         }
                     }
+                    .sharedBackgroundVisibility(.hidden)
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .toolbarBackgroundVisibility(.hidden, for: .navigationBar)

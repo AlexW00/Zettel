@@ -81,10 +81,20 @@ struct MainView: View {
                             showSettings = true 
                         }) {
                             Image(systemName: "gearshape")
-                                .font(.system(size: 17))
+                                .font(.system(size: 20))
                                 .foregroundColor(.primaryText)
                         }
+                        .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
+                        .glassEffect(
+                            .clear
+                                .interactive()
+                                .tint(colorScheme == .dark
+                                      ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity)
+                                      : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)),
+                            in: Circle()
+                        )
                     }
+                    .sharedBackgroundVisibility(.hidden)
                     
                     
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -94,10 +104,20 @@ struct MainView: View {
                             shareNote()
                         }) {
                             Image(systemName: "square.and.arrow.up")
-                                .font(.system(size: 17))
+                                .font(.system(size: 20))
                                 .foregroundColor(.primaryText)
                         }
+                        .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
+                        .glassEffect(
+                            .clear
+                                .interactive()
+                                .tint(colorScheme == .dark
+                                      ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity)
+                                      : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)),
+                            in: Circle()
+                        )
                     }
+                    .sharedBackgroundVisibility(.hidden)
                 }
                 .sheet(isPresented: $showSettings) {
                     SettingsView(noteStore: noteStore)
