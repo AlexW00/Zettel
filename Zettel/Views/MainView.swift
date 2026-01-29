@@ -27,6 +27,7 @@ struct MainView: View {
     @StateObject private var dictationController = NoteDictationController()
     @State private var showLocaleDownloadPrompt = false
     @State private var pendingLocaleOption: DictationLocaleManager.LocaleOption?
+    @Environment(\.colorScheme) var colorScheme
 
     private let clearThreshold: CGFloat = GestureConstants.tearThreshold
     private let clearZoneHeight: CGFloat = LayoutConstants.Size.tearZoneHeight
@@ -244,7 +245,7 @@ struct MainView: View {
         .background {
             RoundedRectangle(cornerRadius: 14)
                 .fill(Color.clear)
-                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14))
+                .glassEffect(.clear.interactive().tint(colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity) : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)), in: RoundedRectangle(cornerRadius: 14))
         }
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .modifier(ClearAnimationModifier(

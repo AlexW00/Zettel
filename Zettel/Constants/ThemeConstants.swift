@@ -24,6 +24,9 @@ enum ThemeConstants {
         
         /// Very heavy opacity for maximum emphasis (0.75)
         static let veryHeavy: Double = 0.75
+        
+        /// Glass tint opacity (0.4)
+        static let glassTintOpacity: Double = 0.35
     }
     
     /// Shadow values for consistent depth effects

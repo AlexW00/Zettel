@@ -9,6 +9,8 @@ struct TagChipView: View {
     let tagName: String
     let compact: Bool
     
+    @Environment(\.colorScheme) var colorScheme
+    
     init(tagName: String, compact: Bool = false) {
         self.tagName = tagName
         self.compact = compact
@@ -26,7 +28,7 @@ struct TagChipView: View {
             .padding(.vertical, compact ? LayoutConstants.Padding.extraSmall : LayoutConstants.Padding.small)
             .background {
                 shape.fill(Color.clear)
-                    .glassEffect(.regular, in: shape)
+                    .glassEffect(.clear.interactive().tint(colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity) : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)), in: shape)
             }
             .contentShape(shape)
     }
@@ -36,6 +38,7 @@ struct TagListView: View {
     let tags: [String]
     let maxTags: Int
     let compact: Bool
+    @Environment(\.colorScheme) var colorScheme
     
     @State private var isOverflowing = false
     @State private var contentWidth: CGFloat = 0
@@ -64,7 +67,7 @@ struct TagListView: View {
                             .padding(.vertical, compact ? 1 : LayoutConstants.Padding.extraSmall)
                             .background {
                                 shape.fill(Color.clear)
-                                    .glassEffect(.regular, in: shape)
+                                    .glassEffect(.clear.interactive().tint(colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity) : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)), in: shape)
                             }
                             .layoutPriority(-1)
                     }

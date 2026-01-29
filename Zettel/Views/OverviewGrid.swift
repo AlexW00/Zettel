@@ -210,6 +210,8 @@ struct NoteCard: View {
 
     @State private var wiggleAnimation = false
 
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
@@ -269,7 +271,7 @@ struct NoteCard: View {
             .background {
                 RoundedRectangle(cornerRadius: cardCornerRadius)
                     .fill(isSelected ? Color.accentColor.opacity(Color.lightOpacity) : Color.clear)
-                    .glassEffect(.regular, in: RoundedRectangle(cornerRadius: cardCornerRadius))
+                    .glassEffect(.clear.interactive().tint(colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity) : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)), in: RoundedRectangle(cornerRadius: cardCornerRadius))
             }
             .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius))
             .overlay(
