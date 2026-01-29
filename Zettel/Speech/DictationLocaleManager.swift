@@ -151,4 +151,9 @@ final class DictationLocaleManager: ObservableObject {
             return copy
         }
     }
+
+    func resetToDefaults() {
+        selectedLocaleIdentifier = Locale.current.identifier
+        userDefaults.removeObject(forKey: defaultsKey)
+    }
 }

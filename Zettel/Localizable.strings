@@ -59,8 +59,9 @@
 "settings.background" = "Custom Background";
 "settings.background_description" = "Set an image or video as background";
 "settings.choose" = "Choose";
-"settings.background_video_volume" = "Video Volume";
+"settings.video_volume" = "Video Volume";
 "settings.background_dimming" = "Dimming";
+"settings.video_loop_fade_duration" = "Loop Fade Duration";
 
 // MARK: - Notifications
 "notifications.title" = "Notifications";

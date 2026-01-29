@@ -71,6 +71,13 @@ class ThemeStore: ObservableObject {
         let savedFontSize = UserDefaults.standard.object(forKey: "contentFontSize") as? CGFloat
         self.contentFontSize = savedFontSize ?? LayoutConstants.FontSize.large
     }
+    /**
+     * Resets all theme settings to their default values.
+     */
+    func resetToDefaults() {
+        currentTheme = .system
+        contentFontSize = LayoutConstants.FontSize.large
+    }
 }
 
 // MARK: - Theme Colors

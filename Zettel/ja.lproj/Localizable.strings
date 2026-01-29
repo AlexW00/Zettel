@@ -64,6 +64,7 @@
 "settings.video_too_long" = "動画は10分以内にしてください";
 "settings.background_video_volume" = "動画の音量";
 "settings.background_dimming" = "暗さ";
+"settings.video_loop_fade_duration" = "ループフェード時間";
 
 // Theme Options
 "theme.system" = "システム";

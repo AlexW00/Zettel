@@ -52,6 +52,13 @@ class BackgroundStore: ObservableObject {
         }
     }
     
+    /// Duration of the crossfade effect for video looping in seconds (0.0 to 5.0)
+    @Published var videoLoopFadeDuration: Double = 2.0 {
+        didSet {
+            UserDefaults.standard.set(videoLoopFadeDuration, forKey: videoLoopFadeDurationKey)
+        }
+    }
+    
     /// Maximum video duration in seconds (10 minutes)
     private let maxVideoDuration: TimeInterval = 10 * 60
     
@@ -59,6 +66,17 @@ class BackgroundStore: ObservableObject {
     private let backgroundTypeKey = "backgroundType"
     /// UserDefaults key for background dimming
     private let backgroundDimmingKey = "backgroundDimming"
+    /// UserDefaults key for video loop fade duration
+    private let videoLoopFadeDurationKey = "videoLoopFadeDuration"
+    /// UserDefaults key for video volume
+    private let videoVolumeKey = "videoVolume"
+    
+    /// Video volume (0.0 to 1.0)
+    @Published var videoVolume: Double = 0.0 {
+        didSet {
+            UserDefaults.standard.set(videoVolume, forKey: videoVolumeKey)
+        }
+    }
     
     /// File names for stored media
     private let imageFileName = "custom_background.jpg"
@@ -72,6 +90,8 @@ class BackgroundStore: ObservableObject {
     init() {
         loadSavedBackground()
         loadSavedDimming()
+        loadSavedVideoLoopFadeDuration()
+        loadSavedVideoVolume()
     }
     
     // MARK: - Public Methods
@@ -90,6 +110,14 @@ class BackgroundStore: ObservableObject {
         // Save to UserDefaults
         UserDefaults.standard.set(BackgroundType.none.rawValue, forKey: backgroundTypeKey)
     }
+
+    /// Resets all background settings to their default values
+    func resetToDefaults() {
+        removeBackground()
+        backgroundDimming = 0.1
+        videoLoopFadeDuration = 2.0
+        videoVolume = 0.0
+    }
     
     // MARK: - Private Methods
     
@@ -101,6 +129,26 @@ class BackgroundStore: ObservableObject {
             backgroundDimming = savedDimming
         } else {
             backgroundDimming = 0.1
+        }
+    }
+    
+    private func loadSavedVideoLoopFadeDuration() {
+        // Load stored fade duration or default to 2.0 if not set
+        let savedDuration = UserDefaults.standard.double(forKey: videoLoopFadeDurationKey)
+        if UserDefaults.standard.object(forKey: videoLoopFadeDurationKey) != nil {
+            videoLoopFadeDuration = savedDuration
+        } else {
+            videoLoopFadeDuration = 2.0
+        }
+    }
+
+    private func loadSavedVideoVolume() {
+        // Load stored volume or default to 0.0 if not set
+        let savedVolume = UserDefaults.standard.double(forKey: videoVolumeKey)
+        if UserDefaults.standard.object(forKey: videoVolumeKey) != nil {
+            videoVolume = savedVolume
+        } else {
+            videoVolume = 0.0
         }
     }
     

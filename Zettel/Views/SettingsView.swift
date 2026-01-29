@@ -35,6 +35,38 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                // Storage Section
+                Section {
+                    HStack {
+                        Image(systemName: "folder")
+                            .foregroundColor(.iconTint)
+                            .frame(width: 24)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("settings.storage_location".localized)
+                                .font(.system(size: 16, weight: .medium))
+                            
+                            Text(noteStore.storageDirectory.path)
+                                .font(.system(size: 12))
+                                .foregroundColor(.secondary)
+                                .lineLimit(2)
+                                .truncationMode(.middle)
+                        }
+                        
+                        Spacer()
+                        
+                        Button(StringConstants.Actions.change.localized) {
+                            showingFolderPicker = true
+                        }
+                        .font(.system(size: 14, weight: .medium))
+                    }
+                    .padding(.vertical, 4)
+                } header: {
+                    Text(StringConstants.Navigation.storage.localized)
+                } footer: {
+                    Text("settings.storage_description".localized)
+                }
+                
                 // Theme Section
                 Section {
                     HStack {
@@ -203,10 +235,41 @@ struct SettingsView: View {
                     
 
                     
+                    // Video Volume Slider - only show if background is video
+                    if backgroundStore.backgroundType == .video {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "speaker.wave.2")
+                                    .foregroundColor(.iconTint)
+                                    .frame(width: 20)
+                                Text("settings.video_volume".localized)
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.primary)
+                                
+                                Spacer()
+                                
+                                Text("\(Int(backgroundStore.videoVolume * 100))%")
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 40, alignment: .trailing)
+                            }
+                            
+                            Slider(
+                                value: $backgroundStore.videoVolume,
+                                in: 0.0...1.0
+                            )
+                            .accentColor(.iconTint)
+                        }
+                        .padding(.vertical, 4)
+                    }
+
                     // Dimming Slider - only show if background is set
                     if backgroundStore.hasCustomBackground {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
+                                Image(systemName: "sun.min")
+                                    .foregroundColor(.iconTint)
+                                    .frame(width: 20)
                                 Text("settings.background_dimming".localized)
                                     .font(.system(size: 14))
                                     .foregroundColor(.primary)
@@ -222,6 +285,35 @@ struct SettingsView: View {
                             Slider(
                                 value: $backgroundStore.backgroundDimming,
                                 in: 0.0...0.8
+                            )
+                            .accentColor(.iconTint)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    
+                    // Loop Fade Duration Slider - only show if background is video
+                    if backgroundStore.backgroundType == .video {
+                         VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                                    .foregroundColor(.iconTint)
+                                    .frame(width: 20)
+                                Text("settings.video_loop_fade_duration".localized)
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.primary)
+                                
+                                Spacer()
+                                
+                                Text(String(format: "%.1fs", backgroundStore.videoLoopFadeDuration))
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 50, alignment: .trailing)
+                            }
+                            
+                            Slider(
+                                value: $backgroundStore.videoLoopFadeDuration,
+                                in: 0.0...5.0,
+                                step: 0.1
                             )
                             .accentColor(.iconTint)
                         }
@@ -332,37 +424,7 @@ struct SettingsView: View {
                     Text(StringConstants.Settings.dictationSectionDescription.localized)
                 }
 
-                // Storage Section
-                Section {
-                    HStack {
-                        Image(systemName: "folder")
-                            .foregroundColor(.iconTint)
-                            .frame(width: 24)
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("settings.storage_location".localized)
-                                .font(.system(size: 16, weight: .medium))
-                            
-                            Text(noteStore.storageDirectory.path)
-                                .font(.system(size: 12))
-                                .foregroundColor(.secondary)
-                                .lineLimit(2)
-                                .truncationMode(.middle)
-                        }
-                        
-                        Spacer()
-                        
-                        Button(StringConstants.Actions.change.localized) {
-                            showingFolderPicker = true
-                        }
-                        .font(.system(size: 14, weight: .medium))
-                    }
-                    .padding(.vertical, 4)
-                } header: {
-                    Text(StringConstants.Navigation.storage.localized)
-                } footer: {
-                    Text("settings.storage_description".localized)
-                }
+
                 
                 // App Info Section
                 Section {
@@ -456,6 +518,44 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
                 } header: {
                     Text("Debug")
+                }
+                
+                // Debug Reset Section
+                Section {
+                    Button(role: .destructive, action: {
+                        // Reset all stores
+                        withAnimation {
+                            themeStore.resetToDefaults()
+                            backgroundStore.resetToDefaults()
+                            dictationLocaleManager.resetToDefaults()
+                            DefaultTitleTemplateManager.shared.saveTemplate("")
+                            
+                            // Reset NoteStore settings if any (none explicit so far besides storage which we probably shouldn't reset blindly)
+                            // We purposefully DON'T reset storage location to avoid data loss confusion
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .foregroundColor(.red)
+                                .frame(width: 24)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Reset All Settings")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(.red)
+                                
+                                Text("Reverts theme, background, and other preferences to defaults")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.vertical, 4)
+                } header: {
+                     Text("Debug - Reset")
                 }
                 #endif
             }
