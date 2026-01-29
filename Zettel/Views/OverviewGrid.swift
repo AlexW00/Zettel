@@ -10,6 +10,7 @@ import SwiftUI
 struct OverviewGrid: View {
     @ObservedObject var noteStore: NoteStore
     @Binding var showArchive: Bool
+    @EnvironmentObject var backgroundStore: BackgroundStore
     @State private var selectedNote: Note?
     @State private var isSelectionMode = false
     @State private var selectedNotes = Set<String>()
@@ -74,11 +75,21 @@ struct OverviewGrid: View {
         }
     }
     
+    /// Returns transparent background when custom background is set, otherwise default app background
+    @ViewBuilder
+    private var backgroundLayer: some View {
+        if backgroundStore.hasCustomBackground {
+            Color.clear
+        } else {
+            Color.appBackground
+        }
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             NavigationStack {
                 ZStack(alignment: .top) {
-                    Color.appBackground
+                    backgroundLayer
                         .ignoresSafeArea()
                     ScrollView {
                         VStack(alignment: .leading, spacing: verticalStackSpacing) {
@@ -171,6 +182,7 @@ struct OverviewGrid: View {
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
+                .transparentBackground() // Clear the hosting controller background
             } // NavigationStack
             .searchable(text: $searchText,
                         placement: .navigationBarDrawer(displayMode: .automatic),
@@ -436,5 +448,6 @@ struct OverviewGrid_Previews: PreviewProvider {
         noteStore.archivedNotes = sampleNotes
         
         return OverviewGrid(noteStore: noteStore, showArchive: .constant(true))
+            .environmentObject(BackgroundStore())
     }
 }

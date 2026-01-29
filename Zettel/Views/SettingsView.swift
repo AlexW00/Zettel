@@ -8,12 +8,14 @@
 import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
+import PhotosUI
 
 struct SettingsView: View {
     @ObservedObject var noteStore: NoteStore
     @EnvironmentObject var themeStore: ThemeStore
     @EnvironmentObject var localizationManager: LocalizationManager
     @EnvironmentObject var dictationLocaleManager: DictationLocaleManager
+    @EnvironmentObject var backgroundStore: BackgroundStore
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
     @State private var showingFolderPicker = false
@@ -166,6 +168,68 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
                 } header: {
                     Text("settings.display".localized)
+                }
+                
+                // Background Section
+                Section {
+                    HStack {
+                        Image(systemName: "photo.on.rectangle")
+                            .foregroundColor(.iconTint)
+                            .frame(width: 24)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("settings.background".localized)
+                                .font(.system(size: 16, weight: .medium))
+                            
+                            Text("settings.background_description".localized)
+                                .font(.system(size: 12))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        PhotosPicker(
+                            selection: $backgroundStore.selectedItem,
+                            matching: .any(of: [.images, .videos]),
+                            photoLibrary: .shared()
+                        ) {
+                            Text(backgroundStore.hasCustomBackground ?
+                                 "settings.change".localized :
+                                 "settings.choose".localized)
+                                .font(.system(size: 14, weight: .medium))
+                        }
+                    }
+                    .padding(.vertical, 4)
+                    
+                    // Remove button - only show if background is set
+                    if backgroundStore.hasCustomBackground {
+                        Button(role: .destructive) {
+                            backgroundStore.removeBackground()
+                        } label: {
+                            HStack {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                                    .frame(width: 24)
+                                Text("settings.remove_background".localized)
+                                    .font(.system(size: 16, weight: .medium))
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    
+                    // Loading indicator
+                    if backgroundStore.isLoading {
+                        HStack {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                            Text("Loading...")
+                                .font(.system(size: 14))
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                } header: {
+                    Text("settings.background_section".localized)
                 }
                 
                 // Dictation Locale Selection
@@ -407,6 +471,21 @@ struct SettingsView: View {
                 print("Error selecting folder: \(error)")
             }
         }
+        .alert(
+            "Error",
+            isPresented: Binding(
+                get: { backgroundStore.errorMessage != nil },
+                set: { if !$0 { backgroundStore.errorMessage = nil } }
+            )
+        ) {
+            Button(StringConstants.Actions.ok.localized, role: .cancel) {
+                backgroundStore.errorMessage = nil
+            }
+        } message: {
+            if let errorMessage = backgroundStore.errorMessage {
+                Text(errorMessage)
+            }
+        }
     }
 }
 
@@ -418,5 +497,6 @@ struct SettingsView_Previews: PreviewProvider {
             .environmentObject(ThemeStore())
             .environmentObject(LocalizationManager.shared)
             .environmentObject(DictationLocaleManager.shared)
+            .environmentObject(BackgroundStore())
     }
 }

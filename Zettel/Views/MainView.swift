@@ -12,6 +12,7 @@ struct MainView: View {
     @EnvironmentObject var themeStore: ThemeStore
     @EnvironmentObject var localizationManager: LocalizationManager
     @EnvironmentObject var dictationLocaleManager: DictationLocaleManager
+    @EnvironmentObject var backgroundStore: BackgroundStore
     @State private var showSettings = false
     @State private var showArchive = false
     @State private var dragOffset: CGFloat = 0
@@ -35,7 +36,8 @@ struct MainView: View {
         SwipeNavigationView(showOverview: $showArchive) {
             NavigationStack {
                 ZStack {
-                    Color.appBackground
+                    // Use transparent background when custom background is set
+                    backgroundLayer
                         .ignoresSafeArea()
                         .onTapGesture {
                             // Dismiss keyboard when tapping on background
@@ -56,6 +58,7 @@ struct MainView: View {
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbarBackground(.hidden, for: .navigationBar)
                 .toolbar {
                     // Add an invisible toolbar item in the center to capture taps
                     ToolbarItem(placement: .principal) {
@@ -106,6 +109,7 @@ struct MainView: View {
                 } message: {
                     Text(StringConstants.Shortcuts.confirmationMessage.localized)
                 }
+                .transparentBackground() // Clear the hosting controller background
             }
         } overviewContent: {
             OverviewGrid(noteStore: noteStore, showArchive: $showArchive)
@@ -168,6 +172,16 @@ struct MainView: View {
             if let error = noteStore.saveError {
                 Text(error.errorDescription ?? "")
             }
+        }
+    }
+    
+    /// Returns transparent background when custom background is set, otherwise default app background
+    @ViewBuilder
+    private var backgroundLayer: some View {
+        if backgroundStore.hasCustomBackground {
+            Color.clear
+        } else {
+            Color.appBackground
         }
     }
     
@@ -489,6 +503,7 @@ struct ClearAnimationModifier: ViewModifier, Animatable {
         .environmentObject(ThemeStore())
         .environmentObject(LocalizationManager.shared)
         .environmentObject(DictationLocaleManager.shared)
+        .environmentObject(BackgroundStore())
 }
 
 private struct DictationControlButton: View {

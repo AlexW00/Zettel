@@ -61,6 +61,7 @@ struct SwipeNavigationView<MainContent: View, OverviewContent: View>: View {
                 overviewContent
                     .frame(width: containerWidth)
             }
+            .background(Color.clear)  // Ensure HStack is transparent for custom background
             .contentShape(Rectangle())
             .offset(x: contentOffset(for: containerWidth))
             .animation(.spring(response: 0.32, dampingFraction: 0.86), value: showOverview)
@@ -75,6 +76,7 @@ struct SwipeNavigationView<MainContent: View, OverviewContent: View>: View {
                 }
             }
         }
+        .background(Color.clear)  // Ensure GeometryReader is transparent for custom background
     }
 
     private func contentOffset(for width: CGFloat) -> CGFloat {
