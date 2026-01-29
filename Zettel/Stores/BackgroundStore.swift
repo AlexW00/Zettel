@@ -45,11 +45,20 @@ class BackgroundStore: ObservableObject {
     /// The URL for video backgrounds (stored in documents directory)
     @Published private(set) var backgroundVideoURL: URL?
     
+    /// Dimming opacity for custom background (0.0 to 1.0)
+    @Published var backgroundDimming: Double = 0.1 {
+        didSet {
+            UserDefaults.standard.set(backgroundDimming, forKey: backgroundDimmingKey)
+        }
+    }
+    
     /// Maximum video duration in seconds (10 minutes)
     private let maxVideoDuration: TimeInterval = 10 * 60
     
     /// UserDefaults key for background type
     private let backgroundTypeKey = "backgroundType"
+    /// UserDefaults key for background dimming
+    private let backgroundDimmingKey = "backgroundDimming"
     
     /// File names for stored media
     private let imageFileName = "custom_background.jpg"
@@ -62,6 +71,7 @@ class BackgroundStore: ObservableObject {
     
     init() {
         loadSavedBackground()
+        loadSavedDimming()
     }
     
     // MARK: - Public Methods
@@ -82,6 +92,17 @@ class BackgroundStore: ObservableObject {
     }
     
     // MARK: - Private Methods
+    
+    private func loadSavedDimming() {
+        // Load stored dimming value or default to 0.2 if not set
+        let savedDimming = UserDefaults.standard.double(forKey: backgroundDimmingKey)
+        // verify it's a valid value (UserDefaults returns 0.0 if not found, but we want 0.2 default if key is missing)
+        if UserDefaults.standard.object(forKey: backgroundDimmingKey) != nil {
+            backgroundDimming = savedDimming
+        } else {
+            backgroundDimming = 0.1
+        }
+    }
     
     private func loadSavedBackground() {
         guard let savedType = UserDefaults.standard.string(forKey: backgroundTypeKey),

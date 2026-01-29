@@ -201,18 +201,29 @@ struct SettingsView: View {
                     }
                     .padding(.vertical, 4)
                     
-                    // Remove button - only show if background is set
+
+                    
+                    // Dimming Slider - only show if background is set
                     if backgroundStore.hasCustomBackground {
-                        Button(role: .destructive) {
-                            backgroundStore.removeBackground()
-                        } label: {
+                        VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Image(systemName: "trash")
-                                    .foregroundColor(.red)
-                                    .frame(width: 24)
-                                Text("settings.remove_background".localized)
-                                    .font(.system(size: 16, weight: .medium))
+                                Text("settings.background_dimming".localized)
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.primary)
+                                
+                                Spacer()
+                                
+                                Text("\(Int(backgroundStore.backgroundDimming * 100))%")
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 40, alignment: .trailing)
                             }
+                            
+                            Slider(
+                                value: $backgroundStore.backgroundDimming,
+                                in: 0.0...0.8
+                            )
+                            .accentColor(.iconTint)
                         }
                         .padding(.vertical, 4)
                     }
@@ -225,6 +236,22 @@ struct SettingsView: View {
                             Text("Loading...")
                                 .font(.system(size: 14))
                                 .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 4)
+                    }
+
+                    // Remove button - only show if background is set
+                    if backgroundStore.hasCustomBackground {
+                        Button(role: .destructive) {
+                            backgroundStore.removeBackground()
+                        } label: {
+                            HStack {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                                    .frame(width: 24)
+                                Text("settings.remove_background".localized)
+                                    .font(.system(size: 16, weight: .medium))
+                            }
                         }
                         .padding(.vertical, 4)
                     }

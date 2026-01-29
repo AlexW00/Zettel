@@ -59,6 +59,11 @@
 "settings.background" = "Custom Background";
 "settings.background_description" = "Set an image or video as background";
 "settings.choose" = "Choose";
+"settings.background_video_volume" = "Video Volume";
+"settings.background_dimming" = "Dimming";
+
+// MARK: - Notifications
+"notifications.title" = "Notifications";
 "settings.change" = "Change";
 "settings.remove_background" = "Remove Background";
 "settings.video_too_long" = "Video must be 10 minutes or less";

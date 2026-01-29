@@ -62,6 +62,8 @@
 "settings.change" = "Ändern";
 "settings.remove_background" = "Hintergrund entfernen";
 "settings.video_too_long" = "Video darf maximal 10 Minuten lang sein";
+"settings.background_video_volume" = "Videolautstärke";
+"settings.background_dimming" = "Abdunkelung";
 
 // Theme Options
 "theme.system" = "System";

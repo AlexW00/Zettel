@@ -221,6 +221,7 @@ struct NoteCard: View {
                     .foregroundColor(.primaryText)
                     .lineLimit(1)
                     .padding(.bottom, 8)
+                    .shadow(color: colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.textShadowDark) : .white.opacity(ThemeConstants.Opacity.textShadowLight), radius: ThemeConstants.Shadow.textRadius, x: 0, y: 1)
 
                 // Content preview with overflow handling
                 ZStack(alignment: .bottom) {
@@ -249,10 +250,10 @@ struct NoteCard: View {
                     } else {
                         Text(note.contentPreview(maxLines: 6))
                             .font(.system(size: 12, weight: .regular, design: .monospaced))
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.primary.opacity(0.75))
                             .lineLimit(6)
-                            .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                            .shadow(color: colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.textShadowDark) : .white.opacity(ThemeConstants.Opacity.textShadowLight), radius: ThemeConstants.Shadow.textRadius, x: 0, y: 1)
                     }
                 }
                 .clipped()
@@ -305,6 +306,7 @@ struct NoteCard: View {
                 }
             }
         }
+        .contentShape(RoundedRectangle(cornerRadius: cardCornerRadius))
         .onAppear {
             if isSelectionMode && !isSelected {
                 wiggleAnimation.toggle()

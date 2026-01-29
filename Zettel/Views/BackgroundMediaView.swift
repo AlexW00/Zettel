@@ -39,6 +39,13 @@ struct BackgroundMediaView: View {
                         Color.appBackground
                     }
                 }
+                
+                // Dimming overlay
+                if backgroundStore.hasCustomBackground {
+                    Color(UIColor.systemBackground)
+                        .opacity(backgroundStore.backgroundDimming)
+                        .allowsHitTesting(false) // Allow interactions to pass through if needed, though this is background
+                }
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
         }

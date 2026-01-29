@@ -25,8 +25,14 @@ enum ThemeConstants {
         /// Very heavy opacity for maximum emphasis (0.75)
         static let veryHeavy: Double = 0.75
         
-        /// Glass tint opacity (0.4)
-        static let glassTintOpacity: Double = 0.35
+        /// Glass tint opacity (0.65)
+        static let glassTintOpacity: Double = 0.65
+        
+        /// Text shadow opacity for dark mode (0.8)
+        static let textShadowDark: Double = 0.8
+        
+        /// Text shadow opacity for light mode (0.5)
+        static let textShadowLight: Double = 0.5
     }
     
     /// Shadow values for consistent depth effects
@@ -36,5 +42,8 @@ enum ThemeConstants {
         
         /// Medium shadow for moderate depth (4)
         static let medium: CGFloat = 4
+        
+        /// Text shadow radius (2.0)
+        static let textRadius: CGFloat = 2.0
     }
 }

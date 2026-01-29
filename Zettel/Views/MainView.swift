@@ -40,6 +40,7 @@ struct MainView: View {
                     // Use transparent background when custom background is set
                     backgroundLayer
                         .ignoresSafeArea()
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             // Dismiss keyboard when tapping on background
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
