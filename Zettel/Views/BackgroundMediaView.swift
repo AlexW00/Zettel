@@ -100,8 +100,15 @@ struct LoopingVideoPlayerView: View {
         }
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
+                activateAudioSession()
                 player?.play()
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { notification in
+            handleInterruption(notification)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.routeChangeNotification)) { notification in
+            handleRouteChange(notification)
         }
     }
     
@@ -116,11 +123,67 @@ struct LoopingVideoPlayerView: View {
         queuePlayer.volume = Float(volume)
         queuePlayer.isMuted = false // Controlled by volume
         
+        // Activate session before playing
+        activateAudioSession()
+        
         // Start playing
         queuePlayer.play()
         
         self.player = queuePlayer
         self.playerLooper = looper
+    }
+    
+    private func activateAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, options: .mixWithOthers)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to activate audio session: \(error)")
+        }
+    }
+    
+    private func handleInterruption(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+        
+        if type == .ended {
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume) {
+                    activateAudioSession()
+                    player?.play()
+                }
+            }
+        }
+    }
+    
+    private func handleRouteChange(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+              let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else {
+            return
+        }
+        
+        // Resume on route changes if we should be playing
+        // E.g. when connecting headphones, oldRoute usually indicates what kept us playing?
+        // Actually simplest logic is: if we experienced a route change and app is active, try to resume.
+        
+        switch reason {
+        case .newDeviceAvailable, .oldDeviceUnavailable, .categoryChange:
+            Task {
+                // Small delay to let system settle
+                try? await Task.sleep(nanoseconds: 500_000_000)
+                await MainActor.run {
+                    activateAudioSession()
+                    player?.play()
+                }
+            }
+        default:
+            break
+        }
     }
 }
 
@@ -216,36 +279,12 @@ struct CrossfadingLoopPlayerView: View {
         }
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
+                activateAudioSession()
+                
                 // Determine which player should be playing
-                // Usually both are "ready" but one might be paused if waiting for crossfade
-                // But generally, AVPlayer pauses when backgrounded. Resuming primarily the active one is critical.
-                // Resuming the background one is also safe if it was in the middle of a crossfade (handled by timeObserver?)
-                // Safest approach: Play the active player. The background player's state is managed by the timeObserver,
-                // but if we are in a crossfade, the timeObserver loop will tick and ensure things are right.
-                // Just calling play() on the players is what's needed.
-                
-                player1?.play()
-                // If we are crossfading, play the second one too just in case it was playing
-                // Actually, just playing both is fine because `setupTimeObserver` manages `bg.pause()` if it shouldn't be playing yet.
-                // Wait, `setupTimeObserver` only pauses BG at the START of the loop.
-                // If we are mid-fade, both should be playing.
-                // If we are not fading, BG should be paused (and at zero).
-                
-                // Let's rely on the fact that if it wasn't playing, playing it might not be skipping logic, 
-                // BUT `setupTimeObserver` logic triggers `bg.play()` when fade starts.
-                // If we blindly play both, we might start the background player prematurely.
-                
-                // Correct logic:
-                // 1. Play the main active player.
                 let activePlayer = (currentPlayerIndex == 1) ? player1 : player2
                 activePlayer?.play()
                 
-                // 2. If we are in the middle of a fade (opacity2 > 0 and opacity1 < 1.0 for example),
-                //    or simply if the timeObserver says so... 
-                //    Actually, simple check: if the bg player has volume > 0, it should be playing.
-                //    Or simpler: just check if it WAS playing before backgrounding? No, we don't store that.
-                
-                //    Let's check the time.
                 if let active = activePlayer {
                      let currentTime = active.currentTime().seconds
                      let fadeDuration = backgroundStore.videoLoopFadeDuration
@@ -258,6 +297,12 @@ struct CrossfadingLoopPlayerView: View {
                      }
                 }
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { notification in
+            handleInterruption(notification)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.routeChangeNotification)) { notification in
+            handleRouteChange(notification)
         }
     }
     
@@ -425,5 +470,76 @@ struct CrossfadingLoopPlayerView: View {
         player2?.pause()
         player1 = nil
         player2 = nil
+    }
+    
+    private func activateAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, options: .mixWithOthers)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to activate audio session: \(error)")
+        }
+    }
+    
+    private func handleInterruption(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+        
+        if type == .ended {
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume) {
+                    activateAudioSession()
+                    let activePlayer = (currentPlayerIndex == 1) ? player1 : player2
+                    activePlayer?.play()
+                    
+                    // Also resume background player if needed (in fade)
+                    if let active = activePlayer {
+                         let currentTime = active.currentTime().seconds
+                         let fadeDuration = backgroundStore.videoLoopFadeDuration
+                         let triggerTime = max(0, duration - fadeDuration)
+                         if currentTime >= triggerTime {
+                             let bgPlayer = (currentPlayerIndex == 1) ? player2 : player1
+                             bgPlayer?.play()
+                         }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func handleRouteChange(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+              let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else {
+            return
+        }
+        
+        switch reason {
+        case .newDeviceAvailable, .oldDeviceUnavailable, .categoryChange:
+            Task {
+                try? await Task.sleep(nanoseconds: 500_000_000)
+                await MainActor.run {
+                    activateAudioSession()
+                    let activePlayer = (currentPlayerIndex == 1) ? player1 : player2
+                    activePlayer?.play()
+                    
+                    if let active = activePlayer {
+                         let currentTime = active.currentTime().seconds
+                         let fadeDuration = backgroundStore.videoLoopFadeDuration
+                         let triggerTime = max(0, duration - fadeDuration)
+                         if currentTime >= triggerTime {
+                             let bgPlayer = (currentPlayerIndex == 1) ? player2 : player1
+                             bgPlayer?.play()
+                         }
+                    }
+                }
+            }
+        default:
+            break
+        }
     }
 }
