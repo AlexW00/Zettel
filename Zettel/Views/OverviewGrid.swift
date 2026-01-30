@@ -165,6 +165,32 @@ struct OverviewGrid: View {
                     .navigationBarTitleDisplayMode(.inline)
                 }
                 .toolbar {
+                    // Search button on the leading edge
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        if !isSelectionMode {
+                            Button {
+                                withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
+                                    searchBarRevealed.toggle()
+                                    if !searchBarRevealed {
+                                        searchText = ""
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: searchBarRevealed ? "xmark" : "magnifyingglass")
+                                    .foregroundColor(.primaryText)
+                                    .font(.system(size: 18, weight: .medium))
+                                    .contentTransition(.symbolEffect(.replace))
+                            }
+                            .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
+                            .adaptiveGlassEffect(
+                                in: Circle(),
+                                colorScheme: colorScheme,
+                                hasCustomBackground: backgroundStore.hasCustomBackground
+                            )
+                        }
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                    
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if isSelectionMode {
                             HStack {

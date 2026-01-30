@@ -131,64 +131,60 @@ struct PullToRevealScrollView<Content: View>: View {
         GeometryReader { outerProxy in
             let outerFrame = outerProxy.frame(in: .global)
             
-            ScrollView {
-                ZStack(alignment: .top) {
-                    // Tracker
-                    GeometryReader { innerProxy in
-                        let innerFrame = innerProxy.frame(in: .global)
-                        let currentOffset = innerFrame.minY - outerFrame.minY
+            ScrollViewReader { proxy in
+                ScrollView {
+                    ZStack(alignment: .top) {
+                        // Tracker
+                        GeometryReader { innerProxy in
+                            let innerFrame = innerProxy.frame(in: .global)
+                            let currentOffset = innerFrame.minY - outerFrame.minY
+                            
+                            Color.clear
+                                // Direct layout observation - bypassing PreferenceKeys which can fail in ScrollViews
+                                .onChange(of: innerFrame.minY) { _ in
+                                    updateOffset(currentOffset)
+                                }
+                                .onAppear {
+                                    updateOffset(currentOffset)
+                                }
+                        }
+                        .frame(height: 0)
                         
-                        Color.clear
-                            // Direct layout observation - bypassing PreferenceKeys which can fail in ScrollViews
-                            .onChange(of: innerFrame.minY) { _ in
-                                updateOffset(currentOffset)
-                            }
-                            .onAppear {
-                                updateOffset(currentOffset)
-                            }
+                        VStack(spacing: 0) {
+                            // Search bar (dynamic reveal)
+                            PullToRevealSearchBar(
+                                searchText: $searchText,
+                                isRevealed: $isSearchRevealed,
+                                colorScheme: colorScheme,
+                                hasCustomBackground: hasCustomBackground,
+                                scrollOffset: scrollOffset,
+                                isDragging: isDragging
+                            )
+                            .padding(.horizontal, 24)
+                            .padding(.bottom, isSearchRevealed ? LayoutConstants.Padding.medium : 0)
+                            .id("top")
+                            
+                            // Main content
+                            content()
+                                .frame(maxWidth: .infinity)
+                        }
                     }
-                    .frame(height: 0)
-                    
-                    VStack(spacing: 0) {
-                        // Search bar (dynamic reveal)
-                        PullToRevealSearchBar(
-                            searchText: $searchText,
-                            isRevealed: $isSearchRevealed,
-                            colorScheme: colorScheme,
-                            hasCustomBackground: hasCustomBackground,
-                            scrollOffset: scrollOffset,
-                            isDragging: isDragging
-                        )
-                        .padding(.horizontal, 24)
-                        .padding(.bottom, isSearchRevealed ? LayoutConstants.Padding.medium : 0)
-                        
-                        // Main content
-                        content()
-                            .frame(maxWidth: .infinity)
+                }
+                .scrollBounceBehavior(.always)
+                .onChange(of: isSearchRevealed) { _, revealed in
+                    if revealed {
+                        withAnimation {
+                            proxy.scrollTo("top", anchor: .top)
+                        }
                     }
                 }
             }
-            .scrollBounceBehavior(.always)
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { _ in isDragging = true }
                     .onEnded { _ in isDragging = false }
             )
-            #if DEBUG
-            .overlay(alignment: .topTrailing) {
-                VStack(alignment: .trailing) {
-                    Text("Off: \(Int(scrollOffset))")
-                    Text("Drag: \(isDragging)")
-                    Text("State: \(isSearchRevealed ? "Open" : "Closed")")
-                }
-                .font(.caption.monospaced())
-                .padding(4)
-                .background(.orange.opacity(0.8))
-                .foregroundColor(.white)
-                .padding()
-                .allowsHitTesting(false)
-            }
-            #endif
+
         }
     }
     
@@ -211,7 +207,7 @@ struct PullToRevealScrollView<Content: View>: View {
         }
         
         // Detect scrolling down
-        if offset < hideThreshold && isSearchRevealed && searchText.isEmpty {
+        if offset < hideThreshold && isSearchRevealed && searchText.isEmpty && isDragging {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                 isSearchRevealed = false
             }
