@@ -220,15 +220,22 @@ struct SettingsView: View {
                         
                         Spacer()
                         
-                        PhotosPicker(
-                            selection: $backgroundStore.selectedItem,
-                            matching: .any(of: [.images, .videos]),
-                            photoLibrary: .shared()
-                        ) {
-                            Text(backgroundStore.hasCustomBackground ?
-                                 "settings.change".localized :
-                                 "settings.choose".localized)
-                                .font(.system(size: 14, weight: .medium))
+                        if backgroundStore.isLoading {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .scaleEffect(0.8)
+                                .frame(height: 20)
+                        } else {
+                            PhotosPicker(
+                                selection: $backgroundStore.selectedItem,
+                                matching: .any(of: [.images, .videos]),
+                                photoLibrary: .shared()
+                            ) {
+                                Text(backgroundStore.hasCustomBackground ?
+                                     "settings.change".localized :
+                                     "settings.choose".localized)
+                                    .font(.system(size: 14, weight: .medium))
+                            }
                         }
                     }
                     .padding(.vertical, 4)
@@ -320,17 +327,8 @@ struct SettingsView: View {
                         .padding(.vertical, 4)
                     }
                     
-                    // Loading indicator
-                    if backgroundStore.isLoading {
-                        HStack {
-                            ProgressView()
-                                .scaleEffect(0.8)
-                            Text("Loading...")
-                                .font(.system(size: 14))
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.vertical, 4)
-                    }
+                    // Loading indicator - Removed as it's now inline
+
 
                     // Remove button - only show if background is set
                     if backgroundStore.hasCustomBackground {

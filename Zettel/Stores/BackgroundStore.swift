@@ -68,6 +68,8 @@ class BackgroundStore: ObservableObject {
     private let backgroundDimmingKey = "backgroundDimming"
     /// UserDefaults key for video loop fade duration
     private let videoLoopFadeDurationKey = "videoLoopFadeDuration"
+    /// UserDefaults key for the current video filename
+    private let currentVideoFilenameKey = "currentVideoFilename"
     /// UserDefaults key for video volume
     private let videoVolumeKey = "videoVolume"
     
@@ -80,7 +82,6 @@ class BackgroundStore: ObservableObject {
     
     /// File names for stored media
     private let imageFileName = "custom_background.jpg"
-    private let videoFileName = "custom_background.mp4"
     
     /// Whether a custom background is set
     var hasCustomBackground: Bool {
@@ -187,7 +188,15 @@ class BackgroundStore: ObservableObject {
     }
     
     private func loadStoredVideo() {
-        let url = getDocumentsDirectory().appendingPathComponent(videoFileName)
+        // Get dynamic filename
+        guard let filename = UserDefaults.standard.string(forKey: currentVideoFilenameKey) else {
+            // No filename stored, reset content
+            removeBackground()
+            return
+        }
+        
+        let url = getDocumentsDirectory().appendingPathComponent(filename)
+        
         guard FileManager.default.fileExists(atPath: url.path) else {
             // File doesn't exist, reset to none
             removeBackground()
@@ -270,23 +279,24 @@ class BackgroundStore: ObservableObject {
                 return
             }
             
+            // Generate a unique identifier for the new video
+            let newFilename = "custom_background_\(UUID().uuidString).mp4"
+            let destURL = getDocumentsDirectory().appendingPathComponent(newFilename)
+            
             // Copy to documents directory
-            let destURL = getDocumentsDirectory().appendingPathComponent(videoFileName)
-            
-            // Remove existing file if present
-            if FileManager.default.fileExists(atPath: destURL.path) {
-                try FileManager.default.removeItem(at: destURL)
-            }
-            
             try FileManager.default.copyItem(at: sourceURL, to: destURL)
             
-            // Update state
+            // Delete the OLD video file if it exists
+            deleteStoredVideo()
+            
+            // Update state with NEW video info
             deleteStoredImage() // Remove any existing image
             backgroundType = .video
             backgroundImage = nil
             backgroundVideoURL = destURL
             
-            // Save type to UserDefaults
+            // Save new filename and type to UserDefaults
+            UserDefaults.standard.set(newFilename, forKey: currentVideoFilenameKey)
             UserDefaults.standard.set(BackgroundType.video.rawValue, forKey: backgroundTypeKey)
             
         } catch {
@@ -309,8 +319,12 @@ class BackgroundStore: ObservableObject {
     }
     
     private func deleteStoredVideo() {
-        let url = getDocumentsDirectory().appendingPathComponent(videoFileName)
-        try? FileManager.default.removeItem(at: url)
+        // Delete current file if known
+        if let filename = UserDefaults.standard.string(forKey: currentVideoFilenameKey) {
+            let url = getDocumentsDirectory().appendingPathComponent(filename)
+            try? FileManager.default.removeItem(at: url)
+            UserDefaults.standard.removeObject(forKey: currentVideoFilenameKey)
+        }
     }
 }
 
