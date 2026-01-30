@@ -61,6 +61,7 @@ enum LayoutConstants {
         static let tagRowHeight: CGFloat = 32
         static let dictationButton: CGFloat = 48
         static let toolbarButton: CGFloat = 44
+        static let searchBarHeight: CGFloat = 44
     }
 }
 

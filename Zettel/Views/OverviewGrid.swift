@@ -15,6 +15,7 @@ struct OverviewGrid: View {
     @State private var isSelectionMode = false
     @State private var selectedNotes = Set<String>()
     @State private var searchText = ""
+    @State private var searchBarRevealed = false
     @Environment(\.navigationGestureActive) private var navigationGestureActive
     @Environment(\.colorScheme) var colorScheme
 
@@ -92,7 +93,12 @@ struct OverviewGrid: View {
                 ZStack(alignment: .top) {
                     backgroundLayer
                         .ignoresSafeArea()
-                    ScrollView {
+                    PullToRevealScrollView(
+                        searchText: $searchText,
+                        isSearchRevealed: $searchBarRevealed,
+                        colorScheme: colorScheme,
+                        hasCustomBackground: backgroundStore.hasCustomBackground
+                    ) {
                         VStack(alignment: .leading, spacing: verticalStackSpacing) {
                             if noteStore.isInitialLoadingNotes {
                                 LoadingStateView(
@@ -207,21 +213,6 @@ struct OverviewGrid: View {
                 .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
                 .transparentBackground() // Clear the hosting controller background
             } // NavigationStack
-            .navigationBarTitleDisplayMode(.large)
-            .searchable(text: $searchText,
-                        placement: .navigationBarDrawer(displayMode: .automatic),
-                        prompt: Text(StringConstants.Search.prompt.localized),
-            )
-            .textInputAutocapitalization(.never)
-            .disableAutocorrection(true)
-            .searchSuggestions {
-                if !isSearching {
-                    ForEach(popularSearchTags) { tag in
-                        Text("#\(tag.displayName)")
-                            .searchCompletion("#\(tag.displayName)")
-                    }
-                }
-            }
         } // GeometryReader
     }
 }
