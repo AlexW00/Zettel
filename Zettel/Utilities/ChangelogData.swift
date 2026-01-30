@@ -15,6 +15,23 @@ enum ChangelogData {
     /// All changelog entries - add new versions at the TOP
     static let entries: [(version: String, title: String, content: String)] = [
         (
+            version: "3.0",
+            title: "v3.0 - 🎨 Make It Yours",
+            content: """
+            ## ✨ New Features
+
+            - **Custom Backgrounds**: Personalize your Zettel background with your favorite image or set a calming video loop.
+            - **Background Settings**: Fine-tune your background with dimming, loop fade, and volume controls.
+            - **Improved Search**: Quickly find what you need with the new collapsible search bar.
+            
+            Open the settings to change your background now!
+            
+            ---
+
+            Thank you for using Zettel! 💛
+            """
+        ),
+        (
             version: "2.3",
             title: "v2.3 - What's New",
             content: """
