@@ -23,7 +23,8 @@ struct PullToRevealSearchBar: View {
     @Binding var isRevealed: Bool
     let colorScheme: ColorScheme
     let hasCustomBackground: Bool
-    let scrollOffset: CGFloat // Add scroll offset for smooth animation
+    let scrollOffset: CGFloat
+    let isDragging: Bool // Only show during actual finger drag
     
     @FocusState private var isFocused: Bool
     
@@ -37,7 +38,8 @@ struct PullToRevealSearchBar: View {
         if isRevealed {
             return searchBarHeight
         }
-        // Smoothly reveal based on scroll (clamped 0 to height)
+        // Only show during active drag, hide during momentum
+        guard isDragging else { return 0 }
         return max(0, min(searchBarHeight, scrollOffset))
     }
     
@@ -45,7 +47,8 @@ struct PullToRevealSearchBar: View {
         if isRevealed {
             return 1.0
         }
-        // Fade in as it pulls down
+        // Only show during active drag, hide during momentum
+        guard isDragging else { return 0 }
         return max(0, min(1.0, Double(scrollOffset) / Double(searchBarHeight)))
     }
     
@@ -153,7 +156,8 @@ struct PullToRevealScrollView<Content: View>: View {
                             isRevealed: $isSearchRevealed,
                             colorScheme: colorScheme,
                             hasCustomBackground: hasCustomBackground,
-                            scrollOffset: scrollOffset
+                            scrollOffset: scrollOffset,
+                            isDragging: isDragging
                         )
                         .padding(.horizontal, 24)
                         .padding(.bottom, isSearchRevealed ? LayoutConstants.Padding.medium : 0)
