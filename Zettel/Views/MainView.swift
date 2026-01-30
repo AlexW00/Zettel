@@ -85,13 +85,10 @@ struct MainView: View {
                                 .foregroundColor(.primaryText)
                         }
                         .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
-                        .glassEffect(
-                            .clear
-                                .interactive()
-                                .tint(colorScheme == .dark
-                                      ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity)
-                                      : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)),
-                            in: Circle()
+                        .adaptiveGlassEffect(
+                            in: Circle(),
+                            colorScheme: colorScheme,
+                            hasCustomBackground: backgroundStore.hasCustomBackground
                         )
                     }
                     .sharedBackgroundVisibility(.hidden)
@@ -108,13 +105,10 @@ struct MainView: View {
                                 .foregroundColor(.primaryText)
                         }
                         .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
-                        .glassEffect(
-                            .clear
-                                .interactive()
-                                .tint(colorScheme == .dark
-                                      ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity)
-                                      : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)),
-                            in: Circle()
+                        .adaptiveGlassEffect(
+                            in: Circle(),
+                            colorScheme: colorScheme,
+                            hasCustomBackground: backgroundStore.hasCustomBackground
                         )
                     }
                     .sharedBackgroundVisibility(.hidden)
@@ -266,7 +260,11 @@ struct MainView: View {
         .background {
             RoundedRectangle(cornerRadius: 14)
                 .fill(Color.clear)
-                .glassEffect(.clear.interactive().tint(colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity) : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)), in: RoundedRectangle(cornerRadius: 14))
+                .adaptiveGlassEffect(
+                    in: RoundedRectangle(cornerRadius: 14),
+                    colorScheme: colorScheme,
+                    hasCustomBackground: backgroundStore.hasCustomBackground
+                )
         }
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .modifier(ClearAnimationModifier(

@@ -10,6 +10,7 @@ struct TagChipView: View {
     let compact: Bool
     
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var backgroundStore: BackgroundStore
     
     init(tagName: String, compact: Bool = false) {
         self.tagName = tagName
@@ -28,7 +29,11 @@ struct TagChipView: View {
             .padding(.vertical, compact ? LayoutConstants.Padding.extraSmall : LayoutConstants.Padding.small)
             .background {
                 shape.fill(Color.clear)
-                    .glassEffect(.clear.interactive().tint(colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity) : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)), in: shape)
+                    .adaptiveGlassEffect(
+                        in: shape,
+                        colorScheme: colorScheme,
+                        hasCustomBackground: backgroundStore.hasCustomBackground
+                    )
             }
             .contentShape(shape)
     }
@@ -39,6 +44,7 @@ struct TagListView: View {
     let maxTags: Int
     let compact: Bool
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var backgroundStore: BackgroundStore
     
     @State private var isOverflowing = false
     @State private var contentWidth: CGFloat = 0
@@ -67,7 +73,11 @@ struct TagListView: View {
                             .padding(.vertical, compact ? 1 : LayoutConstants.Padding.extraSmall)
                             .background {
                                 shape.fill(Color.clear)
-                                    .glassEffect(.clear.interactive().tint(colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity) : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)), in: shape)
+                                    .adaptiveGlassEffect(
+                                        in: shape,
+                                        colorScheme: colorScheme,
+                                        hasCustomBackground: backgroundStore.hasCustomBackground
+                                    )
                             }
                             .layoutPriority(-1)
                     }

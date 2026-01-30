@@ -168,13 +168,10 @@ struct OverviewGrid: View {
                                         .font(.system(size: 20))
                                 }
                                 .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
-                                .glassEffect(
-                                    .clear
-                                        .interactive()
-                                        .tint(colorScheme == .dark
-                                              ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity)
-                                              : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)),
-                                    in: Circle()
+                                .adaptiveGlassEffect(
+                                    in: Circle(),
+                                    colorScheme: colorScheme,
+                                    hasCustomBackground: backgroundStore.hasCustomBackground
                                 )
                                 .disabled(selectedNotes.isEmpty)
 
@@ -184,13 +181,10 @@ struct OverviewGrid: View {
                                 .foregroundColor(.primaryText)
                                 .padding(.horizontal, 16)
                                 .frame(height: LayoutConstants.Size.toolbarButton)
-                                .glassEffect(
-                                    .clear
-                                        .interactive()
-                                        .tint(colorScheme == .dark
-                                              ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity)
-                                              : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)),
-                                    in: Capsule()
+                                .adaptiveGlassEffect(
+                                    in: Capsule(),
+                                    colorScheme: colorScheme,
+                                    hasCustomBackground: backgroundStore.hasCustomBackground
                                 )
                             }
                         } else {
@@ -200,13 +194,10 @@ struct OverviewGrid: View {
                                     .font(.system(size: 22))
                             }
                             .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
-                            .glassEffect(
-                                .clear
-                                    .interactive()
-                                    .tint(colorScheme == .dark
-                                          ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity)
-                                          : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)),
-                                in: Circle()
+                            .adaptiveGlassEffect(
+                                in: Circle(),
+                                colorScheme: colorScheme,
+                                hasCustomBackground: backgroundStore.hasCustomBackground
                             )
                         }
                     }
@@ -216,9 +207,11 @@ struct OverviewGrid: View {
                 .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
                 .transparentBackground() // Clear the hosting controller background
             } // NavigationStack
+            .navigationBarTitleDisplayMode(.large)
             .searchable(text: $searchText,
                         placement: .navigationBarDrawer(displayMode: .automatic),
-                        prompt: Text(StringConstants.Search.prompt.localized))
+                        prompt: Text(StringConstants.Search.prompt.localized),
+            )
             .textInputAutocapitalization(.never)
             .disableAutocorrection(true)
             .searchSuggestions {
@@ -243,6 +236,7 @@ struct NoteCard: View {
     @State private var wiggleAnimation = false
 
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var backgroundStore: BackgroundStore
 
     var body: some View {
         ZStack {
@@ -304,7 +298,11 @@ struct NoteCard: View {
             .background {
                 RoundedRectangle(cornerRadius: cardCornerRadius)
                     .fill(isSelected ? Color.accentColor.opacity(Color.lightOpacity) : Color.clear)
-                    .glassEffect(.clear.interactive().tint(colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.glassTintOpacity) : .white.opacity(ThemeConstants.Opacity.glassTintOpacity)), in: RoundedRectangle(cornerRadius: cardCornerRadius))
+                    .adaptiveGlassEffect(
+                        in: RoundedRectangle(cornerRadius: cardCornerRadius),
+                        colorScheme: colorScheme,
+                        hasCustomBackground: backgroundStore.hasCustomBackground
+                    )
             }
             .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius))
             .overlay(
