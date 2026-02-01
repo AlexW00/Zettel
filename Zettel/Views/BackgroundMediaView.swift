@@ -240,6 +240,14 @@ struct CrossfadingLoopPlayerView: View {
     
     @Environment(\.scenePhase) private var scenePhase
     
+    /// Returns a fade duration that is safe for the current video length.
+    /// Ensures we never fade for more than 50% of the video duration,
+    /// which would cause players to sync up and loop incorrectly.
+    private var safeFadeDuration: Double {
+        let maxFade = max(0, duration / 2.0)
+        return min(backgroundStore.videoLoopFadeDuration, maxFade)
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -287,7 +295,7 @@ struct CrossfadingLoopPlayerView: View {
                 
                 if let active = activePlayer {
                      let currentTime = active.currentTime().seconds
-                     let fadeDuration = backgroundStore.videoLoopFadeDuration
+                     let fadeDuration = safeFadeDuration
                      let triggerTime = max(0, duration - fadeDuration)
                      
                      if currentTime >= triggerTime {
@@ -392,7 +400,7 @@ struct CrossfadingLoopPlayerView: View {
         
         timeObserver = active.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
             let currentTime = time.seconds
-            let fadeDuration = backgroundStore.videoLoopFadeDuration
+            let fadeDuration = safeFadeDuration
             let triggerTime = max(0, duration - fadeDuration)
             
             if currentTime >= triggerTime {
@@ -499,7 +507,7 @@ struct CrossfadingLoopPlayerView: View {
                     // Also resume background player if needed (in fade)
                     if let active = activePlayer {
                          let currentTime = active.currentTime().seconds
-                         let fadeDuration = backgroundStore.videoLoopFadeDuration
+                         let fadeDuration = safeFadeDuration
                          let triggerTime = max(0, duration - fadeDuration)
                          if currentTime >= triggerTime {
                              let bgPlayer = (currentPlayerIndex == 1) ? player2 : player1
@@ -529,7 +537,7 @@ struct CrossfadingLoopPlayerView: View {
                     
                     if let active = activePlayer {
                          let currentTime = active.currentTime().seconds
-                         let fadeDuration = backgroundStore.videoLoopFadeDuration
+                         let fadeDuration = safeFadeDuration
                          let triggerTime = max(0, duration - fadeDuration)
                          if currentTime >= triggerTime {
                              let bgPlayer = (currentPlayerIndex == 1) ? player2 : player1
