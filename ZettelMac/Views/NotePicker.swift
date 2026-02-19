@@ -2,10 +2,11 @@
 //  NotePicker.swift
 //  ZettelMac
 //
-//  In-window search overlay for browsing and opening notes.
-//  Cmd+Enter or Cmd+Click opens in a new window.
+//  Anchored popup for browsing and opening notes.
+//  Cmd+Click opens in a new window.
 //
 
+import AppKit
 import SwiftUI
 import ZettelKit
 
@@ -13,7 +14,6 @@ struct NotePicker: View {
     @Bindable var state: ZettelWindowState
 
     @State private var searchText = ""
-    @State private var selectedIndex: Int = 0
 
     private var store: MacNoteStore { MacNoteStore.shared }
 
@@ -21,21 +21,16 @@ struct NotePicker: View {
         if searchText.isEmpty {
             return store.allNotes
         }
-        let query = searchText.lowercased()
         return store.allNotes.filter { note in
-            note.title.lowercased().contains(query)
-            || note.content.lowercased().contains(query)
+            note.title.localizedStandardContains(searchText)
+            || note.content.localizedStandardContains(searchText)
         }
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Search field
+        VStack(spacing: 10) {
             searchField
 
-            Divider().opacity(0.5)
-
-            // Notes list
             if store.isLoading {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -45,8 +40,9 @@ struct NotePicker: View {
                 notesList
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.ultraThinMaterial)
+        .frame(width: 420, height: 260)
+        .padding(12)
+        .background(.regularMaterial)
         .task {
             await store.loadAllNotes()
         }
@@ -59,20 +55,17 @@ struct NotePicker: View {
     // MARK: - Search Field
 
     private var searchField: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(.secondary)
-                .font(.system(size: 14))
-
+        HStack {
             TextField(
-                String(localized: "Search notes…", comment: "Picker search placeholder"),
+                String(
+                    localized: "mac.picker.filter_placeholder",
+                    defaultValue: "Filter notes…",
+                    comment: "Picker search placeholder"
+                ),
                 text: $searchText
             )
-            .textFieldStyle(.plain)
+            .textFieldStyle(.roundedBorder)
             .font(.system(size: 15))
-            .onSubmit {
-                openSelectedNote(inNewWindow: false)
-            }
 
             if !searchText.isEmpty {
                 Button {
@@ -85,45 +78,22 @@ struct NotePicker: View {
                 .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
     }
 
     // MARK: - Notes List
 
     private var notesList: some View {
         ScrollView {
-            LazyVStack(spacing: 2) {
-                ForEach(Array(filteredNotes.enumerated()), id: \.element.id) { index, note in
+            LazyVStack(spacing: 4) {
+                ForEach(filteredNotes, id: \.id) { note in
                     NotePickerRow(
                         note: note,
-                        isSelected: index == selectedIndex,
-                        onOpen: { openNote(note, inNewWindow: false) },
-                        onOpenNewWindow: { openNote(note, inNewWindow: true) },
+                        onOpen: { openNoteFromClick(note) },
                         onDelete: { deleteNote(note) }
                     )
                 }
             }
-            .padding(.vertical, 4)
-            .padding(.horizontal, 8)
-        }
-        .onChange(of: filteredNotes.count) {
-            selectedIndex = min(selectedIndex, max(filteredNotes.count - 1, 0))
-        }
-        .onKeyPress(.upArrow) {
-            selectedIndex = max(selectedIndex - 1, 0)
-            return .handled
-        }
-        .onKeyPress(.downArrow) {
-            selectedIndex = min(selectedIndex + 1, filteredNotes.count - 1)
-            return .handled
-        }
-        .onKeyPress(.return, phases: .down) { press in
-            if press.modifiers.contains(.command) {
-                openSelectedNote(inNewWindow: true)
-                return .handled
-            }
-            return .ignored
+            .padding(.vertical, 2)
         }
     }
 
@@ -135,8 +105,8 @@ struct NotePicker: View {
                 .font(.system(size: 28))
                 .foregroundStyle(.tertiary)
             Text(searchText.isEmpty
-                 ? String(localized: "No notes yet", comment: "Picker empty state")
-                 : String(localized: "No matching notes", comment: "Picker no results"))
+                 ? String(localized: "mac.picker.empty", defaultValue: "No notes yet", comment: "Picker empty state")
+                 : String(localized: "mac.picker.no_results", defaultValue: "No matching notes", comment: "Picker no results"))
                 .foregroundStyle(.secondary)
                 .font(.system(size: 13))
         }
@@ -145,9 +115,9 @@ struct NotePicker: View {
 
     // MARK: - Actions
 
-    private func openSelectedNote(inNewWindow: Bool) {
-        guard !filteredNotes.isEmpty, filteredNotes.indices.contains(selectedIndex) else { return }
-        openNote(filteredNotes[selectedIndex], inNewWindow: inNewWindow)
+    private func openNoteFromClick(_ note: Note) {
+        let openInNewWindow = NSApp.currentEvent?.modifierFlags.contains(.command) == true
+        openNote(note, inNewWindow: openInNewWindow)
     }
 
     private func openNote(_ note: Note, inNewWindow: Bool) {
@@ -168,73 +138,51 @@ struct NotePicker: View {
 
 private struct NotePickerRow: View {
     let note: Note
-    let isSelected: Bool
     let onOpen: () -> Void
-    let onOpenNewWindow: () -> Void
     let onDelete: () -> Void
 
     @State private var isHovering = false
 
     var body: some View {
         HStack(spacing: 0) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(note.title.isEmpty ? note.autoGeneratedTitle : note.title)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
-
-                if !note.contentPreview.isEmpty {
-                    Text(note.contentPreview)
-                        .font(.system(size: 11))
-                        .foregroundStyle(.secondary)
+            Button(action: onOpen) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(note.title.isEmpty ? note.autoGeneratedTitle : note.title)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.primary)
                         .lineLimit(1)
+
+                    if !note.contentPreview.isEmpty {
+                        Text(note.contentPreview)
+                            .font(.system(size: 11))
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .buttonStyle(.plain)
 
             Spacer(minLength: 8)
 
-            // Timestamp
-            Text(note.modifiedAt, style: .relative)
-                .font(.system(size: 10))
-                .foregroundStyle(.tertiary)
-                .lineLimit(1)
-
-            // Action buttons (visible on hover)
             if isHovering {
-                HStack(spacing: 4) {
-                    Button {
-                        onOpenNewWindow()
-                    } label: {
-                        Image(systemName: "rectangle.on.rectangle")
-                            .font(.system(size: 11))
-                            .foregroundStyle(.secondary)
-                    }
-                    .buttonStyle(.plain)
-                    .help(String(localized: "Open in New Window", comment: "Picker row action"))
-
-                    Button {
-                        onDelete()
-                    } label: {
-                        Image(systemName: "trash")
-                            .font(.system(size: 11))
-                            .foregroundStyle(.red.opacity(0.8))
-                    }
-                    .buttonStyle(.plain)
-                    .help(String(localized: "Delete Note", comment: "Picker row action"))
+                Button(action: onDelete) {
+                    Image(systemName: "trash")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.red.opacity(0.85))
                 }
+                .buttonStyle(.plain)
+                .help(String(localized: "mac.picker.delete_note", defaultValue: "Delete Note", comment: "Picker row delete action"))
                 .padding(.leading, 8)
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 8)
         .background {
-            RoundedRectangle(cornerRadius: 6)
-                .fill(isSelected || isHovering ? Color.accentColor.opacity(0.12) : .clear)
+            RoundedRectangle(cornerRadius: 8)
+                .fill(isHovering ? Color.accentColor.opacity(0.14) : .clear)
         }
         .contentShape(Rectangle())
-        .onTapGesture {
-            onOpen()
-        }
         .onHover { hovering in
             isHovering = hovering
         }

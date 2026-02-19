@@ -82,6 +82,13 @@
 "search.no_results_title" = "\"%@\" の結果は見つかりませんでした";
 "search.no_results_message" = "別のキーワードを試すかフィルターを解除してください。";
 
+// macOS ノートピッカー
+"mac.picker.filter_placeholder" = "ノートを絞り込み…";
+"mac.picker.empty" = "ノートがまだありません";
+"mac.picker.no_results" = "一致するノートがありません";
+"mac.picker.delete_note" = "ノートを削除";
+"mac.title_editor.placeholder" = "ノートのタイトル";
+
 // Tags
 "tags.hashtag_prefix" = "#%@";
 "tags.no_tags" = "タグなし";

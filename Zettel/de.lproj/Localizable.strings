@@ -82,6 +82,13 @@
 "search.no_results_title" = "Keine Ergebnisse für \"%@\"";
 "search.no_results_message" = "Versuche ein anderes Suchwort oder entferne Filter.";
 
+// macOS Notizauswahl
+"mac.picker.filter_placeholder" = "Notizen filtern…";
+"mac.picker.empty" = "Noch keine Notizen";
+"mac.picker.no_results" = "Keine passenden Notizen";
+"mac.picker.delete_note" = "Notiz löschen";
+"mac.title_editor.placeholder" = "Notiztitel";
+
 // Tags
 "tags.hashtag_prefix" = "#%@";
 "tags.no_tags" = "Keine Tags";

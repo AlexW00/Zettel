@@ -8,7 +8,7 @@ DERIVED_DATA_PATH=${DERIVED_DATA_PATH:-build/DerivedData}
 APP="$DERIVED_DATA_PATH/Build/Products/$CONFIGURATION-iphoneos/Zettel.app"
 
 if [[ ! -d "$APP" ]]; then
-  echo "error: app bundle not found at $APP. Run build.sh first or check your paths." >&2
+  echo "error: app bundle not found at $APP. Run ./build.sh ios first or check your paths." >&2
   exit 1
 fi
 
