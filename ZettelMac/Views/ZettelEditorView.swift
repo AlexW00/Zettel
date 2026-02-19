@@ -11,6 +11,7 @@ import ZettelKit
 
 struct ZettelEditorView: View {
     @Bindable var state: ZettelWindowState
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         ZStack {
@@ -58,17 +59,47 @@ struct ZettelEditorView: View {
 
     // MARK: - Editor Content
 
+    /// All unique tag display names gathered from every note (including the one currently
+    /// being edited so newly typed tags appear as suggestions without needing a save).
+    private var allTagDisplayNames: [String] {
+        var normalizedToDisplay: [String: String] = [:]
+        for note in MacNoteStore.shared.allNotes {
+            let combined = note.title + " " + note.content
+            let (displayMap, _) = TagParser.extractNormalizedAndDisplay(from: combined)
+            for (normalized, display) in displayMap where normalizedToDisplay[normalized] == nil {
+                normalizedToDisplay[normalized] = display
+            }
+        }
+        // Also extract from the current (possibly unsaved) note so newly typed tags
+        // appear in the suggestion list immediately.
+        let currentCombined = state.note.title + " " + state.note.content
+        let (currentDisplayMap, _) = TagParser.extractNormalizedAndDisplay(from: currentCombined)
+        for (normalized, display) in currentDisplayMap where normalizedToDisplay[normalized] == nil {
+            normalizedToDisplay[normalized] = display
+        }
+        return Array(normalizedToDisplay.values)
+    }
+
     private var editorContent: some View {
         MacTextEditor(
             text: Binding(
                 get: { state.note.content },
                 set: { state.updateContent($0) }
-            )
+            ),
+            allTags: allTagDisplayNames
         )
         .background {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color(nsColor: .textBackgroundColor))
-                .shadow(color: .black.opacity(0.08), radius: 6, y: 2)
+                .fill(
+                    colorScheme == .dark
+                        ? Color(red: 0.24, green: 0.24, blue: 0.25) // even lighter dark-gray for dark mode
+                        : Color(nsColor: .textBackgroundColor)
+                )
+                .shadow(
+                    color: .black.opacity(colorScheme == .dark ? 0.4 : 0.08),
+                    radius: colorScheme == .dark ? 10 : 6,
+                    y: colorScheme == .dark ? 4 : 2
+                )
         }
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .padding(10)

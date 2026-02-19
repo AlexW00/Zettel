@@ -10,9 +10,22 @@ import SwiftUI
 import AppKit
 import ZettelKit
 
+private struct BulletInfo {
+    enum BulletType {
+        case dash
+        case asterisk
+        case numbered(Int)
+    }
+
+    let type: BulletType
+    let prefix: String
+}
+
 struct MacTextEditor: NSViewRepresentable {
     @Binding var text: String
     var onInteraction: (() -> Void)?
+    /// All tag display names known across notes — used for autocomplete suggestions.
+    var allTags: [String] = []
 
     private static var resolvedEditorFontSize: CGFloat {
         let value = UserDefaults.standard.double(forKey: "editorFontSize")
@@ -78,6 +91,7 @@ struct MacTextEditor: NSViewRepresentable {
     func updateNSView(_ scrollView: NSScrollView, context: Context) {
         guard let textView = scrollView.documentView as? NSTextView else { return }
         (textView as? InteractionTextView)?.onInteraction = onInteraction
+        context.coordinator.allTags = allTags
 
         let targetFontSize = Self.resolvedEditorFontSize
         if textView.font?.pointSize != targetFontSize {
@@ -95,13 +109,17 @@ struct MacTextEditor: NSViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(text: $text)
+        Coordinator(text: $text, allTags: allTags)
     }
 
     // MARK: - Coordinator
 
     final class InteractionTextView: NSTextView {
         var onInteraction: (() -> Void)?
+
+        override func insertNewline(_ sender: Any?) {
+            handleNewlineForAutoBullet()
+        }
 
         override func becomeFirstResponder() -> Bool {
             let became = super.becomeFirstResponder()
@@ -115,14 +133,91 @@ struct MacTextEditor: NSViewRepresentable {
             onInteraction?()
             super.mouseDown(with: event)
         }
+
+        private func handleNewlineForAutoBullet() {
+            let cursorPosition = selectedRange().location
+            let textBeforeCursor = String(string.prefix(cursorPosition))
+
+            // Find the current line (text after last newline)
+            let lines = textBeforeCursor.components(separatedBy: "\n")
+            let currentLine = lines.last ?? ""
+
+            if let bulletInfo = detectBulletPattern(in: currentLine) {
+                if isEmptyBulletLine(currentLine, bulletInfo: bulletInfo) {
+                    // User wants a simple newline, not removal.
+                    super.insertNewline(nil)
+                } else {
+                    // Insert next bullet point
+                    insertNextBullet(bulletInfo: bulletInfo)
+                }
+            } else {
+                // Normal newline behavior
+                super.insertNewline(nil)
+            }
+        }
+
+        private func detectBulletPattern(in line: String) -> BulletInfo? {
+            let trimmedLine = line.trimmingCharacters(in: .whitespaces)
+
+            // Check for dash bullet (- )
+            if trimmedLine.hasPrefix("- ") {
+                return BulletInfo(type: .dash, prefix: "- ")
+            }
+
+            // Check for asterisk bullet (* )
+            if trimmedLine.hasPrefix("* ") {
+                return BulletInfo(type: .asterisk, prefix: "* ")
+            }
+
+            // Check for numbered list (1. 2. 3. etc.)
+            let numberedPattern = #"^(\d+)\.\s"#
+            if let regex = try? NSRegularExpression(pattern: numberedPattern),
+               let match = regex.firstMatch(in: trimmedLine, range: NSRange(location: 0, length: trimmedLine.count)) {
+                let numberRange = match.range(at: 1)
+                let numberString = String(trimmedLine[Range(numberRange, in: trimmedLine)!])
+                if let number = Int(numberString) {
+                    return BulletInfo(type: .numbered(number), prefix: "\(number). ")
+                }
+            }
+
+            return nil
+        }
+
+        private func isEmptyBulletLine(_ line: String, bulletInfo: BulletInfo) -> Bool {
+            let contentAfterBullet = line.dropFirst(bulletInfo.prefix.count).trimmingCharacters(in: .whitespaces)
+            return contentAfterBullet.isEmpty
+        }
+
+        private func insertNextBullet(bulletInfo: BulletInfo) {
+            let nextBulletPrefix: String
+
+            switch bulletInfo.type {
+            case .dash:
+                nextBulletPrefix = "\n- "
+            case .asterisk:
+                nextBulletPrefix = "\n* "
+            case .numbered(let currentNumber):
+                nextBulletPrefix = "\n\(currentNumber + 1). "
+            }
+
+            // Insert the newline and next bullet
+            super.insertText(nextBulletPrefix, replacementRange: selectedRange())
+        }
     }
 
     final class Coordinator: NSObject, NSTextViewDelegate {
         var text: Binding<String>
+        var allTags: [String]
         private var isUpdating = false
 
-        init(text: Binding<String>) {
+        // MARK: Autocomplete
+        private let autocomplete = TagAutocompleteController()
+        /// NSRange covering `#partialTag` currently being typed (in the text view's string).
+        private var currentTagRange: NSRange?
+
+        init(text: Binding<String>, allTags: [String]) {
             self.text = text
+            self.allTags = allTags
         }
 
         func textDidChange(_ notification: Notification) {
@@ -131,6 +226,103 @@ struct MacTextEditor: NSViewRepresentable {
             text.wrappedValue = textView.string
             applyHashtagHighlighting(to: textView)
             isUpdating = false
+            updateAutocomplete(in: textView)
+        }
+
+        func textViewDidChangeSelection(_ notification: Notification) {
+            guard let textView = notification.object as? NSTextView else { return }
+            guard autocomplete.isVisible else { return }
+            let cursor = textView.selectedRange().location
+            if TagParser.findHashtagAtPosition(textView.string, position: cursor) == nil {
+                autocomplete.hide()
+                currentTagRange = nil
+            }
+        }
+
+        // MARK: Command interception (Tab, Return, Escape)
+
+        func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+            guard autocomplete.isVisible else { return false }
+
+            switch commandSelector {
+            case #selector(NSResponder.insertTab(_:)):
+                autocomplete.selectNext()
+                return true
+            case #selector(NSResponder.insertBacktab(_:)):
+                autocomplete.selectPrevious()
+                return true
+            case #selector(NSResponder.moveDown(_:)):
+                autocomplete.selectNext()
+                return true
+            case #selector(NSResponder.moveUp(_:)):
+                autocomplete.selectPrevious()
+                return true
+            case #selector(NSResponder.insertNewline(_:)):
+                completeSelectedSuggestion(in: textView)
+                return true
+            case #selector(NSResponder.cancelOperation(_:)): // Escape
+                autocomplete.hide()
+                currentTagRange = nil
+                return true
+            default:
+                return false
+            }
+        }
+
+        // MARK: Autocomplete helpers
+
+        private func updateAutocomplete(in textView: NSTextView) {
+            let cursor = textView.selectedRange().location
+            let text = textView.string
+
+            guard let result = TagParser.findHashtagAtPosition(text, position: cursor) else {
+                autocomplete.hide()
+                currentTagRange = nil
+                return
+            }
+
+            currentTagRange = result.range
+            let prefix = result.partial.lowercased()
+
+            // Match all known tags by prefix; partial empty = just typed '#', show all
+            let suggestions: [String] = allTags
+                .filter { prefix.isEmpty || $0.lowercased().hasPrefix(prefix) }
+                .sorted { $0.lowercased() < $1.lowercased() }
+                .prefix(20)
+                .map { $0 }
+
+            guard !suggestions.isEmpty else {
+                autocomplete.hide()
+                return
+            }
+
+            // Anchor below the end of the partial tag in screen coordinates
+            let anchorLoc = result.range.location + result.range.length
+            let anchorRange = NSRange(location: anchorLoc, length: 0)
+            var actualRange = NSRange()
+            let screenRect = textView.firstRect(forCharacterRange: anchorRange, actualRange: &actualRange)
+
+            if autocomplete.isVisible {
+                autocomplete.update(suggestions: suggestions)
+            } else {
+                autocomplete.show(suggestions: suggestions, near: screenRect) { [weak self, weak textView] tag in
+                    guard let self, let textView else { return }
+                    self.completeTag(tag, in: textView)
+                }
+            }
+        }
+
+        private func completeSelectedSuggestion(in textView: NSTextView) {
+            guard let tag = autocomplete.selectedSuggestion else { return }
+            completeTag(tag, in: textView)
+        }
+
+        private func completeTag(_ tag: String, in textView: NSTextView) {
+            guard let tagRange = currentTagRange else { return }
+            let fullTag = "#\(tag)"
+            textView.insertText(fullTag, replacementRange: tagRange)
+            autocomplete.hide()
+            currentTagRange = nil
         }
 
         @MainActor

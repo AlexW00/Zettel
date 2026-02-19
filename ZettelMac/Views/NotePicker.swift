@@ -19,6 +19,7 @@ struct NotePickerModal: View {
 
     @State private var searchText = ""
     @FocusState private var isSearchFocused: Bool
+    @Environment(\.colorScheme) private var colorScheme
 
     private let pickerPreferredWidth: CGFloat = 420
     private let pickerPreferredHeight: CGFloat = 320
@@ -77,11 +78,17 @@ struct NotePickerModal: View {
                     height: min(pickerPreferredHeight, max(0, geometry.size.height - (pickerMinWindowMargin * 2)))
                 )
                 .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .shadow(color: .black.opacity(0.2), radius: 20, y: 10)
+                .shadow(
+                    color: .black.opacity(colorScheme == .dark ? 0.5 : 0.2),
+                    radius: colorScheme == .dark ? 24 : 20,
+                    y: 10
+                )
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .task {
+            // Flush any pending auto-save so the current note appears immediately
+            state.saveNow()
             await store.loadAllNotes()
         }
         .onAppear {
@@ -133,7 +140,7 @@ struct NotePickerModal: View {
         .padding(.vertical, 7)
         .background(
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(.white.opacity(0.08))
+                .fill(.primary.opacity(0.06))
         )
     }
 
@@ -269,16 +276,37 @@ private struct NotePickerRow: View {
         .padding(.vertical, 8)
         .background {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(isHovering ? Color.accentColor.opacity(0.12) : (isCurrent ? Color.gray.opacity(0.22) : .clear))
+                .fill(isHovering ? Color.accentColor.opacity(0.15) : (isCurrent ? Color.primary.opacity(0.08) : .clear))
         }
         .contentShape(Rectangle())
         .onHover { hovering in
             isHovering = hovering
-            if hovering {
-                NSCursor.pointingHand.push()
-            } else {
-                NSCursor.pop()
-            }
+        }
+        .overlay {
+            PointingHandCursorView()
         }
     }
 }
+
+private struct PointingHandCursorView: NSViewRepresentable {
+    func makeNSView(context: Context) -> CursorView {
+        CursorView()
+    }
+
+    func updateNSView(_ nsView: CursorView, context: Context) {
+        DispatchQueue.main.async {
+            nsView.window?.invalidateCursorRects(for: nsView)
+        }
+    }
+
+    final class CursorView: NSView {
+        override func resetCursorRects() {
+            addCursorRect(bounds, cursor: .pointingHand)
+        }
+        
+        override func hitTest(_ point: NSPoint) -> NSView? {
+            return nil // Allow clicks to pass through
+        }
+    }
+}
+

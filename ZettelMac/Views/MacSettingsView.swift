@@ -79,12 +79,13 @@ struct MacSettingsView: View {
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .truncationMode(.middle)
-                        .frame(maxWidth: 200, alignment: .trailing)
                         .help(storageDirectory.path)
 
                     Button("Change…") {
                         showingFolderPicker = true
                     }
+                    .fixedSize()
+                    .layoutPriority(1)
                 }
             } label: {
                 Text("Storage Location")

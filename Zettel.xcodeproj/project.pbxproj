@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4BB769962F47B4CF006075B1 /* ZettelKit in Frameworks */ = {isa = PBXBuildFile; productRef = CE005BFF1E3238B24810B42F /* ZettelKit */; };
 		9919791BA4923E353DD9080A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8723AD39BFE4641DD8E888B /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BB769962F47B4CF006075B1 /* ZettelKit in Frameworks */,
 				9919791BA4923E353DD9080A /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -179,7 +181,7 @@
 			mainGroup = 9ED9FF992E09D9AF0000CCCD;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "ZettelKit" */,
+				ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "Packages/ZettelKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9ED9FFA32E09D9AF0000CCCD /* Products */;
@@ -538,7 +540,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "ZettelKit" */ = {
+		ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "Packages/ZettelKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/ZettelKit;
 		};
@@ -547,7 +549,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		CE005BFF1E3238B24810B42F /* ZettelKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "ZettelKit" */;
+			package = ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "Packages/ZettelKit" */;
 			productName = ZettelKit;
 		};
 /* End XCSwiftPackageProductDependency section */
