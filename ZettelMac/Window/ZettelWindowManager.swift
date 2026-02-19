@@ -169,10 +169,10 @@ final class ZettelWindowManager: NSObject, ObservableObject {
         let defaultSize = NSSize(width: 640, height: 520)
         let initialRect = centeredRect(size: defaultSize, cascadeIndex: windowStates.count)
 
-        // Create panel — standard macOS window chrome (system handles glass)
+        // Create panel — Liquid Glass chrome on macOS Tahoe
         let panel = ZettelPanel(
             contentRect: initialRect,
-            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
@@ -183,8 +183,10 @@ final class ZettelWindowManager: NSObject, ObservableObject {
         panel.worksWhenModal = true
         panel.isReleasedWhenClosed = false
         panel.isMovableByWindowBackground = true
+        panel.toolbarStyle = .unified
 
-        // Titlebar: visible, standard (system provides liquid glass chrome)
+        // Titlebar: transparent glass — content extends underneath
+        panel.titlebarAppearsTransparent = true
         panel.titleVisibility = .visible
 
         // Set min size
