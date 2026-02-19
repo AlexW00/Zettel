@@ -12,6 +12,7 @@ struct MainView: View {
     @EnvironmentObject var themeStore: ThemeStore
     @EnvironmentObject var localizationManager: LocalizationManager
     @EnvironmentObject var dictationLocaleManager: DictationLocaleManager
+    @EnvironmentObject var backgroundStore: BackgroundStore
     @State private var showSettings = false
     @State private var showArchive = false
     @State private var dragOffset: CGFloat = 0
@@ -26,6 +27,7 @@ struct MainView: View {
     @StateObject private var dictationController = NoteDictationController()
     @State private var showLocaleDownloadPrompt = false
     @State private var pendingLocaleOption: DictationLocaleManager.LocaleOption?
+    @Environment(\.colorScheme) var colorScheme
 
     private let clearThreshold: CGFloat = GestureConstants.tearThreshold
     private let clearZoneHeight: CGFloat = LayoutConstants.Size.tearZoneHeight
@@ -35,8 +37,10 @@ struct MainView: View {
         SwipeNavigationView(showOverview: $showArchive) {
             NavigationStack {
                 ZStack {
-                    Color.appBackground
+                    // Use transparent background when custom background is set
+                    backgroundLayer
                         .ignoresSafeArea()
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             // Dismiss keyboard when tapping on background
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -56,6 +60,7 @@ struct MainView: View {
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbarBackground(.hidden, for: .navigationBar)
                 .toolbar {
                     // Add an invisible toolbar item in the center to capture taps
                     ToolbarItem(placement: .principal) {
@@ -76,10 +81,17 @@ struct MainView: View {
                             showSettings = true 
                         }) {
                             Image(systemName: "gearshape")
-                                .font(.system(size: 17))
+                                .font(.system(size: 20))
                                 .foregroundColor(.primaryText)
                         }
+                        .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
+                        .adaptiveGlassEffect(
+                            in: Circle(),
+                            colorScheme: colorScheme,
+                            hasCustomBackground: backgroundStore.hasCustomBackground
+                        )
                     }
+                    .sharedBackgroundVisibility(.hidden)
                     
                     
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -89,10 +101,17 @@ struct MainView: View {
                             shareNote()
                         }) {
                             Image(systemName: "square.and.arrow.up")
-                                .font(.system(size: 17))
+                                .font(.system(size: 20))
                                 .foregroundColor(.primaryText)
                         }
+                        .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
+                        .adaptiveGlassEffect(
+                            in: Circle(),
+                            colorScheme: colorScheme,
+                            hasCustomBackground: backgroundStore.hasCustomBackground
+                        )
                     }
+                    .sharedBackgroundVisibility(.hidden)
                 }
                 .sheet(isPresented: $showSettings) {
                     SettingsView(noteStore: noteStore)
@@ -106,6 +125,7 @@ struct MainView: View {
                 } message: {
                     Text(StringConstants.Shortcuts.confirmationMessage.localized)
                 }
+                .transparentBackground() // Clear the hosting controller background
             }
         } overviewContent: {
             OverviewGrid(noteStore: noteStore, showArchive: $showArchive)
@@ -171,6 +191,16 @@ struct MainView: View {
         }
     }
     
+    /// Returns transparent background when custom background is set, otherwise default app background
+    @ViewBuilder
+    private var backgroundLayer: some View {
+        if backgroundStore.hasCustomBackground {
+            Color.clear
+        } else {
+            Color.appBackground
+        }
+    }
+    
     private var noteCard: some View {
         VStack(spacing: 0) {
             SelectableTextField(
@@ -216,7 +246,7 @@ struct MainView: View {
                 .padding(.trailing, LayoutConstants.Padding.large)
                 .padding(.bottom, LayoutConstants.Padding.large)
             }
-            .background(Color.noteBackground)
+            .background(Color.clear)
             .opacity(max(0.25, 1.0 - (clearProgress * ThemeConstants.Opacity.veryHeavy)))
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
@@ -227,9 +257,16 @@ struct MainView: View {
                     }
                 }
         }
-        .background(Color.noteBackground)
+        .background {
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color.clear)
+                .adaptiveGlassEffect(
+                    in: RoundedRectangle(cornerRadius: 14),
+                    colorScheme: colorScheme,
+                    hasCustomBackground: backgroundStore.hasCustomBackground
+                )
+        }
         .clipShape(RoundedRectangle(cornerRadius: 14))
-        .shadow(color: Color.cardShadow, radius: 8, x: 0, y: 2)
         .modifier(ClearAnimationModifier(
             clearProgress: clearProgress,
             dragOffset: dragOffset,
@@ -411,7 +448,7 @@ struct ClearIndicatorView: View {
         GeometryReader { geometry in
             ZStack {
                 Rectangle()
-                    .fill(Color.noteBackground)
+                    .fill(Color.clear)
                     .frame(height: geometry.size.height.safeDivide(by: 2, fallback: 20))
                     .frame(maxHeight: .infinity, alignment: .top)
 
@@ -421,7 +458,7 @@ struct ClearIndicatorView: View {
                     HStack(spacing: 8) {
                         ForEach(0..<max(0, Int(geometry.size.width.safeDivide(by: 10, fallback: 0))), id: \.self) { _ in
                             Circle()
-                                .fill(Color.tearIndicator)
+                                .fill(Color.secondary.opacity(0.4))
                                 .frame(width: 3, height: 3)
                         }
                     }
@@ -431,7 +468,7 @@ struct ClearIndicatorView: View {
                     if isDragging {
                         HStack {
                             Rectangle()
-                                .fill(clearProgress >= GestureConstants.tearThreshold ? Color.tearIndicatorActive : Color.tearIndicator)
+                                .fill(clearProgress >= GestureConstants.tearThreshold ? Color.tearIndicatorActive : Color.secondary.opacity(0.6))
                                 .frame(height: 2)
                                 .frame(width: geometry.size.width * min(1.0, clearProgress))
                             Spacer(minLength: 0)
@@ -486,6 +523,7 @@ struct ClearAnimationModifier: ViewModifier, Animatable {
         .environmentObject(ThemeStore())
         .environmentObject(LocalizationManager.shared)
         .environmentObject(DictationLocaleManager.shared)
+        .environmentObject(BackgroundStore())
 }
 
 private struct DictationControlButton: View {

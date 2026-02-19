@@ -1,0 +1,20 @@
+{
+	"servers": {
+		"context7": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@upstash/context7-mcp@latest"
+			]
+		},
+		"apple-docs": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@kimsungwhee/apple-docs-mcp"
+			]
+		}
+	},
+	"inputs": []
+}

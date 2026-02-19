@@ -10,11 +10,14 @@ import SwiftUI
 struct OverviewGrid: View {
     @ObservedObject var noteStore: NoteStore
     @Binding var showArchive: Bool
+    @EnvironmentObject var backgroundStore: BackgroundStore
     @State private var selectedNote: Note?
     @State private var isSelectionMode = false
     @State private var selectedNotes = Set<String>()
     @State private var searchText = ""
+    @State private var searchBarRevealed = false
     @Environment(\.navigationGestureActive) private var navigationGestureActive
+    @Environment(\.colorScheme) var colorScheme
 
     // Design system constants
     private let cardCornerRadius: CGFloat = 14
@@ -74,13 +77,28 @@ struct OverviewGrid: View {
         }
     }
     
+    /// Returns transparent background when custom background is set, otherwise default app background
+    @ViewBuilder
+    private var backgroundLayer: some View {
+        if backgroundStore.hasCustomBackground {
+            Color.clear
+        } else {
+            Color.appBackground
+        }
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             NavigationStack {
                 ZStack(alignment: .top) {
-                    Color.appBackground
+                    backgroundLayer
                         .ignoresSafeArea()
-                    ScrollView {
+                    PullToRevealScrollView(
+                        searchText: $searchText,
+                        isSearchRevealed: $searchBarRevealed,
+                        colorScheme: colorScheme,
+                        hasCustomBackground: backgroundStore.hasCustomBackground
+                    ) {
                         VStack(alignment: .leading, spacing: verticalStackSpacing) {
                             if noteStore.isInitialLoadingNotes {
                                 LoadingStateView(
@@ -147,44 +165,80 @@ struct OverviewGrid: View {
                     .navigationBarTitleDisplayMode(.inline)
                 }
                 .toolbar {
+                    // Search button on the leading edge
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        if !isSelectionMode {
+                            Button {
+                                withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
+                                    searchBarRevealed.toggle()
+                                    if !searchBarRevealed {
+                                        searchText = ""
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: searchBarRevealed ? "xmark" : "magnifyingglass")
+                                    .foregroundColor(.primaryText)
+                                    .font(.system(size: 18, weight: .medium))
+                                    .contentTransition(.symbolEffect(.replace))
+                            }
+                            .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
+                            .adaptiveGlassEffect(
+                                in: Circle(),
+                                colorScheme: colorScheme,
+                                hasCustomBackground: backgroundStore.hasCustomBackground
+                            )
+                        }
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                    
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if isSelectionMode {
                             HStack {
                                 Button(action: deleteSelectedNotes) {
                                     Image(systemName: "trash")
                                         .foregroundColor(.primaryText)
+                                        .font(.system(size: 20))
                                 }
+                                .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
+                                .adaptiveGlassEffect(
+                                    in: Circle(),
+                                    colorScheme: colorScheme,
+                                    hasCustomBackground: backgroundStore.hasCustomBackground
+                                )
                                 .disabled(selectedNotes.isEmpty)
 
                                 Button(StringConstants.Actions.cancel.localized) {
                                     exitSelectionMode()
                                 }
                                 .foregroundColor(.primaryText)
+                                .padding(.horizontal, 16)
+                                .frame(height: LayoutConstants.Size.toolbarButton)
+                                .adaptiveGlassEffect(
+                                    in: Capsule(),
+                                    colorScheme: colorScheme,
+                                    hasCustomBackground: backgroundStore.hasCustomBackground
+                                )
                             }
                         } else {
                             Button(action: enterSelectionMode) {
                                 Image(systemName: "checkmark.circle")
                                     .foregroundColor(.primaryText)
+                                    .font(.system(size: 22))
                             }
+                            .frame(width: LayoutConstants.Size.toolbarButton, height: LayoutConstants.Size.toolbarButton)
+                            .adaptiveGlassEffect(
+                                in: Circle(),
+                                colorScheme: colorScheme,
+                                hasCustomBackground: backgroundStore.hasCustomBackground
+                            )
                         }
                     }
+                    .sharedBackgroundVisibility(.hidden)
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
+                .transparentBackground() // Clear the hosting controller background
             } // NavigationStack
-            .searchable(text: $searchText,
-                        placement: .navigationBarDrawer(displayMode: .automatic),
-                        prompt: Text(StringConstants.Search.prompt.localized))
-            .textInputAutocapitalization(.never)
-            .disableAutocorrection(true)
-            .searchSuggestions {
-                if !isSearching {
-                    ForEach(popularSearchTags) { tag in
-                        Text("#\(tag.displayName)")
-                            .searchCompletion("#\(tag.displayName)")
-                    }
-                }
-            }
         } // GeometryReader
     }
 }
@@ -195,9 +249,11 @@ struct NoteCard: View {
     var isSelectionMode: Bool = false
 
     private let cardCornerRadius: CGFloat = 14
-    private let shadowRadius: CGFloat = 3
 
     @State private var wiggleAnimation = false
+
+    @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var backgroundStore: BackgroundStore
 
     var body: some View {
         ZStack {
@@ -208,6 +264,7 @@ struct NoteCard: View {
                     .foregroundColor(.primaryText)
                     .lineLimit(1)
                     .padding(.bottom, 8)
+                    .shadow(color: colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.textShadowDark) : .white.opacity(ThemeConstants.Opacity.textShadowLight), radius: ThemeConstants.Shadow.textRadius, x: 0, y: 1)
 
                 // Content preview with overflow handling
                 ZStack(alignment: .bottom) {
@@ -236,25 +293,10 @@ struct NoteCard: View {
                     } else {
                         Text(note.contentPreview(maxLines: 6))
                             .font(.system(size: 12, weight: .regular, design: .monospaced))
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.primary.opacity(0.75))
                             .lineLimit(6)
-                            .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                    }
-
-                    // Gradient overlay for overflow indication (hidden in selection mode and for cloud stubs)
-                    if !isSelectionMode && !note.isCloudStub {
-                        LinearGradient(
-                            gradient: Gradient(colors: [
-                                Color.noteBackground.opacity(0),
-                                Color.noteBackground.opacity(0.8),
-                                Color.noteBackground
-                            ]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                        .frame(height: 20)
-                        .allowsHitTesting(false)
+                            .shadow(color: colorScheme == .dark ? .black.opacity(ThemeConstants.Opacity.textShadowDark) : .white.opacity(ThemeConstants.Opacity.textShadowLight), radius: ThemeConstants.Shadow.textRadius, x: 0, y: 1)
                     }
                 }
                 .clipped()
@@ -270,9 +312,16 @@ struct NoteCard: View {
             }
             .padding(12)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .background(isSelected ? Color.accentColor.opacity(Color.lightOpacity) : Color.noteBackground)
-            .cornerRadius(cardCornerRadius)
-            .shadow(color: Color.cardShadow, radius: shadowRadius, x: 0, y: 2)
+            .background {
+                RoundedRectangle(cornerRadius: cardCornerRadius)
+                    .fill(isSelected ? Color.accentColor.opacity(Color.lightOpacity) : Color.clear)
+                    .adaptiveGlassEffect(
+                        in: RoundedRectangle(cornerRadius: cardCornerRadius),
+                        colorScheme: colorScheme,
+                        hasCustomBackground: backgroundStore.hasCustomBackground
+                    )
+            }
+            .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: cardCornerRadius)
                     .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 2)
@@ -296,7 +345,7 @@ struct NoteCard: View {
                             .padding(8)
                             .background(
                                 Circle()
-                                    .fill(Color.noteBackground)
+                                    .fill(Color.clear)
                                     .frame(width: 24, height: 24)
                             )
                     }
@@ -304,6 +353,7 @@ struct NoteCard: View {
                 }
             }
         }
+        .contentShape(RoundedRectangle(cornerRadius: cardCornerRadius))
         .onAppear {
             if isSelectionMode && !isSelected {
                 wiggleAnimation.toggle()
@@ -449,5 +499,6 @@ struct OverviewGrid_Previews: PreviewProvider {
         noteStore.archivedNotes = sampleNotes
         
         return OverviewGrid(noteStore: noteStore, showArchive: .constant(true))
+            .environmentObject(BackgroundStore())
     }
 }

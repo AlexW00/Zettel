@@ -54,6 +54,18 @@
 "dictation.settings.section_description" = "音声入力に使用する言語を選択します。";
 "dictation.locale.download.in_progress" = "ダウンロード中…";
 
+// 背景設定
+"settings.background_section" = "背景";
+"settings.background" = "カスタム背景";
+"settings.background_description" = "画像または動画を背景に設定";
+"settings.choose" = "選択";
+"settings.change" = "変更";
+"settings.remove_background" = "背景を削除";
+"settings.video_too_long" = "動画は10分以内にしてください";
+"settings.background_video_volume" = "動画の音量";
+"settings.background_dimming" = "暗さ";
+"settings.video_loop_fade_duration" = "ループフェード時間";
+
 // Theme Options
 "theme.system" = "システム";
 "theme.light" = "ライト";

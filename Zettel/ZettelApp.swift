@@ -18,6 +18,28 @@ struct ZettelApp: App {
     init() {
         // Register app shortcuts
         ZettelAppShortcuts.updateAppShortcutParameters()
+        
+        // Configure UIKit appearances for transparent backgrounds
+        configureTransparentNavigationAppearance()
+    }
+    
+    /// Configures UIKit navigation-related appearances to be transparent
+    /// This allows custom backgrounds to show through NavigationStack
+    private func configureTransparentNavigationAppearance() {
+        // Make UINavigationBar background transparent
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.configureWithTransparentBackground()
+        navBarAppearance.backgroundColor = .clear
+        navBarAppearance.shadowColor = .clear
+        UINavigationBar.appearance().standardAppearance = navBarAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+        UINavigationBar.appearance().compactAppearance = navBarAppearance
+        
+        // Make table/list backgrounds transparent (for Form, List, etc.)
+        UITableView.appearance().backgroundColor = .clear
+        
+        // Make collection view backgrounds transparent
+        UICollectionView.appearance().backgroundColor = .clear
     }
     
     var body: some Scene {

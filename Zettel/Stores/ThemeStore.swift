@@ -71,13 +71,27 @@ class ThemeStore: ObservableObject {
         let savedFontSize = UserDefaults.standard.object(forKey: "contentFontSize") as? CGFloat
         self.contentFontSize = savedFontSize ?? LayoutConstants.FontSize.large
     }
+    /**
+     * Resets all theme settings to their default values.
+     */
+    func resetToDefaults() {
+        currentTheme = .system
+        contentFontSize = LayoutConstants.FontSize.large
+    }
 }
 
 // MARK: - Theme Colors
 extension Color {
     // Background colors
     static var appBackground: Color {
-        Color(UIColor.systemGroupedBackground)
+        Color(UIColor { traitCollection in
+            if traitCollection.userInterfaceStyle == .dark {
+                return UIColor.systemGroupedBackground
+            } else {
+                // Slightly darker than systemGroupedBackground for better contrast with liquid glass
+                return UIColor(white: 0.9, alpha: 1.0)
+            }
+        })
     }
     
     static var primaryBackground: Color {

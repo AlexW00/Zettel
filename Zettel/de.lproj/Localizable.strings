@@ -54,6 +54,18 @@
 "dictation.settings.section_description" = "Wähle die Sprache für Sprachaufnahmen.";
 "dictation.locale.download.in_progress" = "Wird geladen…";
 
+// Hintergrund-Einstellungen
+"settings.background_section" = "Hintergrund";
+"settings.background" = "Eigener Hintergrund";
+"settings.background_description" = "Bild oder Video als Hintergrund setzen";
+"settings.choose" = "Wählen";
+"settings.change" = "Ändern";
+"settings.remove_background" = "Hintergrund entfernen";
+"settings.video_too_long" = "Video darf maximal 10 Minuten lang sein";
+"settings.background_video_volume" = "Videolautstärke";
+"settings.background_dimming" = "Abdunkelung";
+"settings.video_loop_fade_duration" = "Loop-Überblendung";
+
 // Theme Options
 "theme.system" = "System";
 "theme.light" = "Hell";

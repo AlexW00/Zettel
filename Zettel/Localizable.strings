@@ -54,6 +54,21 @@
 "dictation.settings.section_description" = "Select which speech language to use when dictating notes.";
 "dictation.locale.download.in_progress" = "Downloading…";
 
+// Background Settings
+"settings.background_section" = "Background";
+"settings.background" = "Custom Background";
+"settings.background_description" = "Set an image or video as background";
+"settings.choose" = "Choose";
+"settings.video_volume" = "Video Volume";
+"settings.background_dimming" = "Dimming";
+"settings.video_loop_fade_duration" = "Loop Fade Duration";
+
+// MARK: - Notifications
+"notifications.title" = "Notifications";
+"settings.change" = "Change";
+"settings.remove_background" = "Remove Background";
+"settings.video_too_long" = "Video must be 10 minutes or less";
+
 // Theme Options
 "theme.system" = "System";
 "theme.light" = "Light";
