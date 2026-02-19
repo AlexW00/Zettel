@@ -14,12 +14,16 @@ import ZettelKit
 struct ZettelMacApp: App {
     @NSApplicationDelegateAdaptor(ZettelAppDelegate.self) var appDelegate
 
+    init() {
+        MacAppearanceOption.fromUserDefaults().apply()
+    }
+
     var body: some Scene {
         // Settings window (Cmd+,)
         Settings {
             MacSettingsView()
-                .frame(width: 480, height: 400)
         }
+        .windowResizability(.contentSize)
         .commands {
             // MARK: - File Menu
             CommandGroup(replacing: .newItem) {

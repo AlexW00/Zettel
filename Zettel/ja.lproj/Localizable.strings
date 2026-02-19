@@ -50,6 +50,11 @@
 "settings.default_title_template_info_title" = "テンプレート形式";
 "settings.default_title_template_info_message" = "使用できるプレースホルダ:\n%@\n\nフィールドを空にすると既定のテンプレート (%@) に戻ります。";
 "settings.default_title_template_info_button" = "テンプレート形式の説明を表示";
+"settings.general_tab" = "一般";
+"settings.template_tokens" = "テンプレートトークン";
+"settings.change_ellipsis" = "変更…";
+"settings.version_format" = "バージョン %@ (%@)";
+"settings.app_description_mac" = "ミニマルなメモアプリです。";
 "dictation.settings.section_title" = "音声入力";
 "dictation.settings.section_description" = "音声入力に使用する言語を選択します。";
 "dictation.locale.download.in_progress" = "ダウンロード中…";
@@ -83,10 +88,15 @@
 "search.no_results_message" = "別のキーワードを試すかフィルターを解除してください。";
 
 // macOS ノートピッカー
-"mac.picker.filter_placeholder" = "ノートを絞り込み…";
+"mac.picker.filter_placeholder" = "ノートを検索…";
 "mac.picker.empty" = "ノートがまだありません";
 "mac.picker.no_results" = "一致するノートがありません";
 "mac.picker.delete_note" = "ノートを削除";
+"mac.picker.pin_note" = "ピン留めして開く";
+"mac.picker.section_header" = "ノート";
+"mac.picker.characters" = "文字";
+"mac.picker.current" = "現在";
+"mac.picker.opened" = "最終更新";
 "mac.title_editor.placeholder" = "ノートのタイトル";
 
 // Tags

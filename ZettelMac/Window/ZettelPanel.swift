@@ -12,4 +12,7 @@ import AppKit
 final class ZettelPanel: NSPanel {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { true }
+
+    override func cancelOperation(_ sender: Any?) {
+    }
 }

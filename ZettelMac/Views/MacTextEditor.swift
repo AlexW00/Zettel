@@ -12,12 +12,29 @@ import ZettelKit
 
 struct MacTextEditor: NSViewRepresentable {
     @Binding var text: String
+    var onInteraction: (() -> Void)?
+
+    private static var resolvedEditorFontSize: CGFloat {
+        let value = UserDefaults.standard.double(forKey: "editorFontSize")
+        let normalized = value == 0 ? 15 : value
+        return CGFloat(min(max(normalized, 12), 28))
+    }
 
     func makeNSView(context: Context) -> NSScrollView {
-        let scrollView = NSTextView.scrollableTextView()
-        guard let textView = scrollView.documentView as? NSTextView else {
-            return scrollView
-        }
+        let textContainer = NSTextContainer()
+        textContainer.widthTracksTextView = true
+
+        let layoutManager = NSLayoutManager()
+        layoutManager.addTextContainer(textContainer)
+
+        let textStorage = NSTextStorage()
+        textStorage.addLayoutManager(layoutManager)
+
+        let textView = InteractionTextView(frame: .zero, textContainer: textContainer)
+        textView.onInteraction = onInteraction
+
+        let scrollView = NSScrollView()
+        scrollView.documentView = textView
 
         // Configure text view
         textView.isRichText = false
@@ -29,7 +46,7 @@ struct MacTextEditor: NSViewRepresentable {
         textView.isIncrementalSearchingEnabled = true
 
         // Appearance
-        textView.font = .systemFont(ofSize: 15, weight: .regular)
+        textView.font = .systemFont(ofSize: Self.resolvedEditorFontSize, weight: .regular)
         textView.textColor = .labelColor
         textView.backgroundColor = .clear
         textView.drawsBackground = false
@@ -60,6 +77,13 @@ struct MacTextEditor: NSViewRepresentable {
 
     func updateNSView(_ scrollView: NSScrollView, context: Context) {
         guard let textView = scrollView.documentView as? NSTextView else { return }
+        (textView as? InteractionTextView)?.onInteraction = onInteraction
+
+        let targetFontSize = Self.resolvedEditorFontSize
+        if textView.font?.pointSize != targetFontSize {
+            textView.font = .systemFont(ofSize: targetFontSize, weight: .regular)
+            context.coordinator.applyHashtagHighlighting(to: textView)
+        }
 
         // Only update if the text actually differs (avoid cursor jumping)
         if textView.string != text {
@@ -75,6 +99,23 @@ struct MacTextEditor: NSViewRepresentable {
     }
 
     // MARK: - Coordinator
+
+    final class InteractionTextView: NSTextView {
+        var onInteraction: (() -> Void)?
+
+        override func becomeFirstResponder() -> Bool {
+            let became = super.becomeFirstResponder()
+            if became {
+                onInteraction?()
+            }
+            return became
+        }
+
+        override func mouseDown(with event: NSEvent) {
+            onInteraction?()
+            super.mouseDown(with: event)
+        }
+    }
 
     final class Coordinator: NSObject, NSTextViewDelegate {
         var text: Binding<String>
@@ -92,13 +133,15 @@ struct MacTextEditor: NSViewRepresentable {
             isUpdating = false
         }
 
+        @MainActor
         func applyHashtagHighlighting(to textView: NSTextView) {
             guard let textStorage = textView.textStorage else { return }
             let fullRange = NSRange(location: 0, length: textStorage.length)
             let text = textStorage.string
+            let fontSize = MacTextEditor.resolvedEditorFontSize
 
             // Reset to default style
-            let defaultFont = NSFont.systemFont(ofSize: 15, weight: .regular)
+            let defaultFont = NSFont.systemFont(ofSize: fontSize, weight: .regular)
             let defaultColor = NSColor.labelColor
             textStorage.addAttribute(.foregroundColor, value: defaultColor, range: fullRange)
             textStorage.addAttribute(.font, value: defaultFont, range: fullRange)
@@ -108,7 +151,7 @@ struct MacTextEditor: NSViewRepresentable {
             let matches = regex.matches(in: text, options: [], range: fullRange)
 
             let hashtagColor = NSColor.systemBlue
-            let hashtagFont = NSFont.systemFont(ofSize: 15, weight: .medium)
+            let hashtagFont = NSFont.systemFont(ofSize: fontSize, weight: .medium)
 
             for match in matches {
                 textStorage.addAttribute(.foregroundColor, value: hashtagColor, range: match.range)

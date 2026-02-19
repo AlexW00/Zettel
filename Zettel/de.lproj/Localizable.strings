@@ -50,6 +50,11 @@
 "settings.default_title_template_info_title" = "Vorlagenformat";
 "settings.default_title_template_info_message" = "Verfügbare Platzhalter:\n%@\n\nLasse das Feld leer, um die Standardvorlage zurückzusetzen (%@).";
 "settings.default_title_template_info_button" = "Vorlagenformat-Hilfe anzeigen";
+"settings.general_tab" = "Allgemein";
+"settings.template_tokens" = "Vorlagen-Tokens";
+"settings.change_ellipsis" = "Ändern…";
+"settings.version_format" = "Version %@ (%@)";
+"settings.app_description_mac" = "Eine minimalistische Notiz-App.";
 "dictation.settings.section_title" = "Diktieren";
 "dictation.settings.section_description" = "Wähle die Sprache für Sprachaufnahmen.";
 "dictation.locale.download.in_progress" = "Wird geladen…";
@@ -83,10 +88,15 @@
 "search.no_results_message" = "Versuche ein anderes Suchwort oder entferne Filter.";
 
 // macOS Notizauswahl
-"mac.picker.filter_placeholder" = "Notizen filtern…";
+"mac.picker.filter_placeholder" = "Notizen suchen…";
 "mac.picker.empty" = "Noch keine Notizen";
 "mac.picker.no_results" = "Keine passenden Notizen";
 "mac.picker.delete_note" = "Notiz löschen";
+"mac.picker.pin_note" = "Angeheftet öffnen";
+"mac.picker.section_header" = "Notizen";
+"mac.picker.characters" = "Zeichen";
+"mac.picker.current" = "Aktuell";
+"mac.picker.opened" = "Geöffnet";
 "mac.title_editor.placeholder" = "Notiztitel";
 
 // Tags

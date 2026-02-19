@@ -26,7 +26,7 @@ final class ZettelWindowState {
     /// Whether this window is pinned (floating)
     var isPinned: Bool = false
 
-    /// Whether the note picker popup is showing
+    /// Whether the note picker modal is showing
     var isShowingPicker: Bool = false
 
     /// Auto-save debounce
