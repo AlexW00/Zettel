@@ -6,8 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9919791BA4923E353DD9080A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8723AD39BFE4641DD8E888B /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		9ED9FFA22E09D9AF0000CCCD /* Zettel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zettel.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9F21730384B9E76C684CD7C /* ZettelMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZettelMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8723AD39BFE4641DD8E888B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -18,9 +24,24 @@
 			);
 			target = 9ED9FFA12E09D9AF0000CCCD /* Zettel */;
 		};
+		C2B37314D4A2702A1CCC64C3 /* Exceptions for "ZettelMac" folder in "ZettelMac" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 265B02BCDB83B24B5A542C82 /* ZettelMac */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		8A9AF4FCF7B1540CF84A1C9E /* ZettelMac */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C2B37314D4A2702A1CCC64C3 /* Exceptions for "ZettelMac" folder in "ZettelMac" target */,
+			);
+			path = ZettelMac;
+			sourceTree = "<group>";
+		};
 		9ED9FFA42E09D9AF0000CCCD /* Zettel */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -39,14 +60,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C2F401BA988BE5A84150CC8D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9919791BA4923E353DD9080A /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06822BD6ADE5F429388586F1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BE8241F5BFF75FB72B00DF9C /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		9ED9FF992E09D9AF0000CCCD = {
 			isa = PBXGroup;
 			children = (
 				9ED9FFA42E09D9AF0000CCCD /* Zettel */,
 				9ED9FFA32E09D9AF0000CCCD /* Products */,
+				06822BD6ADE5F429388586F1 /* Frameworks */,
+				8A9AF4FCF7B1540CF84A1C9E /* ZettelMac */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,13 +93,45 @@
 			isa = PBXGroup;
 			children = (
 				9ED9FFA22E09D9AF0000CCCD /* Zettel.app */,
+				D9F21730384B9E76C684CD7C /* ZettelMac.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BE8241F5BFF75FB72B00DF9C /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				E8723AD39BFE4641DD8E888B /* Cocoa.framework */,
+			);
+			name = "OS X";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		265B02BCDB83B24B5A542C82 /* ZettelMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D9218D505FF7FC14C2F04F0 /* Build configuration list for PBXNativeTarget "ZettelMac" */;
+			buildPhases = (
+				94DC1E8B6B2B827D63D000BF /* Sources */,
+				C2F401BA988BE5A84150CC8D /* Frameworks */,
+				3411A8881028749F4585F42F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				8A9AF4FCF7B1540CF84A1C9E /* ZettelMac */,
+			);
+			name = ZettelMac;
+			packageProductDependencies = (
+				CE005BFF1E3238B24810B42F /* ZettelKit */,
+			);
+			productName = ZettelMac;
+			productReference = D9F21730384B9E76C684CD7C /* ZettelMac.app */;
+			productType = "com.apple.product-type.application";
+		};
 		9ED9FFA12E09D9AF0000CCCD /* Zettel */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9ED9FFC32E09D9B00000CCCD /* Build configuration list for PBXNativeTarget "Zettel" */;
@@ -77,8 +148,6 @@
 				9ED9FFA42E09D9AF0000CCCD /* Zettel */,
 			);
 			name = Zettel;
-			packageProductDependencies = (
-			);
 			productName = Zettel;
 			productReference = 9ED9FFA22E09D9AF0000CCCD /* Zettel.app */;
 			productType = "com.apple.product-type.application";
@@ -109,17 +178,28 @@
 			);
 			mainGroup = 9ED9FF992E09D9AF0000CCCD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "ZettelKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9ED9FFA32E09D9AF0000CCCD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				9ED9FFA12E09D9AF0000CCCD /* Zettel */,
+				265B02BCDB83B24B5A542C82 /* ZettelMac */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3411A8881028749F4585F42F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9ED9FFA02E09D9AF0000CCCD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -130,6 +210,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		94DC1E8B6B2B827D63D000BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9ED9FF9E2E09D9AF0000CCCD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -140,6 +227,44 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		0D26BE367FBB2E38A1CE731A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ZettelMac/ZettelMac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ZettelMac/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Zettel;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 3.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
 		9ED9FFC12E09D9B00000CCCD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -345,9 +470,53 @@
 			};
 			name = Release;
 		};
+		F639BA6086368C486748005C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ZettelMac/ZettelMac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ZettelMac/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Zettel;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 3.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3D9218D505FF7FC14C2F04F0 /* Build configuration list for PBXNativeTarget "ZettelMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F639BA6086368C486748005C /* Release */,
+				0D26BE367FBB2E38A1CE731A /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9ED9FF9D2E09D9AF0000CCCD /* Build configuration list for PBXProject "Zettel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -367,6 +536,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "ZettelKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/ZettelKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CE005BFF1E3238B24810B42F /* ZettelKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "ZettelKit" */;
+			productName = ZettelKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9ED9FF9A2E09D9AF0000CCCD /* Project object */;
 }
