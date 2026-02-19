@@ -248,10 +248,11 @@ final class ZettelWindowManager: NSObject, ObservableObject {
             titleView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
             titleView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
             titleView.heightAnchor.constraint(equalTo: container.heightAnchor),
-            // Cap to half the container so it never overlaps the buttons on either side.
-            titleView.widthAnchor.constraint(lessThanOrEqualTo: container.widthAnchor, multiplier: 0.5),
-            // Minimum so the view is always visible for short titles.
-            titleView.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
+            // Minimum clearance from edges (clears traffic lights + collapsed chevron).
+            titleView.leftAnchor.constraint(greaterThanOrEqualTo: container.leftAnchor, constant: 80),
+            titleView.rightAnchor.constraint(lessThanOrEqualTo: container.rightAnchor, constant: -36),
+            // Percentage cap prevents overlap with fully expanded toolbar buttons.
+            titleView.widthAnchor.constraint(lessThanOrEqualTo: container.widthAnchor, multiplier: 0.45),
         ])
     }
 
@@ -342,6 +343,7 @@ private final class TitlebarTitleView: NSView, NSTextFieldDelegate {
     var displayTitle: String = "" {
         didSet {
             textField.stringValue = displayTitle
+            invalidateIntrinsicContentSize()
         }
     }
 
@@ -363,6 +365,7 @@ private final class TitlebarTitleView: NSView, NSTextFieldDelegate {
         textField.cell?.isScrollable = false
         textField.cell?.wraps = false
         textField.font = .systemFont(ofSize: 13, weight: .semibold)
+        textField.textColor = .labelColor
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textField)
@@ -371,14 +374,24 @@ private final class TitlebarTitleView: NSView, NSTextFieldDelegate {
             textField.centerYAnchor.constraint(equalTo: centerYAnchor),
             textField.widthAnchor.constraint(equalTo: widthAnchor),
         ])
+
+        // The title must never force the window wider — it should truncate instead.
+        setContentCompressionResistancePriority(.fittingSizeCompression, for: .horizontal)
+        textField.setContentCompressionResistancePriority(.fittingSizeCompression, for: .horizontal)
+        setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        textField.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
 
     // MARK: - Sizing
 
-    // No intrinsicContentSize override — returning noIntrinsicMetric for width
-    // prevents the titlebar from ever resizing the window to fit the title text.
-    // The view expands to fill available space (up to the lessThanOrEqualTo cap)
-    // and the text field truncates within it.
+    /// Width hugs the text content but is capped so long titles truncate instead of overflowing.
+    override var intrinsicContentSize: NSSize {
+        let attr = [NSAttributedString.Key.font: NSFont.systemFont(ofSize: 13, weight: .semibold)]
+        let textWidth = (displayTitle as NSString).size(withAttributes: attr).width
+        let preferred = ceil(textWidth) + 24
+        // Never report more than 300 pt; Auto Layout + the container cap will enforce the real max.
+        return NSSize(width: min(preferred, 300), height: NSView.noIntrinsicMetric)
+    }
 
     // MARK: - Click handling
 
@@ -409,6 +422,7 @@ private final class TitlebarTitleView: NSView, NSTextFieldDelegate {
             textField.stringValue = displayTitle
         }
         window?.makeFirstResponder(nil)
+        invalidateIntrinsicContentSize()
     }
 
     // MARK: - NSTextFieldDelegate
