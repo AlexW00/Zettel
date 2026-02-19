@@ -121,6 +121,20 @@ struct MacTextEditor: NSViewRepresentable {
             handleNewlineForAutoBullet()
         }
 
+        override func deleteToBeginningOfLine(_ sender: Any?) {
+            let sel = selectedRange()
+            let str = string as NSString
+            let lineRange = str.lineRange(for: NSRange(location: sel.location, length: 0))
+            let charsBeforeCursor = sel.location - lineRange.location
+            if charsBeforeCursor > 0 {
+                // Delete from start of line up to cursor
+                insertText("", replacementRange: NSRange(location: lineRange.location, length: charsBeforeCursor))
+            } else if lineRange.location > 0 {
+                // Already at start of line — delete the preceding newline to merge with previous line
+                insertText("", replacementRange: NSRange(location: lineRange.location - 1, length: 1))
+            }
+        }
+
         override func becomeFirstResponder() -> Bool {
             let became = super.becomeFirstResponder()
             if became {

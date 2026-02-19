@@ -17,7 +17,7 @@ struct MacSettingsView: View {
     @State private var titleTemplate: String = DefaultTitleTemplateManager.shared.savedTemplate() ?? ""
     @State private var storageDirectory: URL = MacNoteStore.shared.storageDirectory
     @State private var showingFolderPicker = false
-    @State private var showTemplateTokens = false
+    @State private var showTemplateTokens = true
 
     var body: some View {
         TabView {
@@ -101,7 +101,7 @@ struct MacSettingsView: View {
                     Text("Default Title")
                 }
 
-                DisclosureGroup("Template Tokens", isExpanded: $showTemplateTokens) {
+                DisclosureGroup("Title Variables", isExpanded: $showTemplateTokens) {
                     let examples = DefaultTitleTemplateManager.shared.placeholderExamples()
                     Grid(alignment: .leading, verticalSpacing: 4) {
                         ForEach(examples, id: \.token) { example in
@@ -120,9 +120,6 @@ struct MacSettingsView: View {
                     .padding(.vertical, 2)
                 }
                 .font(.callout)
-            } footer: {
-                Text("Leave empty to use the default.")
-                    .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)

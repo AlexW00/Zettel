@@ -250,6 +250,8 @@ final class ZettelWindowManager: NSObject, ObservableObject {
             titleView.heightAnchor.constraint(equalTo: container.heightAnchor),
             // Cap to half the container so it never overlaps the buttons on either side.
             titleView.widthAnchor.constraint(lessThanOrEqualTo: container.widthAnchor, multiplier: 0.5),
+            // Minimum so the view is always visible for short titles.
+            titleView.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
         ])
     }
 
@@ -340,7 +342,6 @@ private final class TitlebarTitleView: NSView, NSTextFieldDelegate {
     var displayTitle: String = "" {
         didSet {
             textField.stringValue = displayTitle
-            invalidateIntrinsicContentSize()
         }
     }
 
@@ -374,14 +375,10 @@ private final class TitlebarTitleView: NSView, NSTextFieldDelegate {
 
     // MARK: - Sizing
 
-    /// Width hugs the text content but is capped so long titles truncate instead of overflowing.
-    override var intrinsicContentSize: NSSize {
-        let attr = [NSAttributedString.Key.font: NSFont.systemFont(ofSize: 13, weight: .semibold)]
-        let textWidth = (displayTitle as NSString).size(withAttributes: attr).width
-        let preferred = ceil(textWidth) + 24
-        // Never report more than 300 pt; Auto Layout + the container cap will enforce the real max.
-        return NSSize(width: min(preferred, 300), height: NSView.noIntrinsicMetric)
-    }
+    // No intrinsicContentSize override — returning noIntrinsicMetric for width
+    // prevents the titlebar from ever resizing the window to fit the title text.
+    // The view expands to fill available space (up to the lessThanOrEqualTo cap)
+    // and the text field truncates within it.
 
     // MARK: - Click handling
 
@@ -412,7 +409,6 @@ private final class TitlebarTitleView: NSView, NSTextFieldDelegate {
             textField.stringValue = displayTitle
         }
         window?.makeFirstResponder(nil)
-        invalidateIntrinsicContentSize()
     }
 
     // MARK: - NSTextFieldDelegate
