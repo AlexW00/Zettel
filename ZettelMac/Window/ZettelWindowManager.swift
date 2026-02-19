@@ -189,6 +189,10 @@ final class ZettelWindowManager: NSObject, ObservableObject {
         panel.titlebarAppearsTransparent = true
         panel.titleVisibility = .visible
 
+        // Transparent background for Liquid Glass
+        panel.isOpaque = false
+        panel.backgroundColor = .clear
+
         // Set min size
         panel.minSize = NSSize(width: 320, height: 280)
 

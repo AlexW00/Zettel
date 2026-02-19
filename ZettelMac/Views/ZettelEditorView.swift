@@ -26,6 +26,7 @@ struct ZettelEditorView: View {
         }
         .animation(.smooth(duration: 0.2), value: state.isShowingPicker)
         .frame(minWidth: 320, minHeight: 280)
+        .background(.ultraThinMaterial)
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 // List / Picker button
@@ -72,5 +73,12 @@ struct ZettelEditorView: View {
                 set: { state.updateContent($0) }
             )
         )
+        .background {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Color(nsColor: .textBackgroundColor))
+                .shadow(color: .black.opacity(0.08), radius: 6, y: 2)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .padding(10)
     }
 }
