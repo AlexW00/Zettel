@@ -14,6 +14,10 @@
 				"-y",
 				"@kimsungwhee/apple-docs-mcp"
 			]
+		},
+		"XcodeBuildMCP": {
+			"command": "npx",
+			"args": ["-y", "xcodebuildmcp@latest", "mcp"]
 		}
 	},
 	"inputs": []
