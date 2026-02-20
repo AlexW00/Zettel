@@ -185,15 +185,21 @@ struct ZettelEditorView: View {
     private var card2Fill: Color {
         colorScheme == .dark
             ? Color(red: 0.20, green: 0.20, blue: 0.21)
-            : Color(red: 0.97, green: 0.97, blue: 0.97)
+            : Color(red: 0.94, green: 0.94, blue: 0.94)
     }
 
-    /// Back card — subtle but visibly darker than the middle card in light mode
-    /// (dark-mode tuned to be lighter so the stack doesn't read like a heavy slab)
+    /// Back card — noticeably darker than middle to reinforce depth
     private var card3Fill: Color {
         colorScheme == .dark
-            ? Color(red: 0.19, green: 0.19, blue: 0.20)
-            : Color(red: 0.95, green: 0.95, blue: 0.95)
+            ? Color(red: 0.17, green: 0.17, blue: 0.18)
+            : Color(red: 0.88, green: 0.88, blue: 0.88)
+    }
+
+    /// Stroke used as the card border — very subtle in both modes
+    private var cardBorderColor: Color {
+        colorScheme == .dark
+            ? Color.white.opacity(0.07)
+            : Color.black.opacity(0.08)
     }
 
     // MARK: - Stacked Card Layout
@@ -216,24 +222,29 @@ struct ZettelEditorView: View {
             // Card 3 — rest position (back)
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(card3Fill)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .strokeBorder(cardBorderColor, lineWidth: 0.5)
+                }
                 .shadow(
                     color: .black.opacity(colorScheme == .dark ? 0.28 : 0.06),
                     radius: colorScheme == .dark ? 8 : 6,
                     y: colorScheme == .dark ? 3 : 2
                 )
                 .padding(.horizontal, narrowStep * 2)
+                .animation(.easeInOut(duration: 0.4), value: colorScheme)
 
             // Card 2 — rest position (middle)
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(card2Fill)
-                .overlay(
+                .overlay {
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(Color.black.opacity(colorScheme == .dark ? 0.035 : 0.03), lineWidth: 0.5)
-                        .blendMode(.normal)
-                )
+                        .strokeBorder(cardBorderColor, lineWidth: 0.5)
+                }
                 // SHADOW-2 REMOVED
                 .padding(.horizontal, narrowStep)
                 .padding(.bottom, peekAmount)
+                .animation(.easeInOut(duration: 0.4), value: colorScheme)
 
             // ── Animated overlays (only present during transition) ────────────
             // At t=0 they are invisible (identical to the static cards beneath).
@@ -243,6 +254,10 @@ struct ZettelEditorView: View {
                 // New card: fades in at Card 3's exact rest position.
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(card3Fill)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .strokeBorder(cardBorderColor, lineWidth: 0.5)
+                    }
                     // SHADOW-3 REMOVED
                     .padding(.horizontal, narrowStep * 2)
                     .opacity(cardShiftAmount)
@@ -255,14 +270,10 @@ struct ZettelEditorView: View {
                             .fill(card2Fill)
                             .opacity(cardShiftAmount)
                     )
-                    .overlay(
+                    .overlay {
                         RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(
-                                Color.black.opacity((colorScheme == .dark ? 0.035 : 0.03) * cardShiftAmount),
-                                lineWidth: 0.5
-                            )
-                            .blendMode(.normal)
-                    )
+                            .strokeBorder(cardBorderColor, lineWidth: 0.5)
+                    }
                     // SHADOW-4A REMOVED
                     // SHADOW-4B REMOVED
                     .padding(.horizontal, narrowStep * (2 - cardShiftAmount))
@@ -276,14 +287,10 @@ struct ZettelEditorView: View {
                             .fill(cardFill)
                             .opacity(cardShiftAmount)
                     )
-                    .overlay(
+                    .overlay {
                         RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(
-                                Color.black.opacity((colorScheme == .dark ? 0.035 : 0.03) * (1 - cardShiftAmount)),
-                                lineWidth: 0.5
-                            )
-                            .blendMode(.normal)
-                    )
+                            .strokeBorder(cardBorderColor, lineWidth: 0.5)
+                    }
                     // SHADOW-5 REMOVED
                     .padding(.horizontal, narrowStep * (1 - cardShiftAmount))
                     .padding(.bottom, peekAmount + peekAmount * cardShiftAmount)
@@ -305,8 +312,14 @@ struct ZettelEditorView: View {
             .background {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(cardFill)
+                    .animation(.easeInOut(duration: 0.4), value: colorScheme)
             }
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .strokeBorder(cardBorderColor, lineWidth: 0.5)
+                    .animation(.easeInOut(duration: 0.4), value: colorScheme)
+            }
             // SHADOW-6 REMOVED
             .opacity(isAnimatingNewNote ? 0 : 1)
             .allowsHitTesting(!isAnimatingNewNote)
@@ -324,6 +337,10 @@ struct ZettelEditorView: View {
                             .fill(cardFill)
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .strokeBorder(cardBorderColor, lineWidth: 0.5)
+                    }
                     .onGeometryChange(for: CGPoint.self) { proxy in
                         let f = proxy.frame(in: .global)
                         return CGPoint(x: f.minX, y: f.minY)
