@@ -88,7 +88,7 @@
 "search.no_results_message" = "別のキーワードを試すかフィルターを解除してください。";
 
 // macOS ノートピッカー
-"mac.picker.filter_placeholder" = "ノートを検索…";
+"mac.picker.filter_placeholder" = "Zettelを検索";
 "mac.picker.empty" = "ノートがまだありません";
 "mac.picker.no_results" = "一致するノートがありません";
 "mac.picker.delete_note" = "ノートを削除";

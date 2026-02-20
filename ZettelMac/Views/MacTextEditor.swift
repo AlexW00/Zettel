@@ -30,6 +30,12 @@ final class MacTextEditorHandle {
         image.addRepresentation(rep)
         return image
     }
+
+    /// Restores keyboard focus to the underlying NSTextView.
+    func focusEditor() {
+        guard let textView = scrollView?.documentView else { return }
+        textView.window?.makeFirstResponder(textView)
+    }
 }
 
 private struct BulletInfo {
@@ -96,12 +102,23 @@ struct MacTextEditor: NSViewRepresentable {
         textView.isVerticallyResizable = true
         textView.autoresizingMask = [.width]
         textView.textContainer?.widthTracksTextView = true
+        // Allow the text view to grow to any height so the scroll view's
+        // document view always matches the full content height.
+        textView.minSize = NSSize(width: 0, height: 0)
+        textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude,
+                                  height: CGFloat.greatestFiniteMagnitude)
 
         // Scroll view
         scrollView.hasVerticalScroller = true
         scrollView.hasHorizontalScroller = false
         scrollView.drawsBackground = false
         scrollView.backgroundColor = .clear
+        // Prevent macOS from automatically adding a top content inset for the
+        // window toolbar. Without this, the document view is shifted down and
+        // the last lines of text fall below the clip view, making them
+        // unreachable by scrolling.
+        scrollView.automaticallyAdjustsContentInsets = false
+        scrollView.contentInsets = .init(top: 0, left: 0, bottom: 0, right: 0)
 
         // Delegate
         textView.delegate = context.coordinator

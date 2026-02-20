@@ -1,0 +1,12 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^bash build\\.sh macos 2>&1 \\| tail -4$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^bash build\\.sh macos 2>&1 \\| tail -5$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

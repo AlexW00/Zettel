@@ -88,7 +88,7 @@
 "search.no_results_message" = "Versuche ein anderes Suchwort oder entferne Filter.";
 
 // macOS Notizauswahl
-"mac.picker.filter_placeholder" = "Notizen suchen…";
+"mac.picker.filter_placeholder" = "Zettel durchsuchen";
 "mac.picker.empty" = "Noch keine Notizen";
 "mac.picker.no_results" = "Keine passenden Notizen";
 "mac.picker.delete_note" = "Notiz löschen";

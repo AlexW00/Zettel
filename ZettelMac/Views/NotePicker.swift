@@ -116,7 +116,7 @@ struct NotePickerModal: View {
             TextField(
                 String(
                     localized: "mac.picker.filter_placeholder",
-                    defaultValue: "Search for notes…",
+                    defaultValue: "Search Zettel",
                     comment: "Picker search placeholder"
                 ),
                 text: $searchText

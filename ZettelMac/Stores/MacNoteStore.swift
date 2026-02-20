@@ -37,10 +37,10 @@ public final class MacNoteStore {
     // MARK: - Init
 
     private init() {
-        // Default to ~/Documents
+        // Default to ~/Documents/Zettel
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
             ?? FileManager.default.temporaryDirectory
-        self.storageDirectory = documentsURL
+        self.storageDirectory = documentsURL.appendingPathComponent("Zettel", isDirectory: true)
 
         // Restore saved directory
         if let restored = restoreStorageDirectory() {

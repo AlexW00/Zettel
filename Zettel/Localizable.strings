@@ -91,7 +91,7 @@
 "search.no_results_message" = "Try a different keyword or clear filters.";
 
 // macOS Note Picker
-"mac.picker.filter_placeholder" = "Search for notes…";
+"mac.picker.filter_placeholder" = "Search Zettel";
 "mac.picker.empty" = "No notes yet";
 "mac.picker.no_results" = "No matching notes";
 "mac.picker.delete_note" = "Delete Note";

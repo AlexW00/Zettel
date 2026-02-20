@@ -27,6 +27,11 @@ struct ZettelEditorView: View {
     /// We animate this image (a plain SwiftUI view) instead of the NSViewRepresentable
     /// editor, which cannot be captured by Metal layer effects.
     @State private var cardSnapshot: NSImage? = nil
+    /// Global-coordinate center of the toolbar button the genie should collapse toward.
+    @State private var genieButtonCenter: CGPoint = .zero
+    /// Global-coordinate origin of the snapshot view (used to convert button position
+    /// into the shader's local coordinate system).
+    @State private var snapshotGlobalOrigin: CGPoint = .zero
 
     var body: some View {
         ZStack {
@@ -48,6 +53,12 @@ struct ZettelEditorView: View {
                     Label("Browse Notes", systemImage: "list.bullet")
                 }
                 .help("Browse Notes (⌘O)")
+                .onGeometryChange(for: CGPoint.self) { proxy in
+                    let f = proxy.frame(in: .global)
+                    return CGPoint(x: f.midX, y: f.midY)
+                } action: { newValue in
+                    genieButtonCenter = newValue
+                }
 
                 Button {
                     ZettelWindowManager.shared.togglePin(id: state.windowId)
@@ -76,6 +87,14 @@ struct ZettelEditorView: View {
                 ZettelWindowManager.shared.updateWindowTitle(id: state.windowId)
             }
         }
+        .onChange(of: state.isShowingPicker) { _, isShowing in
+            if !isShowing {
+                Task { @MainActor in
+                    await Task.yield()
+                    editorHandle.focusEditor()
+                }
+            }
+        }
     }
 
     // MARK: - New-Note Animation
@@ -99,15 +118,15 @@ struct ZettelEditorView: View {
             cardShiftAmount = 1.0
         }
 
-        // Phase 2: after genie completes, swap content and reset
+        // Phase 2: genie done — swap content and reset everything instantly.
+        // At cardShiftAmount=1 each background card is at the next card's exact frame,
+        // so the instant reset to 0 is invisible behind the live editor.
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(0.55))
 
             state.clearToNewNote()
             ZettelWindowManager.shared.updateWindowTitle(id: state.windowId)
 
-            // Reset animation state without animation so the
-            // new editor card appears exactly where card 2 was.
             var t = Transaction()
             t.disablesAnimations = true
             withTransaction(t) {
@@ -176,18 +195,13 @@ struct ZettelEditorView: View {
 
     private var editorContent: some View {
         ZStack {
-            // New card (back-most) — fades in during animation,
-            // occupies Card 3's original position.
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(card3Fill)
-                .shadow(
-                    color: .black.opacity(colorScheme == .dark ? 0.18 : 0.04),
-                    radius: 4, y: 2
-                )
-                .padding(.horizontal, narrowStep * 2)
-                .opacity(cardShiftAmount)
+            // ── Static background cards ───────────────────────────────────────
+            // These stay fixed at their rest positions at all times.
+            // Animated overlays (below) sit on top during the transition and are
+            // pixel-identical at t=0 and t=1 to the static cards / live editor,
+            // so removing them on instant reset is completely invisible.
 
-            // Card 3 (back) — shifts up during animation
+            // Card 3 — rest position (back)
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(card3Fill)
                 .shadow(
@@ -196,9 +210,9 @@ struct ZettelEditorView: View {
                     y: colorScheme == .dark ? 3 : 2
                 )
                 .padding(.horizontal, narrowStep * 2)
-                .padding(.bottom, peekAmount * cardShiftAmount)
+                .opacity(isAnimatingNewNote ? 0 : 1)
 
-            // Card 2 (middle) — shifts up during animation
+            // Card 2 — rest position (middle)
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(card2Fill)
                 .overlay(
@@ -212,14 +226,90 @@ struct ZettelEditorView: View {
                     y: colorScheme == .dark ? 3 : 2
                 )
                 .padding(.horizontal, narrowStep)
-                .padding(.bottom, peekAmount + peekAmount * cardShiftAmount)
+                .padding(.bottom, peekAmount)
+                .opacity(isAnimatingNewNote ? 0 : 1)
 
-            // Card 1 (front/top)
-            // During animation: show a bitmap snapshot of the card with the genie
-            // Metal shader applied. We use a snapshot so the NSViewRepresentable
-            // text editor is never subjected to layerEffect (which would show the
-            // red/yellow error badge on AppKit-backed views).
-            // At rest: show the live editor as normal.
+            // ── Animated overlays (only present during transition) ────────────
+            // At t=0 they are invisible (identical to the static cards beneath).
+            // At t=1 they are identical to the live editor / static cards at rest,
+            // so the instant reset that removes them causes zero visible change.
+            if isAnimatingNewNote {
+                // New card: fades in at Card 3's exact rest position.
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(card3Fill)
+                    .shadow(
+                        color: .black.opacity(colorScheme == .dark ? 0.28 : 0.06),
+                        radius: colorScheme == .dark ? 8 : 6,
+                        y: colorScheme == .dark ? 3 : 2
+                    )
+                    .padding(.horizontal, narrowStep * 2)
+                    .opacity(cardShiftAmount)
+
+                // Card 3 clone: slides pos3 → pos2, cross-fades to look like Card 2 at rest.
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(card3Fill)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .fill(card2Fill)
+                            .opacity(cardShiftAmount)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(
+                                Color.black.opacity((colorScheme == .dark ? 0.035 : 0.03) * cardShiftAmount),
+                                lineWidth: 0.5
+                            )
+                            .blendMode(.normal)
+                    )
+                    // Card 3 shadow fades out → Card 2 shadow fades in (opacity-only to animate)
+                    .shadow(
+                        color: .black.opacity((colorScheme == .dark ? 0.28 : 0.06) * (1 - cardShiftAmount)),
+                        radius: colorScheme == .dark ? 8 : 6,
+                        y: colorScheme == .dark ? 3 : 2
+                    )
+                    .shadow(
+                        color: .black.opacity((colorScheme == .dark ? 0.30 : 0.10) * cardShiftAmount),
+                        radius: colorScheme == .dark ? 8 : 6,
+                        y: colorScheme == .dark ? 3 : 2
+                    )
+                    .padding(.horizontal, narrowStep * (2 - cardShiftAmount))
+                    .padding(.bottom, peekAmount * cardShiftAmount)
+
+                // Card 2 clone: slides pos2 → pos1, cross-fades to look like the live editor.
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(card2Fill)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .fill(cardFill)
+                            .opacity(cardShiftAmount)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(
+                                Color.black.opacity((colorScheme == .dark ? 0.035 : 0.03) * (1 - cardShiftAmount)),
+                                lineWidth: 0.5
+                            )
+                            .blendMode(.normal)
+                    )
+                    // Single interpolated shadow: Card 2 params → Card 1 params
+                    .shadow(
+                        color: .black.opacity(
+                            colorScheme == .dark
+                                ? 0.30 + (0.50 - 0.30) * cardShiftAmount
+                                : 0.10 + (0.20 - 0.10) * cardShiftAmount
+                        ),
+                        radius: colorScheme == .dark
+                            ? 8 + (14 - 8) * cardShiftAmount
+                            : 6 + (10 - 6) * cardShiftAmount,
+                        y: colorScheme == .dark
+                            ? 3 + (5 - 3) * cardShiftAmount
+                            : 2 + (4 - 2) * cardShiftAmount
+                    )
+                    .padding(.horizontal, narrowStep * (1 - cardShiftAmount))
+                    .padding(.bottom, peekAmount + peekAmount * cardShiftAmount)
+            }
+
+            // ── Card 1: snapshot during animation, live editor at rest ─────────
             if isAnimatingNewNote, let snapshot = cardSnapshot {
                 let snapSize = snapshot.size
                 Image(nsImage: snapshot)
@@ -228,17 +318,27 @@ struct ZettelEditorView: View {
                     .background {
                         RoundedRectangle(cornerRadius: 18, style: .continuous)
                             .fill(cardFill)
+                            // Fades out with the genie so no shadow flash on reset.
                             .shadow(
-                                color: .black.opacity(colorScheme == .dark ? 0.5 : 0.20),
+                                color: .black.opacity((colorScheme == .dark ? 0.5 : 0.20) * (1 - genieProgress)),
                                 radius: colorScheme == .dark ? 14 : 10,
                                 y: colorScheme == .dark ? 5 : 4
                             )
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .onGeometryChange(for: CGPoint.self) { proxy in
+                        let f = proxy.frame(in: .global)
+                        return CGPoint(x: f.minX, y: f.minY)
+                    } action: { newValue in
+                        snapshotGlobalOrigin = newValue
+                    }
                     .layerEffect(
                         ShaderLibrary.genieEffect(
                             .float2(snapSize),
-                            .float2(CGPoint(x: snapSize.width * 0.77, y: -20)),
+                            .float2(CGPoint(
+                                x: genieButtonCenter.x - snapshotGlobalOrigin.x,
+                                y: genieButtonCenter.y - snapshotGlobalOrigin.y
+                            )),
                             .float(genieProgress)
                         ),
                         maxSampleOffset: CGSize(width: snapSize.width, height: snapSize.height)
@@ -257,13 +357,13 @@ struct ZettelEditorView: View {
                 .background {
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
                         .fill(cardFill)
-                        .shadow(
-                            color: .black.opacity(colorScheme == .dark ? 0.5 : 0.20),
-                            radius: colorScheme == .dark ? 14 : 10,
-                            y: colorScheme == .dark ? 5 : 4
-                        )
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .shadow(
+                    color: .black.opacity(colorScheme == .dark ? 0.5 : 0.20),
+                    radius: colorScheme == .dark ? 14 : 10,
+                    y: colorScheme == .dark ? 5 : 4
+                )
                 .allowsHitTesting(true)
                 .padding(.bottom, peekAmount * 2)
             }
