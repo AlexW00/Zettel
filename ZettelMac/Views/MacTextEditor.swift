@@ -10,6 +10,28 @@ import SwiftUI
 import AppKit
 import ZettelKit
 
+// MARK: - Editor handle
+
+/// Lightweight class that holds a weak reference to the underlying NSScrollView.
+/// Use `snapshot()` to capture the current rendered content as an NSImage,
+/// e.g. before applying a Metal layer effect that can't display NSViewRepresentable.
+@MainActor
+final class MacTextEditorHandle {
+    weak var scrollView: NSScrollView?
+
+    /// Returns a bitmap snapshot of the scroll view's current visual state,
+    /// or `nil` if the view isn't ready.
+    func snapshot() -> NSImage? {
+        guard let view = scrollView, !view.bounds.isEmpty else { return nil }
+        let bounds = view.bounds
+        guard let rep = view.bitmapImageRepForCachingDisplay(in: bounds) else { return nil }
+        view.cacheDisplay(in: bounds, to: rep)
+        let image = NSImage(size: bounds.size)
+        image.addRepresentation(rep)
+        return image
+    }
+}
+
 private struct BulletInfo {
     enum BulletType {
         case dash
@@ -26,6 +48,9 @@ struct MacTextEditor: NSViewRepresentable {
     var onInteraction: (() -> Void)?
     /// All tag display names known across notes — used for autocomplete suggestions.
     var allTags: [String] = []
+    /// Optional handle whose `scrollView` property is kept up-to-date so
+    /// callers can snapshot the view before running Metal layer effects.
+    var handle: MacTextEditorHandle? = nil
 
     private static var resolvedEditorFontSize: CGFloat {
         let value = UserDefaults.standard.double(forKey: "editorFontSize")
@@ -85,10 +110,12 @@ struct MacTextEditor: NSViewRepresentable {
         textView.string = text
         context.coordinator.applyHashtagHighlighting(to: textView)
 
+        handle?.scrollView = scrollView
         return scrollView
     }
 
     func updateNSView(_ scrollView: NSScrollView, context: Context) {
+        handle?.scrollView = scrollView
         guard let textView = scrollView.documentView as? NSTextView else { return }
         (textView as? InteractionTextView)?.onInteraction = onInteraction
         context.coordinator.allTags = allTags

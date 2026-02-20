@@ -29,6 +29,10 @@ final class ZettelWindowState {
     /// Whether the note picker modal is showing
     var isShowingPicker: Bool = false
 
+    /// Set to `true` to request the new-note genie animation from the view.
+    /// The view resets this to `false` once it starts the animation.
+    var newNoteAnimationRequested: Bool = false
+
     /// Auto-save debounce
     private var autoSaveTask: Task<Void, Never>?
     private let autoSaveInterval: TimeInterval = 1.5

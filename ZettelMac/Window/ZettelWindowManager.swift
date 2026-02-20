@@ -63,8 +63,7 @@ final class ZettelWindowManager: NSObject, ObservableObject {
     /// New note in the currently focused window (Cmd+N)
     func newNoteInCurrentWindow() {
         if let focusedId = lastFocusedWindowId, let state = windowStates[focusedId] {
-            state.clearToNewNote()
-            updateWindowTitle(id: focusedId)
+            state.newNoteAnimationRequested = true
         } else {
             createWindow()
         }
