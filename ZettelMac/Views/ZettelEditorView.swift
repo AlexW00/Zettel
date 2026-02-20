@@ -86,6 +86,9 @@ struct ZettelEditorView: View {
             }
         }
         .onChange(of: state.note.title) { _, _ in
+            // Skip during genie: the title is already being animated from
+            // the pre-computed value kicked off at the start of animateNewNote().
+            guard !isAnimatingNewNote else { return }
             Task { @MainActor in
                 ZettelWindowManager.shared.updateWindowTitle(id: state.windowId)
             }
@@ -110,6 +113,13 @@ struct ZettelEditorView: View {
         // This avoids applying a Metal layerEffect directly to the NSViewRepresentable
         // editor (which would show the red/yellow error badge).
         let snap = editorHandle.snapshot()
+
+        // Pre-compute the new note title so the titlebar animation can start
+        // concurrently with the genie instead of waiting for clearToNewNote().
+        let newTitle = DefaultTitleTemplateManager.shared.generateTitle(for: Date())
+        ZettelWindowManager.shared.animateWindowTitle(
+            id: state.windowId, to: newTitle, duration: 0.35
+        )
 
         // Set animating flag + snapshot atomically with animations disabled so
         // the live editor's opacity change (1→0) is never caught by an implicit
@@ -137,7 +147,9 @@ struct ZettelEditorView: View {
             try? await Task.sleep(for: .seconds(0.55))
 
             state.clearToNewNote()
-            ZettelWindowManager.shared.updateWindowTitle(id: state.windowId)
+            // Title was already animated from the pre-computed value at genie start.
+            // Update window.title for accessibility/Dock only — no second animation.
+            ZettelWindowManager.shared.updateWindowTitleSilently(id: state.windowId)
 
             var t = Transaction()
             t.disablesAnimations = true
