@@ -18,6 +18,8 @@ struct NotePickerModal: View {
     @Bindable var state: ZettelWindowState
 
     @State private var searchText = ""
+    @State private var selectedIndex: Int? = nil
+    @State private var eventMonitor: Any? = nil
     @FocusState private var isSearchFocused: Bool
     @Environment(\.colorScheme) private var colorScheme
 
@@ -93,11 +95,37 @@ struct NotePickerModal: View {
         }
         .onAppear {
             focusSearchField()
+            eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [self] event in
+                switch event.keyCode {
+                case 125: // Down arrow
+                    moveSelection(by: 1)
+                    return nil
+                case 126: // Up arrow
+                    moveSelection(by: -1)
+                    return nil
+                case 36: // Return — open keyboard-selected note
+                    if let idx = selectedIndex, filteredNotes.indices.contains(idx) {
+                        openNote(filteredNotes[idx], inNewWindow: false)
+                    }
+                    return nil
+                default:
+                    return event
+                }
+            }
+        }
+        .onDisappear {
+            if let monitor = eventMonitor {
+                NSEvent.removeMonitor(monitor)
+                eventMonitor = nil
+            }
         }
         .onChange(of: store.isLoading) { _, isLoading in
             if !isLoading {
                 focusSearchField()
             }
+        }
+        .onChange(of: searchText) { _, _ in
+            selectedIndex = nil
         }
         .onKeyPress(.escape) {
             state.isShowingPicker = false
@@ -134,6 +162,7 @@ struct NotePickerModal: View {
                         .font(.system(size: 12))
                 }
                 .buttonStyle(.plain)
+                .pointingHandCursor()
             }
         }
         .padding(.horizontal, 10)
@@ -147,19 +176,30 @@ struct NotePickerModal: View {
     // MARK: - Notes List
 
     private var notesList: some View {
-        ScrollView {
-            LazyVStack(spacing: 2) {
-                ForEach(filteredNotes, id: \.id) { note in
-                    NotePickerRow(
-                        note: note,
-                        isCurrent: note.id == state.note.id,
-                        onOpen: { openNoteFromClick(note) },
-                        onDelete: { deleteNote(note) }
-                    )
-                    .padding(.horizontal, 8)
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVStack(spacing: 2) {
+                    ForEach(Array(filteredNotes.enumerated()), id: \.element.id) { index, note in
+                        NotePickerRow(
+                            note: note,
+                            isCurrent: note.id == state.note.id,
+                            isSelected: selectedIndex == index,
+                            onOpen: { openNoteFromClick(note) },
+                            onDelete: { deleteNote(note) }
+                        )
+                        .id(note.id)
+                        .padding(.horizontal, 8)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+            .onChange(of: selectedIndex) { _, newIndex in
+                if let idx = newIndex, filteredNotes.indices.contains(idx) {
+                    withAnimation(.easeInOut(duration: 0.15)) {
+                        proxy.scrollTo(filteredNotes[idx].id, anchor: .center)
+                    }
                 }
             }
-            .padding(.vertical, 4)
         }
     }
 
@@ -199,6 +239,15 @@ struct NotePickerModal: View {
         MacNoteStore.shared.deleteNote(note)
     }
 
+    private func moveSelection(by delta: Int) {
+        guard !filteredNotes.isEmpty else { return }
+        if let current = selectedIndex {
+            selectedIndex = max(0, min(filteredNotes.count - 1, current + delta))
+        } else {
+            selectedIndex = delta > 0 ? 0 : filteredNotes.count - 1
+        }
+    }
+
     private func focusSearchField() {
         Task { @MainActor in
             await Task.yield()
@@ -212,6 +261,7 @@ struct NotePickerModal: View {
 private struct NotePickerRow: View {
     let note: Note
     let isCurrent: Bool
+    let isSelected: Bool
     let onOpen: () -> Void
     let onDelete: () -> Void
 
@@ -268,6 +318,7 @@ private struct NotePickerRow: View {
                         .foregroundStyle(.red.opacity(0.85))
                 }
                 .buttonStyle(.plain)
+                .pointingHandCursor()
                 .help(String(localized: "mac.picker.delete_note", defaultValue: "Delete Note", comment: "Picker row delete action"))
                 .padding(.leading, 8)
             }
@@ -276,37 +327,13 @@ private struct NotePickerRow: View {
         .padding(.vertical, 8)
         .background {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(isHovering ? Color.accentColor.opacity(0.15) : (isCurrent ? Color.primary.opacity(0.08) : .clear))
+                .fill(isSelected ? Color.accentColor.opacity(0.25) : (isHovering ? Color.accentColor.opacity(0.15) : (isCurrent ? Color.primary.opacity(0.08) : .clear)))
         }
         .contentShape(Rectangle())
         .onHover { hovering in
             isHovering = hovering
         }
-        .overlay {
-            PointingHandCursorView()
-        }
-    }
-}
-
-private struct PointingHandCursorView: NSViewRepresentable {
-    func makeNSView(context: Context) -> CursorView {
-        CursorView()
-    }
-
-    func updateNSView(_ nsView: CursorView, context: Context) {
-        DispatchQueue.main.async {
-            nsView.window?.invalidateCursorRects(for: nsView)
-        }
-    }
-
-    final class CursorView: NSView {
-        override func resetCursorRects() {
-            addCursorRect(bounds, cursor: .pointingHand)
-        }
-        
-        override func hitTest(_ point: NSPoint) -> NSView? {
-            return nil // Allow clicks to pass through
-        }
+        .pointingHandCursor()
     }
 }
 

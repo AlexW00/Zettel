@@ -53,6 +53,7 @@ struct ZettelEditorView: View {
                     Label("Browse Notes", systemImage: "list.bullet")
                 }
                 .help("Browse Notes (⌘O)")
+                .pointingHandCursor()
                 .onGeometryChange(for: CGPoint.self) { proxy in
                     let f = proxy.frame(in: .global)
                     return CGPoint(x: f.midX, y: f.midY)
@@ -66,6 +67,7 @@ struct ZettelEditorView: View {
                     Label("Pin Window", systemImage: state.isPinned ? "pin.fill" : "pin")
                 }
                 .help("Pin Window (⌘P)")
+                .pointingHandCursor()
 
                 Button {
                     animateNewNote()
@@ -74,6 +76,7 @@ struct ZettelEditorView: View {
                 }
                 .help("New Note (⌘N)")
                 .disabled(isAnimatingNewNote)
+                .pointingHandCursor()
             }
         }
         .onChange(of: state.newNoteAnimationRequested) { _, requested in
@@ -106,8 +109,17 @@ struct ZettelEditorView: View {
         // Capture the top card as a plain NSImage *before* we start animating.
         // This avoids applying a Metal layerEffect directly to the NSViewRepresentable
         // editor (which would show the red/yellow error badge).
-        cardSnapshot = editorHandle.snapshot()
-        isAnimatingNewNote = true
+        let snap = editorHandle.snapshot()
+
+        // Set animating flag + snapshot atomically with animations disabled so
+        // the live editor's opacity change (1→0) is never caught by an implicit
+        // animation context.
+        var startT = Transaction()
+        startT.disablesAnimations = true
+        withTransaction(startT) {
+            cardSnapshot = snap
+            isAnimatingNewNote = true
+        }
 
         // Phase 1: genie effect on the snapshot
         withAnimation(.easeIn(duration: 0.5)) {
@@ -309,7 +321,35 @@ struct ZettelEditorView: View {
                     .padding(.bottom, peekAmount + peekAmount * cardShiftAmount)
             }
 
-            // ── Card 1: snapshot during animation, live editor at rest ─────────
+            // ── Card 1: live editor (always in tree) + snapshot overlay ────
+            // The MacTextEditor is NEVER removed from the view hierarchy.
+            // Removing and re-inserting an NSViewRepresentable causes a
+            // 1-frame rendering gap where its shadow is missing — the pop.
+
+            MacTextEditor(
+                text: Binding(
+                    get: { state.note.content },
+                    set: { state.updateContent($0) }
+                ),
+                allTags: allTagDisplayNames,
+                handle: editorHandle
+            )
+            .background {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(cardFill)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .shadow(
+                color: .black.opacity(colorScheme == .dark ? 0.5 : 0.20),
+                radius: colorScheme == .dark ? 14 : 10,
+                y: colorScheme == .dark ? 5 : 4
+            )
+            .opacity(isAnimatingNewNote ? 0 : 1)
+            .allowsHitTesting(!isAnimatingNewNote)
+            .padding(.bottom, peekAmount * 2)
+
+            // Snapshot overlay — sits on top of the live editor during the
+            // genie animation only; the editor underneath is hidden (opacity 0).
             if isAnimatingNewNote, let snapshot = cardSnapshot {
                 let snapSize = snapshot.size
                 Image(nsImage: snapshot)
@@ -318,12 +358,6 @@ struct ZettelEditorView: View {
                     .background {
                         RoundedRectangle(cornerRadius: 18, style: .continuous)
                             .fill(cardFill)
-                            // Fades out with the genie so no shadow flash on reset.
-                            .shadow(
-                                color: .black.opacity((colorScheme == .dark ? 0.5 : 0.20) * (1 - genieProgress)),
-                                radius: colorScheme == .dark ? 14 : 10,
-                                y: colorScheme == .dark ? 5 : 4
-                            )
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     .onGeometryChange(for: CGPoint.self) { proxy in
@@ -345,27 +379,6 @@ struct ZettelEditorView: View {
                     )
                     .allowsHitTesting(false)
                     .padding(.bottom, peekAmount * 2)
-            } else {
-                MacTextEditor(
-                    text: Binding(
-                        get: { state.note.content },
-                        set: { state.updateContent($0) }
-                    ),
-                    allTags: allTagDisplayNames,
-                    handle: editorHandle
-                )
-                .background {
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(cardFill)
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                .shadow(
-                    color: .black.opacity(colorScheme == .dark ? 0.5 : 0.20),
-                    radius: colorScheme == .dark ? 14 : 10,
-                    y: colorScheme == .dark ? 5 : 4
-                )
-                .allowsHitTesting(true)
-                .padding(.bottom, peekAmount * 2)
             }
         }
         .padding(outerPad)

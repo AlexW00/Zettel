@@ -15,7 +15,7 @@ public final class DefaultTitleTemplateManager: Sendable {
     private let storageKey = "defaultTitleTemplate"
     
     /// Built-in fallback template used when no custom template is set.
-    public let fallbackTemplate = "{{time}} – {{date}}"
+    public let fallbackTemplate = "{{shortDate}} – {{time}}"
     
     private init() {}
     
