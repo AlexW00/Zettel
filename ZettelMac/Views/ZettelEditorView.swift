@@ -216,11 +216,7 @@ struct ZettelEditorView: View {
             // Card 3 — rest position (back)
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(card3Fill)
-                .shadow(
-                    color: .black.opacity(colorScheme == .dark ? 0.28 : 0.06),
-                    radius: colorScheme == .dark ? 8 : 6,
-                    y: colorScheme == .dark ? 3 : 2
-                )
+                // SHADOW-1 REMOVED
                 .padding(.horizontal, narrowStep * 2)
                 .opacity(isAnimatingNewNote ? 0 : 1)
 
@@ -232,11 +228,7 @@ struct ZettelEditorView: View {
                         .stroke(Color.black.opacity(colorScheme == .dark ? 0.035 : 0.03), lineWidth: 0.5)
                         .blendMode(.normal)
                 )
-                .shadow(
-                    color: .black.opacity(colorScheme == .dark ? 0.30 : 0.10),
-                    radius: colorScheme == .dark ? 8 : 6,
-                    y: colorScheme == .dark ? 3 : 2
-                )
+                // SHADOW-2 REMOVED
                 .padding(.horizontal, narrowStep)
                 .padding(.bottom, peekAmount)
                 .opacity(isAnimatingNewNote ? 0 : 1)
@@ -249,11 +241,7 @@ struct ZettelEditorView: View {
                 // New card: fades in at Card 3's exact rest position.
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(card3Fill)
-                    .shadow(
-                        color: .black.opacity(colorScheme == .dark ? 0.28 : 0.06),
-                        radius: colorScheme == .dark ? 8 : 6,
-                        y: colorScheme == .dark ? 3 : 2
-                    )
+                    // SHADOW-3 REMOVED
                     .padding(.horizontal, narrowStep * 2)
                     .opacity(cardShiftAmount)
 
@@ -273,17 +261,8 @@ struct ZettelEditorView: View {
                             )
                             .blendMode(.normal)
                     )
-                    // Card 3 shadow fades out → Card 2 shadow fades in (opacity-only to animate)
-                    .shadow(
-                        color: .black.opacity((colorScheme == .dark ? 0.28 : 0.06) * (1 - cardShiftAmount)),
-                        radius: colorScheme == .dark ? 8 : 6,
-                        y: colorScheme == .dark ? 3 : 2
-                    )
-                    .shadow(
-                        color: .black.opacity((colorScheme == .dark ? 0.30 : 0.10) * cardShiftAmount),
-                        radius: colorScheme == .dark ? 8 : 6,
-                        y: colorScheme == .dark ? 3 : 2
-                    )
+                    // SHADOW-4A REMOVED
+                    // SHADOW-4B REMOVED
                     .padding(.horizontal, narrowStep * (2 - cardShiftAmount))
                     .padding(.bottom, peekAmount * cardShiftAmount)
 
@@ -303,20 +282,7 @@ struct ZettelEditorView: View {
                             )
                             .blendMode(.normal)
                     )
-                    // Single interpolated shadow: Card 2 params → Card 1 params
-                    .shadow(
-                        color: .black.opacity(
-                            colorScheme == .dark
-                                ? 0.30 + (0.50 - 0.30) * cardShiftAmount
-                                : 0.10 + (0.20 - 0.10) * cardShiftAmount
-                        ),
-                        radius: colorScheme == .dark
-                            ? 8 + (14 - 8) * cardShiftAmount
-                            : 6 + (10 - 6) * cardShiftAmount,
-                        y: colorScheme == .dark
-                            ? 3 + (5 - 3) * cardShiftAmount
-                            : 2 + (4 - 2) * cardShiftAmount
-                    )
+                    // SHADOW-5 REMOVED
                     .padding(.horizontal, narrowStep * (1 - cardShiftAmount))
                     .padding(.bottom, peekAmount + peekAmount * cardShiftAmount)
             }
@@ -339,11 +305,7 @@ struct ZettelEditorView: View {
                     .fill(cardFill)
             }
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .shadow(
-                color: .black.opacity(colorScheme == .dark ? 0.5 : 0.20),
-                radius: colorScheme == .dark ? 14 : 10,
-                y: colorScheme == .dark ? 5 : 4
-            )
+            // SHADOW-6 REMOVED
             .opacity(isAnimatingNewNote ? 0 : 1)
             .allowsHitTesting(!isAnimatingNewNote)
             .padding(.bottom, peekAmount * 2)
