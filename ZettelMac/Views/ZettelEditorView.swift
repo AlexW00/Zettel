@@ -216,9 +216,12 @@ struct ZettelEditorView: View {
             // Card 3 — rest position (back)
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(card3Fill)
-                // SHADOW-1 REMOVED
+                .shadow(
+                    color: .black.opacity(colorScheme == .dark ? 0.28 : 0.06),
+                    radius: colorScheme == .dark ? 8 : 6,
+                    y: colorScheme == .dark ? 3 : 2
+                )
                 .padding(.horizontal, narrowStep * 2)
-                .opacity(isAnimatingNewNote ? 0 : 1)
 
             // Card 2 — rest position (middle)
             RoundedRectangle(cornerRadius: 18, style: .continuous)
@@ -231,7 +234,6 @@ struct ZettelEditorView: View {
                 // SHADOW-2 REMOVED
                 .padding(.horizontal, narrowStep)
                 .padding(.bottom, peekAmount)
-                .opacity(isAnimatingNewNote ? 0 : 1)
 
             // ── Animated overlays (only present during transition) ────────────
             // At t=0 they are invisible (identical to the static cards beneath).
