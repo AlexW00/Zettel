@@ -13,7 +13,7 @@
 
 /* Begin PBXFileReference section */
 		9ED9FFA22E09D9AF0000CCCD /* Zettel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zettel.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D9F21730384B9E76C684CD7C /* ZettelMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZettelMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9F21730384B9E76C684CD7C /* Zettel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zettel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8723AD39BFE4641DD8E888B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
@@ -95,7 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				9ED9FFA22E09D9AF0000CCCD /* Zettel.app */,
-				D9F21730384B9E76C684CD7C /* ZettelMac.app */,
+				D9F21730384B9E76C684CD7C /* Zettel.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -131,7 +131,7 @@
 				CE005BFF1E3238B24810B42F /* ZettelKit */,
 			);
 			productName = ZettelMac;
-			productReference = D9F21730384B9E76C684CD7C /* ZettelMac.app */;
+			productReference = D9F21730384B9E76C684CD7C /* Zettel.app */;
 			productType = "com.apple.product-type.application";
 		};
 		9ED9FFA12E09D9AF0000CCCD /* Zettel */ = {
@@ -238,7 +238,7 @@
 				CODE_SIGN_ENTITLEMENTS = ZettelMac/ZettelMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
@@ -482,7 +482,7 @@
 				CODE_SIGN_ENTITLEMENTS = ZettelMac/ZettelMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
