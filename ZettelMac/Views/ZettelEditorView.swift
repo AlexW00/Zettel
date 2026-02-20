@@ -80,28 +80,86 @@ struct ZettelEditorView: View {
         return Array(normalizedToDisplay.values)
     }
 
+    // MARK: - Card Colors
+
+    private var cardFill: Color {
+        colorScheme == .dark
+            ? Color(red: 0.24, green: 0.24, blue: 0.25)
+            : Color(nsColor: .textBackgroundColor)
+    }
+
+    /// Middle card — slightly darker than top in light mode for clearer separation
+    private var card2Fill: Color {
+        colorScheme == .dark
+            ? Color(red: 0.20, green: 0.20, blue: 0.21)
+            : Color(red: 0.97, green: 0.97, blue: 0.97)
+    }
+
+    /// Back card — subtle but visibly darker than the middle card in light mode
+    /// (dark-mode tuned to be lighter so the stack doesn't read like a heavy slab)
+    private var card3Fill: Color {
+        colorScheme == .dark
+            ? Color(red: 0.19, green: 0.19, blue: 0.20)
+            : Color(red: 0.95, green: 0.95, blue: 0.95)
+    }
+
+    // MARK: - Stacked Card Layout
+
+    /// Margin from the window edge to the outermost (back) card
+    private let outerPad: CGFloat = 12
+    /// How many points each card peeks out below the card in front of it
+    private let peekAmount: CGFloat = 6
+    /// How many points narrower each background card is (per side)
+    private let narrowStep: CGFloat = 8
+
     private var editorContent: some View {
-        MacTextEditor(
-            text: Binding(
-                get: { state.note.content },
-                set: { state.updateContent($0) }
-            ),
-            allTags: allTagDisplayNames
-        )
-        .background {
+        ZStack {
+            // Card 3 (back) — defines the outermost bounds, narrowest
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(
-                    colorScheme == .dark
-                        ? Color(red: 0.24, green: 0.24, blue: 0.25) // even lighter dark-gray for dark mode
-                        : Color(nsColor: .textBackgroundColor)
+                .fill(card3Fill)
+                .shadow(
+                    color: .black.opacity(colorScheme == .dark ? 0.28 : 0.06),
+                    radius: colorScheme == .dark ? 8 : 6,
+                    y: colorScheme == .dark ? 3 : 2
+                )
+                .padding(.horizontal, narrowStep * 2)
+
+            // Card 2 (middle) — slightly wider, peekAmount shorter at bottom
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(card2Fill)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(Color.black.opacity(colorScheme == .dark ? 0.035 : 0.03), lineWidth: 0.5)
+                        .blendMode(.normal)
                 )
                 .shadow(
-                    color: .black.opacity(colorScheme == .dark ? 0.4 : 0.08),
-                    radius: colorScheme == .dark ? 10 : 6,
-                    y: colorScheme == .dark ? 4 : 2
+                    color: .black.opacity(colorScheme == .dark ? 0.30 : 0.10),
+                    radius: colorScheme == .dark ? 8 : 6,
+                    y: colorScheme == .dark ? 3 : 2
                 )
+                .padding(.horizontal, narrowStep)
+                .padding(.bottom, peekAmount)
+
+            // Card 1 (front/top) — full width, 2× peekAmount shorter at bottom
+            MacTextEditor(
+                text: Binding(
+                    get: { state.note.content },
+                    set: { state.updateContent($0) }
+                ),
+                allTags: allTagDisplayNames
+            )
+            .background {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(cardFill)
+                    .shadow(
+                        color: .black.opacity(colorScheme == .dark ? 0.5 : 0.20),
+                        radius: colorScheme == .dark ? 14 : 10,
+                        y: colorScheme == .dark ? 5 : 4
+                    )
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .padding(.bottom, peekAmount * 2)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .padding(10)
+        .padding(outerPad)
     }
 }
