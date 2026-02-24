@@ -52,7 +52,7 @@ using namespace metal;
     // Centre slides toward target.x; half-width shrinks with a
     // subtle power curve to widen the funnel mouth a little.
     float centerX  = mix(0.5, target.x, localP);
-    float halfWidth = 0.5 * pow(1.0 - localP, 1.3);
+    float halfWidth = 0.5 * pow(1.0 - localP, 2.2);
 
     if (halfWidth < 0.001) return half4(0.0);
 
