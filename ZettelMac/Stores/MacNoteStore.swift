@@ -237,7 +237,7 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
 
         let fileURL = storageDirectory.appendingPathComponent(note.filename)
         recentlyOwnedFiles[note.filename] = Date()
-        try? FileManager.default.removeItem(at: fileURL)
+        try? FileManager.default.trashItem(at: fileURL, resultingItemURL: nil)
         allNotes.removeAll { $0.id == note.id }
     }
 
