@@ -37,6 +37,8 @@
 "settings.storage_description" = "Notes are saved as .md files in the selected folder.";
 "settings.app_name" = "Zettel";
 "settings.app_description" = "Minimalist notepad for iOS";
+"settings.zettel_macos" = "Zettel for Mac";
+"settings.zettel_macos_description" = "Also available on macOS";
 "settings.developer" = "Developer";
 "settings.developer_description" = "Follow me on X ^^";
 "settings.view_on_github" = "View on GitHub";

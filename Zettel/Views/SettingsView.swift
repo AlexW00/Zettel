@@ -20,6 +20,7 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @State private var showingFolderPicker = false
     @State private var showingTemplateInfo = false
+    @State private var showingMacShareSheet = false
     
     private var templateInfoMessage: String {
         let manager = DefaultTitleTemplateManager.shared
@@ -426,6 +427,38 @@ struct SettingsView: View {
                 
                 // App Info Section
                 Section {
+                    Button(action: {
+                        showingMacShareSheet = true
+                    }) {
+                        HStack {
+                            Image(systemName: "macbook")
+                                .foregroundColor(.iconTint)
+                                .frame(width: 24)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("settings.zettel_macos".localized)
+                                    .font(.system(size: 16, weight: .medium))
+                                
+                                Text("settings.zettel_macos_description".localized)
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.system(size: 14))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.vertical, 4)
+                    .sheet(isPresented: $showingMacShareSheet) {
+                        if let appStoreURL = URL(string: "https://apps.apple.com/app/id6748525244") {
+                            ShareSheet(activityItems: [appStoreURL])
+                        }
+                    }
+                    
                     HStack {
                         Image(systemName: "info.circle")
                             .foregroundColor(.iconTint)
@@ -612,6 +645,18 @@ struct SettingsView: View {
             }
         }
     }
+}
+
+// MARK: - ShareSheet
+
+struct ShareSheet: UIViewControllerRepresentable {
+    let activityItems: [Any]
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 // MARK: - Preview

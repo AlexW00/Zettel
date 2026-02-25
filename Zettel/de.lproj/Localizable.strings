@@ -37,6 +37,8 @@
 "settings.storage_description" = "Notizen werden als .md-Dateien im ausgewählten Ordner gespeichert.";
 "settings.app_name" = "Zettel";
 "settings.app_description" = "Minimalistischer Notizblock für iOS";
+"settings.zettel_macos" = "Zettel für Mac";
+"settings.zettel_macos_description" = "Auch auf macOS verfügbar";
 "settings.developer" = "Entwickler";
 "settings.developer_description" = "Folge mir auf X ^^";
 "settings.view_on_github" = "Auf GitHub anzeigen";

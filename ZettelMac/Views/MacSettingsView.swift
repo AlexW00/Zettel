@@ -13,6 +13,7 @@ import ZettelKit
 
 struct MacSettingsView: View {
     @State private var selectedAppearance: MacAppearanceOption = .fromUserDefaults()
+    @Environment(\.openURL) private var openURL
     @State private var fontSize: Double = UserDefaults.standard.double(forKey: "editorFontSize").clamped(to: 12...28, fallback: 15)
     @State private var titleTemplate: String = DefaultTitleTemplateManager.shared.savedTemplate() ?? ""
     @State private var storageDirectory: URL = MacNoteStore.shared.storageDirectory
@@ -158,6 +159,69 @@ struct MacSettingsView: View {
             Text("A minimal note-taking app.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
+
+            Divider()
+                .padding(.horizontal, 40)
+
+            VStack(spacing: 12) {
+                // Zettel for iOS
+                ShareLink(item: URL(string: "https://apps.apple.com/app/id6748525244")!) {
+                    HStack {
+                        Image(systemName: "iphone")
+                            .frame(width: 20)
+                        Text("Zettel for iOS")
+                            .font(.callout)
+                        Spacer()
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .buttonStyle(.plain)
+
+                Divider()
+
+                // GitHub
+                Button(action: {
+                    if let url = URL(string: "https://github.com/AlexW00/Zettel") {
+                        openURL(url)
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "info.circle")
+                            .frame(width: 20)
+                        Text("View on GitHub")
+                            .font(.callout)
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .buttonStyle(.plain)
+
+                Divider()
+
+                // Developer
+                Button(action: {
+                    if let url = URL(string: "https://x.com/AlexWeichart") {
+                        openURL(url)
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "person.circle")
+                            .frame(width: 20)
+                        Text("Developer")
+                            .font(.callout)
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 40)
 
             Spacer()
         }
