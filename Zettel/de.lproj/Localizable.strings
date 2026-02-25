@@ -39,6 +39,7 @@
 "settings.app_description" = "Minimalistischer Notizblock für iOS";
 "settings.zettel_macos" = "Zettel für Mac";
 "settings.zettel_macos_description" = "Auch auf macOS verfügbar";
+"settings.source_code" = "Quellcode";
 "settings.developer" = "Entwickler";
 "settings.developer_description" = "Folge mir auf X ^^";
 "settings.view_on_github" = "Auf GitHub anzeigen";

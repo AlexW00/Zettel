@@ -188,9 +188,9 @@ struct MacSettingsView: View {
                     }
                 }) {
                     HStack {
-                        Image(systemName: "info.circle")
+                        Image(systemName: "chevron.left.forwardslash.chevron.right")
                             .frame(width: 20)
-                        Text("View on GitHub")
+                        Text("Source Code")
                             .font(.callout)
                         Spacer()
                         Image(systemName: "arrow.up.right")

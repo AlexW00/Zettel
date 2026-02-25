@@ -39,6 +39,7 @@
 "settings.app_description" = "iOS用ミニマリストメモ帳";
 "settings.zettel_macos" = "Zettel for Mac";
 "settings.zettel_macos_description" = "macOSでも利用可能";
+"settings.source_code" = "ソースコード";
 "settings.developer" = "開発者";
 "settings.developer_description" = "X（旧Twitter）でフォローしてください ^^";
 "settings.view_on_github" = "GitHubで表示";

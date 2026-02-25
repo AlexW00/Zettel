@@ -460,12 +460,12 @@ struct SettingsView: View {
                     }
                     
                     HStack {
-                        Image(systemName: "info.circle")
+                        Image(systemName: "chevron.left.forwardslash.chevron.right")
                             .foregroundColor(.iconTint)
                             .frame(width: 24)
                         
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("settings.app_name".localized)
+                            Text("settings.source_code".localized)
                                 .font(.system(size: 16, weight: .medium))
                             
                             Text(StringConstants.Settings.viewOnGitHub.localized)
