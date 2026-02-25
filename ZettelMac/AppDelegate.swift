@@ -12,9 +12,44 @@ import ZettelKit
 @MainActor
 final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
 
+    private let hasLaunchedBeforeKey = "hasLaunchedBefore"
+
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Create the first empty Zettel window on launch
-        ZettelWindowManager.shared.createWindow()
+        // Show welcome note on first launch, otherwise create empty window
+        if isFirstLaunch() {
+            let welcomeNote = createWelcomeNote()
+            ZettelWindowManager.shared.createWindow(note: welcomeNote)
+        } else {
+            ZettelWindowManager.shared.createWindow()
+        }
+    }
+
+    // MARK: - First Launch
+
+    /// Returns `true` on the very first launch (or after the user resets the app).
+    /// Sets the flag so subsequent launches return `false`.
+    private func isFirstLaunch() -> Bool {
+        let hasLaunchedBefore = UserDefaults.standard.bool(forKey: hasLaunchedBeforeKey)
+        if !hasLaunchedBefore {
+            UserDefaults.standard.set(true, forKey: hasLaunchedBeforeKey)
+            return true
+        }
+        return false
+    }
+
+    /// Creates a welcome note with macOS-specific keyboard shortcut tips.
+    private func createWelcomeNote() -> Note {
+        let title = String(
+            localized: "mac.welcome.title",
+            defaultValue: "Welcome to Zettel",
+            comment: "macOS welcome note title"
+        )
+        let content = String(
+            localized: "mac.welcome.content",
+            defaultValue: "👋 Welcome to Zettel\n\nQuick start:\n\n* ⌘O - browse your notes\n* ⌘P - pin window on top\n* ⌘N - new note (⇧⌘N for a new window)\n\nJust start typing - your notes auto-save.\n\nPS: Zettel is also available for iOS\n\nHappy #notetaking ^^",
+            comment: "macOS welcome note content with keyboard shortcuts"
+        )
+        return Note(title: title, content: content)
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {

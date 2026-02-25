@@ -169,9 +169,13 @@
 "debug.localization_test.force_update" = "Force Localization Update";
 "debug.localization_test.current_id" = "Current Language Update ID: %@";
 
-// Welcome Note
+// Welcome Note (iOS)
 "welcome.title" = "Welcome to Zettel";
-"welcome.content" = "In Zettel, you can:\n\n* swipe ← to see your notes\n* swipe → to create a new note\n\nHappy #notetaking ^^";
+"welcome.content" = "👋 Welcome to Zettel\n\nIn Zettel, you can:\n\n* swipe ← to see your notes\n* swipe → to create a new note\n\nPS: Zettel is also available for macOS\n\nHappy #notetaking ^^";
+
+// Welcome Note (macOS)
+"mac.welcome.title" = "Welcome to Zettel";
+"mac.welcome.content" = "👋 Welcome to Zettel\n\nQuick start:\n\n* ⌘O - browse your notes\n* ⌘P - pin window on top\n* ⌘N - new note (⇧⌘N for a new window)\n\nJust start typing - your notes auto-save.\n\nPS: Zettel is also available for iOS\n\nHappy #notetaking ^^";
 
 // Changelog
 "changelog.whats_new" = "What's New";

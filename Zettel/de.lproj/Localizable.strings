@@ -166,9 +166,13 @@
 "debug.localization_test.force_update" = "Lokalisierung aktualisieren erzwingen";
 "debug.localization_test.current_id" = "Aktuelle Language Update ID: %@";
 
-// Welcome Note
+// Welcome Note (iOS)
 "welcome.title" = "Willkommen bei Zettel";
-"welcome.content" = "In Zettel kannst du:\n\n* nach ← wischen um alle Zettel zu sehen\n* nach → wischen um einen neuen Zettel zu erstellen\n\nViel Spaß beim #notieren ^^";
+"welcome.content" = "👋 Willkommen bei Zettel\n\nIn Zettel kannst du:\n\n* nach ← wischen um alle Zettel zu sehen\n* nach → wischen um einen neuen Zettel zu erstellen\n\nPS: Zettel ist auch für macOS verfügbar\n\nViel Spaß beim #notieren ^^";
+
+// Welcome Note (macOS)
+"mac.welcome.title" = "Willkommen bei Zettel";
+"mac.welcome.content" = "👋 Willkommen bei Zettel\n\nKurzanleitung:\n\n* ⌘O - Zettel durchsuchen\n* ⌘P - Fenster anheften\n* ⌘N - neuer Zettel (⇧⌘N in neuem Fenster)\n\nEinfach losschreiben - deine Notizen speichern automatisch.\n\nPS: Zettel ist auch für iOS verfügbar\n\nViel Spaß beim #notieren ^^";
 
 // Changelog
 "changelog.whats_new" = "Was ist neu";

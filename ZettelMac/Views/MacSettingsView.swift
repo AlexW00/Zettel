@@ -122,6 +122,14 @@ struct MacSettingsView: View {
                 }
                 .font(.callout)
             }
+            #if DEBUG
+            Section("Debug") {
+                Button("Reset Welcome Note") {
+                    UserDefaults.standard.removeObject(forKey: "hasLaunchedBefore")
+                }
+                .foregroundStyle(.orange)
+            }
+            #endif
         }
         .formStyle(.grouped)
         .fileImporter(

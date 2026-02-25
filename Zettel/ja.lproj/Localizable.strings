@@ -166,9 +166,13 @@
 "debug.localization_test.force_update" = "ローカライズ更新を強制";
 "debug.localization_test.current_id" = "現在のLanguage Update ID: %@";
 
-// Welcome Note
+// Welcome Note (iOS)
 "welcome.title" = "Zettelへようこそ";
-"welcome.content" = "Zettelでは:\n\n* ←スワイプでメモを表示\n* →スワイプで新しいメモを作成\n\n楽しい#メモライフを ^^";
+"welcome.content" = "👋 Zettelへようこそ\n\nZettelでは:\n\n* ←スワイプでメモを表示\n* →スワイプで新しいメモを作成\n\nPS: ZettelはmacOSでも利用できます\n\n楽しい#メモライフを ^^";
+
+// Welcome Note (macOS)
+"mac.welcome.title" = "Zettelへようこそ";
+"mac.welcome.content" = "👋 Zettelへようこそ\n\n基本操作:\n\n* ⌘O - メモを一覧表示\n* ⌘P - ウィンドウを最前面に固定\n* ⌘N - 新しいメモ（⇧⌘Nで新しいウィンドウ）\n\n入力するだけ - メモは自動保存されます。\n\nPS: ZettelはiOSでも利用できます\n\n楽しい#メモライフを ^^";
 
 // Changelog
 "changelog.whats_new" = "新機能";
