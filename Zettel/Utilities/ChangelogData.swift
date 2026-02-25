@@ -15,6 +15,25 @@ enum ChangelogData {
     /// All changelog entries - add new versions at the TOP
     static let entries: [(version: String, title: String, content: String)] = [
         (
+            version: "3.1",
+            title: "v3.1 - 🖥 Zettel for Mac",
+            content: """
+            ## 🖥 Zettel for Mac - NEW
+
+            Zettel is now available on macOS!
+
+            You can download it on the App Store by searching for "Zettel - Quick Notes" or Air-Dropping this Zettel to your Mac.
+
+            ## 🛠 Improvements
+
+            - **Tag Suggestions**: Tag suggestion pills now use liquid glass.
+
+            ---
+
+            Thank you for using Zettel! 💛
+            """
+        ),
+        (
             version: "3.0",
             title: "v3.0 - 🎨 Make It Yours",
             content: """

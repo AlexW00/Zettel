@@ -363,113 +363,83 @@ class TagTextView: UITextView {
     }
 }
 
+// MARK: - Liquid Glass Tag Suggestion Content (SwiftUI)
+
+/// SwiftUI view rendering tag suggestion chips with liquid glass effect
+private struct TagSuggestionsContentView: View {
+    let suggestions: [Tag]
+    let onTagSelected: (String) -> Void
+
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(suggestions.prefix(10)) { tag in
+                    Button {
+                        onTagSelected(tag.displayName)
+                    } label: {
+                        Text(tag.displayName)
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(.primary)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                    }
+                    .buttonStyle(.plain)
+                    .glassEffect(.regular.interactive(), in: .capsule)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+        }
+        .scrollClipDisabled()
+    }
+}
+
 // Horizontal tag suggestion bar that appears above the keyboard
 class TagSuggestionBar: UIView {
     var onTagSelected: ((String) -> Void)?
-    
-    private let scrollView = UIScrollView()
-    private let stackView = UIStackView()
-    private let backgroundView = UIView()
-    
-    private var currentSuggestions: [Tag] = []
-    private var currentPartial: String = ""
-    
+
+    private var hostingController: UIHostingController<TagSuggestionsContentView>?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
     }
-    
+
     private func setupUI() {
-        // Set initial height
-        frame.size.height = 50
-        
-        // Background with transparent effect
-        backgroundColor = UIColor.clear
-        addSubview(backgroundView)
-        backgroundView.backgroundColor = UIColor.clear
-        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        frame.size.height = 66
+        backgroundColor = .clear
+
+        let content = TagSuggestionsContentView(
+            suggestions: [],
+            onTagSelected: { [weak self] tagName in
+                self?.onTagSelected?(tagName)
+            }
+        )
+        let hc = UIHostingController(rootView: content)
+        hc.view.backgroundColor = .clear
+        hc.view.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(hc.view)
         NSLayoutConstraint.activate([
-            backgroundView.topAnchor.constraint(equalTo: topAnchor),
-            backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            hc.view.topAnchor.constraint(equalTo: topAnchor),
+            hc.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            hc.view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            hc.view.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-        
-        // Scroll view setup
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.alwaysBounceHorizontal = true
-        backgroundView.addSubview(scrollView)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 8),
-            scrollView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 16),
-            scrollView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -16),
-            scrollView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -8)
-        ])
-        
-        // Stack view setup
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        stackView.alignment = .center
-        scrollView.addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
-        ])
-        
-        // No longer initially hidden since we manage visibility at the text view level
+        hostingController = hc
     }
-    
+
     func updateSuggestions(_ suggestions: [Tag], partial: String) {
-        currentSuggestions = suggestions
-        currentPartial = partial
-        
-        // Clear existing suggestion views
-        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
-        // Add suggestion chips
-        for suggestion in suggestions.prefix(10) { // Limit to 10 suggestions
-            let chip = createSuggestionChip(for: suggestion)
-            stackView.addArrangedSubview(chip)
-        }
-    }
-    
-    private func createSuggestionChip(for tag: Tag) -> UIView {
-        var config = UIButton.Configuration.filled()
-        config.title = tag.displayName
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
-            var outgoing = incoming
-            outgoing.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-            return outgoing
-        }
-        config.baseBackgroundColor = UIColor.systemFill
-        config.baseForegroundColor = UIColor.label
-        config.cornerStyle = .fixed
-        config.background.cornerRadius = 16
-        config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)
-        
-        let button = UIButton(configuration: config)
-        
-        // Store the tag name in the button's accessibilityIdentifier for retrieval
-        button.accessibilityIdentifier = tag.displayName
-        button.addTarget(self, action: #selector(suggestionTapped(_:)), for: .touchUpInside)
-        
-        return button
-    }
-    
-    @objc private func suggestionTapped(_ sender: UIButton) {
-        guard let tagName = sender.accessibilityIdentifier else { return }
-        onTagSelected?(tagName)
+        hostingController?.rootView = TagSuggestionsContentView(
+            suggestions: suggestions,
+            onTagSelected: { [weak self] tagName in
+                self?.onTagSelected?(tagName)
+            }
+        )
     }
 }
 
