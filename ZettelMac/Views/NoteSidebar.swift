@@ -76,67 +76,79 @@ struct NoteSidebar: View {
                         : Text(String(localized: "mac.sidebar.no_results_description", defaultValue: "No notes matching your search", comment: "Sidebar no results description"))
                 )
             } else {
-                List(selection: Binding<String?>(
-                    get: { state.note.id },
-                    set: { id in
-                        if let id, let note = filteredNotes.first(where: { $0.id == id }) {
-                            renamingNoteId = nil
-                            state.loadNote(note)
+                ScrollView {
+                    LazyVGrid(
+                        columns: [GridItem(.adaptive(minimum: 140), spacing: 8)],
+                        spacing: 8
+                    ) {
+                        ForEach(filteredNotes) { note in
+                            NoteSidebarCard(
+                                note: note,
+                                isSelected: note.id == state.note.id,
+                                isRenaming: renamingNoteId == note.id,
+                                renameText: $renameText,
+                                onSelect: {
+                                    renamingNoteId = nil
+                                    // Request animated open instead of direct load
+                                    let cardFrame = state.sidebarCardTracker.frame(for: note.id) ?? .zero
+                                    state.openNoteValue = note
+                                    state.openNoteSourceFrame = cardFrame
+                                    state.openNoteAnimationRequested = true
+                                },
+                                onDoubleClick: { beginRename(note) },
+                                onCommitRename: { commitRename(note) },
+                                onCancelRename: { renamingNoteId = nil }
+                            )
+                            // Track each card's global frame for genie targeting
+                            .onGeometryChange(for: CGRect.self) { proxy in
+                                proxy.frame(in: .global)
+                            } action: { frame in
+                                state.sidebarCardTracker.updateFrame(for: note.id, frame: frame)
+                            }
+                            .contextMenu {
+                                Button { beginRename(note) } label: {
+                                    Label(
+                                        String(localized: "mac.sidebar.rename", defaultValue: "Rename", comment: "Sidebar rename action"),
+                                        systemImage: "pencil"
+                                    )
+                                }
+                                Button {
+                                    ZettelWindowManager.shared.createWindow(note: note)
+                                } label: {
+                                    Label(
+                                        String(localized: "mac.sidebar.open_new_window", defaultValue: "Open in New Window", comment: "Sidebar context menu action"),
+                                        systemImage: "macwindow.badge.plus"
+                                    )
+                                }
+                                Button {
+                                    let fileURL = MacNoteStore.shared.storageDirectory
+                                        .appendingPathComponent(note.filename)
+                                    NSWorkspace.shared.activateFileViewerSelecting([fileURL])
+                                } label: {
+                                    Label(
+                                        String(localized: "mac.sidebar.show_in_finder", defaultValue: "Show in Finder", comment: "Sidebar show in Finder action"),
+                                        systemImage: "folder"
+                                    )
+                                }
+                                Divider()
+                                Button(role: .destructive) { deleteNote(note) } label: {
+                                    Label(
+                                        String(localized: "mac.sidebar.delete", defaultValue: "Delete", comment: "Sidebar delete action"),
+                                        systemImage: "trash"
+                                    )
+                                }
+                            }
                         }
                     }
-                )) {
-                    ForEach(filteredNotes) { note in
-                        NoteSidebarRow(
-                            note: note,
-                            isRenaming: renamingNoteId == note.id,
-                            renameText: $renameText,
-                            onDoubleClick: { beginRename(note) },
-                            onCommitRename: { commitRename(note) },
-                            onCancelRename: { renamingNoteId = nil }
-                        )
-                        .tag(note.id)
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            Button(role: .destructive) { deleteNote(note) } label: {
-                                Label(
-                                    String(localized: "mac.sidebar.delete", defaultValue: "Delete", comment: "Sidebar delete action"),
-                                    systemImage: "trash"
-                                )
-                            }
-                        }
-                        .contextMenu {
-                            Button { beginRename(note) } label: {
-                                Label(
-                                    String(localized: "mac.sidebar.rename", defaultValue: "Rename", comment: "Sidebar rename action"),
-                                    systemImage: "pencil"
-                                )
-                            }
-                            Button {
-                                ZettelWindowManager.shared.createWindow(note: note)
-                            } label: {
-                                Label(
-                                    String(localized: "mac.sidebar.open_new_window", defaultValue: "Open in New Window", comment: "Sidebar context menu action"),
-                                    systemImage: "macwindow.badge.plus"
-                                )
-                            }
-                            Button {
-                                let fileURL = MacNoteStore.shared.storageDirectory
-                                    .appendingPathComponent(note.filename)
-                                NSWorkspace.shared.activateFileViewerSelecting([fileURL])
-                            } label: {
-                                Label(
-                                    String(localized: "mac.sidebar.show_in_finder", defaultValue: "Show in Finder", comment: "Sidebar show in Finder action"),
-                                    systemImage: "folder"
-                                )
-                            }
-                            Divider()
-                            Button(role: .destructive) { deleteNote(note) } label: {
-                                Label(
-                                    String(localized: "mac.sidebar.delete", defaultValue: "Delete", comment: "Sidebar delete action"),
-                                    systemImage: "trash"
-                                )
-                            }
-                        }
-                    }
+                    .padding(.horizontal, 10)
+                    .padding(.top, 4)
+                    .padding(.bottom, 8)
+                }
+                // Track the sidebar scroll area's visible bounds
+                .onGeometryChange(for: CGRect.self) { proxy in
+                    proxy.frame(in: .global)
+                } action: { frame in
+                    state.sidebarCardTracker.sidebarVisibleBounds = frame
                 }
             }
         }
@@ -186,66 +198,143 @@ struct NoteSidebar: View {
     }
 }
 
-// MARK: - Sidebar Row
+// MARK: - Sidebar Card
 
-private struct NoteSidebarRow: View {
+private struct NoteSidebarCard: View {
     let note: Note
+    let isSelected: Bool
     let isRenaming: Bool
     @Binding var renameText: String
+    let onSelect: () -> Void
     let onDoubleClick: () -> Void
     let onCommitRename: () -> Void
     let onCancelRename: () -> Void
 
+    @Environment(\.colorScheme) private var colorScheme
     @FocusState private var isRenameFocused: Bool
 
+    private let cardCornerRadius: CGFloat = 12
+
+    private var cardFill: Color {
+        colorScheme == .dark
+            ? Color(red: 0.24, green: 0.24, blue: 0.25)
+            : Color(nsColor: .textBackgroundColor)
+    }
+
+    private var cardBorderColor: Color {
+        colorScheme == .dark
+            ? Color.white.opacity(0.07)
+            : Color.black.opacity(0.08)
+    }
+
     var body: some View {
-        Group {
+        VStack(alignment: .leading, spacing: 4) {
+            // Title or rename field
             if isRenaming {
                 TextField("", text: $renameText)
                     .textFieldStyle(.plain)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .focused($isRenameFocused)
                     .onSubmit { onCommitRename() }
                     .onKeyPress(.escape) {
                         onCancelRename()
                         return .handled
                     }
-                    .padding(.vertical, 2)
             } else {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(note.title.isEmpty ? note.autoGeneratedTitle : note.title)
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(.primary)
-                        .lineLimit(1)
+                Text(note.title.isEmpty ? note.autoGeneratedTitle : note.title)
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+            }
 
-                    if note.isCloudStub {
-                        HStack(spacing: 4) {
-                            if note.isDownloading {
-                                ProgressView().controlSize(.mini)
-                                Text("Downloading…")
-                            } else {
-                                Image(systemName: "icloud.and.arrow.down")
-                                Text(String(localized: "mac.sidebar.icloud", defaultValue: "Available in iCloud", comment: "Sidebar iCloud stub label"))
-                            }
-                        }
-                        .font(.system(size: 11))
-                        .foregroundStyle(.secondary)
-                    } else {
-                        Text(note.contentPreview)
-                            .font(.system(size: 11))
+            // Content preview or cloud stub state
+            if note.isCloudStub {
+                VStack(spacing: 4) {
+                    if note.isDownloading {
+                        ProgressView().controlSize(.mini)
+                        Text("Downloading…")
+                            .font(.system(size: 10, design: .monospaced))
                             .foregroundStyle(.secondary)
-                            .lineLimit(2)
+                    } else {
+                        Image(systemName: "icloud.and.arrow.down")
+                            .font(.system(size: 16))
+                            .foregroundStyle(.secondary)
+                        Text(String(localized: "mac.sidebar.icloud", defaultValue: "Available in iCloud", comment: "Sidebar iCloud stub label"))
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundStyle(.secondary)
                     }
                 }
-                .padding(.vertical, 2)
-                .simultaneousGesture(
-                    TapGesture(count: 2).onEnded { onDoubleClick() }
-                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                Text(note.contentPreview(maxLines: 5))
+                    .font(.system(size: 10, weight: .regular, design: .monospaced))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(5)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+            }
+
+            Spacer(minLength: 0)
+
+            // Tags
+            let tags = Array(note.extractedTags.sorted().prefix(2))
+            if !tags.isEmpty {
+                HStack(spacing: 4) {
+                    ForEach(tags, id: \.self) { tag in
+                        Text("#\(tag)")
+                            .font(.system(size: 9, weight: .medium, design: .monospaced))
+                            .foregroundStyle(.primary.opacity(0.7))
+                            .lineLimit(1)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 2)
+                            .background(
+                                Capsule(style: .continuous)
+                                    .fill(.primary.opacity(0.06))
+                            )
+                    }
+                    let remaining = note.extractedTags.count - 2
+                    if remaining > 0 {
+                        Text("+\(remaining)")
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 2)
+                            .background(
+                                Capsule(style: .continuous)
+                                    .fill(.primary.opacity(0.06))
+                            )
+                    }
+                }
             }
         }
+        .padding(10)
+        .frame(maxWidth: .infinity, minHeight: 140, alignment: .topLeading)
+        .background {
+            RoundedRectangle(cornerRadius: cardCornerRadius, style: .continuous)
+                .fill(cardFill)
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: cardCornerRadius, style: .continuous)
+                .strokeBorder(cardBorderColor, lineWidth: 0.5)
+        }
+        .overlay {
+            if isSelected {
+                RoundedRectangle(cornerRadius: cardCornerRadius, style: .continuous)
+                    .stroke(Color.accentColor, lineWidth: 2)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius, style: .continuous))
+        .shadow(
+            color: .black.opacity(colorScheme == .dark ? 0.22 : 0.06),
+            radius: colorScheme == .dark ? 6 : 4,
+            y: colorScheme == .dark ? 2 : 1
+        )
+        .contentShape(RoundedRectangle(cornerRadius: cardCornerRadius, style: .continuous))
+        .onTapGesture { onSelect() }
+        .simultaneousGesture(
+            TapGesture(count: 2).onEnded { onDoubleClick() }
+        )
         .onChange(of: isRenaming) { _, renaming in
             if renaming {
-                // Small delay so the field is in the hierarchy before focusing
                 Task { @MainActor in
                     try? await Task.sleep(for: .milliseconds(50))
                     isRenameFocused = true
