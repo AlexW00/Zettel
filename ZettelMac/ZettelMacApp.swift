@@ -43,12 +43,12 @@ struct ZettelMacApp: App {
 
                 Divider()
 
-                Button("Open Note Picker") {
+                Button("Toggle Sidebar") {
                     Task { @MainActor in
-                        ZettelWindowManager.shared.togglePickerInCurrentWindow()
+                        ZettelWindowManager.shared.toggleSidebarInCurrentWindow()
                     }
                 }
-                .keyboardShortcut("o", modifiers: .command)
+                .keyboardShortcut("s", modifiers: .command)
             }
 
             // Override Print with Pin

@@ -27,40 +27,30 @@ struct ZettelEditorView: View {
     /// We animate this image (a plain SwiftUI view) instead of the NSViewRepresentable
     /// editor, which cannot be captured by Metal layer effects.
     @State private var cardSnapshot: NSImage? = nil
-    /// Global-coordinate center of the toolbar button the genie should collapse toward.
-    @State private var genieButtonCenter: CGPoint = .zero
+    /// Global-coordinate center of the navigation-area anchor (sits next to the sidebar
+    /// toggle at the far left of the toolbar). The genie always collapses toward this point.
+    @State private var sidebarToggleCenter: CGPoint = .zero
     /// Global-coordinate origin of the snapshot view (used to convert button position
     /// into the shader's local coordinate system).
     @State private var snapshotGlobalOrigin: CGPoint = .zero
+    /// Sidebar column visibility state for NavigationSplitView.
+    @State private var columnVisibility: NavigationSplitViewVisibility = .detailOnly
 
     var body: some View {
-        ZStack {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
+            NoteSidebar(state: state)
+                .navigationSplitViewColumnWidth(min: 200, ideal: 240, max: 320)
+                .navigationTitle("")
+        } detail: {
             editorContent
-                .frame(minWidth: 320, minHeight: 280)
+                .frame(minWidth: 200, minHeight: 280)
                 .background(.ultraThinMaterial)
-
-            if state.isShowingPicker {
-                NotePickerModal(state: state)
-                    .transition(.opacity.combined(with: .scale(scale: 0.95)))
-            }
+                .background {
+                    SidebarToggleTracker { sidebarToggleCenter = $0 }
+                }
         }
-        .animation(.easeInOut(duration: 0.18), value: state.isShowingPicker)
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
-                Button {
-                    state.isShowingPicker.toggle()
-                } label: {
-                    Label("Browse Notes", systemImage: "list.bullet")
-                }
-                .help("Browse Notes (⌘O)")
-                .pointingHandCursor()
-                .onGeometryChange(for: CGPoint.self) { proxy in
-                    let f = proxy.frame(in: .global)
-                    return CGPoint(x: f.midX, y: f.midY)
-                } action: { newValue in
-                    genieButtonCenter = newValue
-                }
-
                 Button {
                     ZettelWindowManager.shared.togglePin(id: state.windowId)
                 } label: {
@@ -79,6 +69,18 @@ struct ZettelEditorView: View {
                 .pointingHandCursor()
             }
         }
+        .onChange(of: state.isSidebarVisible) { _, visible in
+            let target: NavigationSplitViewVisibility = visible ? .all : .detailOnly
+            if columnVisibility != target {
+                withAnimation { columnVisibility = target }
+            }
+        }
+        .onChange(of: columnVisibility) { _, newValue in
+            let isVisible = (newValue != .detailOnly)
+            if state.isSidebarVisible != isVisible {
+                state.isSidebarVisible = isVisible
+            }
+        }
         .onChange(of: state.newNoteAnimationRequested) { _, requested in
             if requested {
                 state.newNoteAnimationRequested = false
@@ -93,17 +95,13 @@ struct ZettelEditorView: View {
                 ZettelWindowManager.shared.updateWindowTitle(id: state.windowId)
             }
         }
-        .onChange(of: state.isShowingPicker) { _, isShowing in
-            if !isShowing {
-                Task { @MainActor in
-                    await Task.yield()
-                    editorHandle.focusEditor()
-                }
-            }
-        }
     }
 
     // MARK: - New-Note Animation
+
+    /// The global screen point the genie animation collapses toward —
+    /// always the invisible navigation anchor next to the sidebar toggle button.
+    private var effectiveGenieTarget: CGPoint { sidebarToggleCenter }
 
     /// Runs the genie-out + card-shift + content-swap sequence.
     private func animateNewNote() {
@@ -363,8 +361,8 @@ struct ZettelEditorView: View {
                         ShaderLibrary.genieEffect(
                             .float2(snapSize),
                             .float2(CGPoint(
-                                x: genieButtonCenter.x - snapshotGlobalOrigin.x,
-                                y: genieButtonCenter.y - snapshotGlobalOrigin.y
+                                x: effectiveGenieTarget.x - snapshotGlobalOrigin.x,
+                                y: effectiveGenieTarget.y - snapshotGlobalOrigin.y
                             )),
                             .float(genieProgress)
                         ),
@@ -375,5 +373,67 @@ struct ZettelEditorView: View {
             }
         }
         .padding(outerPad)
+    }
+}
+
+// MARK: - Sidebar Toggle Tracker
+
+/// Zero-size invisible view that walks up to the NSWindow's toolbar and reads the
+/// sidebar toggle button's screen-coordinate center once the window is laid out.
+/// Placed inside the detail view so it never pollutes the toolbar item list.
+private struct SidebarToggleTracker: NSViewRepresentable {
+    var onCenter: @MainActor (CGPoint) -> Void
+
+    func makeNSView(context: Context) -> TrackerView {
+        TrackerView(onCenter: onCenter)
+    }
+
+    func updateNSView(_ nsView: TrackerView, context: Context) {
+        nsView.onCenter = onCenter
+    }
+
+    final class TrackerView: NSView {
+        var onCenter: @MainActor (CGPoint) -> Void
+        private var hasReported = false
+
+        init(onCenter: @escaping @MainActor (CGPoint) -> Void) {
+            self.onCenter = onCenter
+            super.init(frame: .zero)
+        }
+        required init?(coder: NSCoder) { fatalError() }
+
+        override var intrinsicContentSize: NSSize { .zero }
+
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            if window != nil { scheduleReport() }
+        }
+
+        override func layout() {
+            super.layout()
+            if !hasReported { scheduleReport() }
+        }
+
+        private func scheduleReport() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
+                self?.reportIfPossible()
+            }
+        }
+
+        private func reportIfPossible() {
+            guard let window = self.window,
+                  let toolbar = window.toolbar else { return }
+            let sidebarId = NSToolbarItem.Identifier.toggleSidebar
+            for item in toolbar.items where item.itemIdentifier == sidebarId {
+                guard let view = item.view else { return }
+                let frameInWindow = view.convert(view.bounds, to: nil)
+                let screenFrame = window.convertToScreen(frameInWindow)
+                let center = CGPoint(x: screenFrame.midX, y: screenFrame.midY)
+                hasReported = true
+                let callback = onCenter
+                Task { @MainActor in callback(center) }
+                return
+            }
+        }
     }
 }

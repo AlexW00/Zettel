@@ -46,7 +46,7 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
         )
         let content = String(
             localized: "mac.welcome.content",
-            defaultValue: "👋 Welcome to Zettel\n\nQuick start:\n\n* ⌘O - browse your notes\n* ⌘P - pin window on top\n* ⌘N - new note (⇧⌘N for a new window)\n\nJust start typing - your notes auto-save.\n\nPS: Zettel is also available for iOS\n\nHappy #notetaking ^^",
+            defaultValue: "👋 Welcome to Zettel\n\nQuick start:\n\n* ⌘S - toggle sidebar\n* ⌘P - pin window on top\n* ⌘N - new note (⇧⌘N for a new window)\n\nJust start typing - your notes auto-save.\n\nPS: Zettel is also available for iOS\n\nHappy #notetaking ^^",
             comment: "macOS welcome note content with keyboard shortcuts"
         )
         return Note(title: title, content: content)

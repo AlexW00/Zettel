@@ -26,8 +26,8 @@ final class ZettelWindowState {
     /// Whether this window is pinned (floating)
     var isPinned: Bool = false
 
-    /// Whether the note picker modal is showing
-    var isShowingPicker: Bool = false
+    /// Whether the sidebar is visible
+    var isSidebarVisible: Bool = false
 
     /// Set to `true` to request the new-note genie animation from the view.
     /// The view resets this to `false` once it starts the animation.
@@ -161,7 +161,6 @@ final class ZettelWindowState {
             note = placeholder
             persistedFilename = newNote.filename
             isDirty = false
-            isShowingPicker = false
 
             // Download in background, then swap in the real content
             Task { [weak self] in
@@ -183,7 +182,6 @@ final class ZettelWindowState {
             note = newNote
             persistedFilename = newNote.filename
             isDirty = false
-            isShowingPicker = false
         }
     }
 
