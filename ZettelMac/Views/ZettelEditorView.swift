@@ -15,26 +15,24 @@ struct ZettelEditorView: View {
 
     // MARK: - Animation State
 
-    /// Genie animation phase: controls which overlays are shown and which direction.
-    private enum GeniePhase { case none, genieOut, genieIn }
-    @State private var animationPhase: GeniePhase = .none
+    /// Slide animation phase: controls which overlays are shown and which direction.
+    private enum SlidePhase { case none, slideOut, slideIn }
+    @State private var animationPhase: SlidePhase = .none
 
-    /// Genie shader progress: 0 = identity, 1 = fully collapsed.
-    @State private var genieProgress: CGFloat = 0
+    /// Horizontal slide offset for the snapshot overlay (in points).
+    @State private var slideOffset: CGFloat = 0
     /// Card-shift progress: 0 = normal positions, 1 = fully shifted.
     @State private var cardShiftAmount: CGFloat = 0
     /// Handle to the underlying NSScrollView so we can snapshot it before animating.
     @State private var editorHandle = MacTextEditorHandle()
-    /// Snapshot used for the genie shader overlay (old note for out, new note for in).
+    /// Snapshot used for the slide overlay (old note for out, new note for in).
     @State private var cardSnapshot: NSImage? = nil
-    /// Snapshot of the old note sliding down into the card stack (genie-in only).
+    /// Snapshot of the old note sliding down into the card stack (slide-in only).
     @State private var oldNoteSnapshot: NSImage? = nil
-    /// Global-coordinate genie target point (sidebar card center or fallback).
-    @State private var genieTargetPoint: CGPoint = .zero
-    /// Global-coordinate origin of the snapshot overlay view (for shader local coords).
-    @State private var snapshotGlobalOrigin: CGPoint = .zero
-    /// Global-coordinate frame of the live editor (used for fallback genie target).
+    /// Global-coordinate frame of the live editor.
     @State private var editorGlobalFrame: CGRect = .zero
+    /// Global X of the window's left edge (for edge-fade mask).
+    @State private var windowGlobalMinX: CGFloat = 0
     /// Sidebar column visibility state for NavigationSplitView.
     @State private var columnVisibility: NavigationSplitViewVisibility = .detailOnly
 
@@ -82,6 +80,11 @@ struct ZettelEditorView: View {
                 withAnimation { columnVisibility = target }
             }
         }
+        .onGeometryChange(for: CGFloat.self) { proxy in
+            proxy.frame(in: .global).minX
+        } action: { value in
+            windowGlobalMinX = value
+        }
         .onChange(of: columnVisibility) { _, newValue in
             let isVisible = (newValue != .detailOnly)
             if state.isSidebarVisible != isVisible {
@@ -98,9 +101,8 @@ struct ZettelEditorView: View {
             if requested {
                 state.openNoteAnimationRequested = false
                 if let note = state.openNoteValue {
-                    let sourceFrame = state.openNoteSourceFrame
                     state.openNoteValue = nil
-                    animateOpenNote(note: note, sourceFrame: sourceFrame)
+                    animateOpenNote(note: note)
                 }
             }
         }
@@ -114,47 +116,21 @@ struct ZettelEditorView: View {
         }
     }
 
-    // MARK: - Genie Target
+    // MARK: - New-Note Animation (Slide-Out)
 
-    /// Computes the genie target point in global coordinates for a given note.
-    /// Uses the sidebar card position when visible, otherwise falls back to
-    /// the left-center of the editor area.
-    private func computeGenieTarget(for noteId: String) -> CGPoint {
-        if state.isSidebarVisible {
-            // Try the exact card position in the sidebar
-            if let target = state.sidebarCardTracker.genieTarget(for: noteId) {
-                return target
-            }
-            // Fallback: center of the sidebar's visible area
-            let bounds = state.sidebarCardTracker.sidebarVisibleBounds
-            if !bounds.isEmpty {
-                return CGPoint(x: bounds.midX, y: bounds.midY)
-            }
-        }
-        // Sidebar collapsed or no sidebar data: left-center of editor
-        return CGPoint(
-            x: editorGlobalFrame.minX,
-            y: editorGlobalFrame.midY
-        )
-    }
-
-    // MARK: - New-Note Animation (Genie-Out)
-
-    /// Runs the genie-out + card-shift-up + content-swap sequence.
+    /// Runs the slide-out + card-shift-up + content-swap sequence.
+    /// The current note slides to the left, revealing the new note beneath.
     private func animateNewNote() {
         guard animationPhase == .none else { return }
 
         // Capture the top card as a plain NSImage *before* we start animating.
         let snap = editorHandle.snapshot()
 
-        // Compute target toward the current note's sidebar card.
-        let target = computeGenieTarget(for: state.note.id)
-
         // Pre-compute the new note title so the titlebar animation can start
-        // concurrently with the genie instead of waiting for clearToNewNote().
+        // concurrently with the slide instead of waiting for clearToNewNote().
         let newTitle = DefaultTitleTemplateManager.shared.generateTitle(for: Date())
         ZettelWindowManager.shared.animateWindowTitle(
-            id: state.windowId, to: newTitle, duration: 0.35
+            id: state.windowId, to: newTitle, duration: 0.22
         )
 
         // Set animating flag + snapshot atomically with animations disabled so
@@ -164,23 +140,22 @@ struct ZettelEditorView: View {
         startT.disablesAnimations = true
         withTransaction(startT) {
             cardSnapshot = snap
-            genieTargetPoint = target
-            snapshotGlobalOrigin = CGPoint(x: editorGlobalFrame.minX, y: editorGlobalFrame.minY)
-            animationPhase = .genieOut
+            slideOffset = 0
+            animationPhase = .slideOut
         }
 
-        // Phase 1: genie effect on the snapshot (collapse toward sidebar)
-        withAnimation(.easeIn(duration: 0.5)) {
-            genieProgress = 1.0
+        // Phase 1: slide the snapshot to the left
+        withAnimation(.easeOut(duration: 0.22)) {
+            slideOffset = -editorGlobalFrame.width
         }
         // Phase 1b: bottom cards shift up, new card appears
-        withAnimation(.easeInOut(duration: 0.4).delay(0.08)) {
+        withAnimation(.easeOut(duration: 0.22).delay(0.02)) {
             cardShiftAmount = 1.0
         }
 
-        // Phase 2: genie done — swap content and reset everything instantly.
+        // Phase 2: slide done — swap content and reset everything instantly.
         Task { @MainActor in
-            try? await Task.sleep(for: .seconds(0.55))
+            try? await Task.sleep(for: .seconds(0.25))
 
             state.clearToNewNote()
             ZettelWindowManager.shared.updateWindowTitleSilently(id: state.windowId)
@@ -188,7 +163,7 @@ struct ZettelEditorView: View {
             var t = Transaction()
             t.disablesAnimations = true
             withTransaction(t) {
-                genieProgress = 0
+                slideOffset = 0
                 cardShiftAmount = 0
                 animationPhase = .none
                 cardSnapshot = nil
@@ -196,11 +171,11 @@ struct ZettelEditorView: View {
         }
     }
 
-    // MARK: - Open-Note Animation (Genie-In)
+    // MARK: - Open-Note Animation (Slide-In)
 
-    /// Runs the reverse genie-in + card-shift-down sequence when opening
+    /// Runs the slide-in + card-shift-down sequence when opening
     /// a note from the sidebar.
-    private func animateOpenNote(note: Note, sourceFrame: CGRect) {
+    private func animateOpenNote(note: Note) {
         guard animationPhase == .none else { return }
 
         // Don't animate if clicking the already-selected note
@@ -209,13 +184,10 @@ struct ZettelEditorView: View {
         // 1. Capture old note snapshot (editor still visible with old content)
         let oldSnap = editorHandle.snapshot()
 
-        // Genie target = center of the clicked sidebar card
-        let target = CGPoint(x: sourceFrame.midX, y: sourceFrame.midY)
-
         // Animate titlebar to the new note's title
         let newTitle = note.title.isEmpty ? note.autoGeneratedTitle : note.title
         ZettelWindowManager.shared.animateWindowTitle(
-            id: state.windowId, to: newTitle, duration: 0.35
+            id: state.windowId, to: newTitle, duration: 0.22
         )
 
         // 2. Set initial animation state: hide live editor, show old note snapshot
@@ -223,13 +195,11 @@ struct ZettelEditorView: View {
         startT.disablesAnimations = true
         withTransaction(startT) {
             oldNoteSnapshot = oldSnap
-            genieTargetPoint = target
-            snapshotGlobalOrigin = CGPoint(x: editorGlobalFrame.minX, y: editorGlobalFrame.minY)
-            animationPhase = .genieIn
+            animationPhase = .slideIn
         }
 
         // Start stack shift DOWN immediately (old note slides to card 2, card 2 → card 3)
-        withAnimation(.easeInOut(duration: 0.45)) {
+        withAnimation(.easeOut(duration: 0.25)) {
             cardShiftAmount = 1.0
         }
 
@@ -237,34 +207,34 @@ struct ZettelEditorView: View {
         state.saveNow()
         state.loadNote(note)
 
-        // 4. Wait for NSTextView to render new content, then capture + start genie
+        // 4. Wait for NSTextView to render new content, then capture + slide in
         Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(100))
 
             let newSnap = editorHandle.snapshot()
 
-            // 5. Set genie snapshot at collapsed state (animations disabled)
+            // 5. Set slide snapshot at off-screen left position (animations disabled)
             var snapT = Transaction()
             snapT.disablesAnimations = true
             withTransaction(snapT) {
                 cardSnapshot = newSnap
-                genieProgress = 1.0
+                slideOffset = -editorGlobalFrame.width
             }
 
-            // 6. Animate reverse genie: expand from sidebar card (progress 1→0)
-            withAnimation(.easeOut(duration: 0.45)) {
-                genieProgress = 0
+            // 6. Animate slide in from the left
+            withAnimation(.spring(duration: 0.20, bounce: 0.06)) {
+                slideOffset = 0
             }
 
             // 7. Wait for both animations to complete, then reset
-            try? await Task.sleep(for: .seconds(0.5))
+            try? await Task.sleep(for: .seconds(0.22))
 
             ZettelWindowManager.shared.updateWindowTitleSilently(id: state.windowId)
 
             var resetT = Transaction()
             resetT.disablesAnimations = true
             withTransaction(resetT) {
-                genieProgress = 0
+                slideOffset = 0
                 cardShiftAmount = 0
                 animationPhase = .none
                 cardSnapshot = nil
@@ -372,9 +342,9 @@ struct ZettelEditorView: View {
                 .padding(.bottom, peekAmount)
                 .animation(.easeInOut(duration: 0.4), value: colorScheme)
 
-            // ── Animated overlays: SHIFT UP (genie-out / new note creation) ──
+            // ── Animated overlays: SHIFT UP (slide-out / new note creation) ──
             // At t=0 they match the static cards; at t=1 they match one level up.
-            if animationPhase == .genieOut {
+            if animationPhase == .slideOut {
                 // New card: fades in at Card 3's exact rest position.
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(card3Fill)
@@ -416,9 +386,9 @@ struct ZettelEditorView: View {
                     .padding(.bottom, peekAmount + peekAmount * cardShiftAmount)
             }
 
-            // ── Animated overlays: SHIFT DOWN (genie-in / open from sidebar) ─
+            // ── Animated overlays: SHIFT DOWN (slide-in / open from sidebar) ─
             // At t=0 they match the static cards; at t=1 they match one level down.
-            if animationPhase == .genieIn {
+            if animationPhase == .slideIn {
                 // Card 2 clone: slides pos2 → pos3, cross-fades card2→card3
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(card2Fill)
@@ -492,9 +462,9 @@ struct ZettelEditorView: View {
                 editorGlobalFrame = frame
             }
 
-            // Genie snapshot overlay — used during both genie-out and genie-in.
-            // Genie-out: progress animates 0→1 (collapse toward sidebar card).
-            // Genie-in: progress animates 1→0 (expand from sidebar card).
+            // Slide snapshot overlay — used during both slide-out and slide-in.
+            // Slide-out: offset animates 0 → -width (slides left off screen).
+            // Slide-in:  offset animates -width → 0 (slides in from the left).
             if isAnimating, let snapshot = cardSnapshot {
                 let snapSize = snapshot.size
                 Image(nsImage: snapshot)
@@ -509,23 +479,27 @@ struct ZettelEditorView: View {
                         RoundedRectangle(cornerRadius: 18, style: .continuous)
                             .strokeBorder(cardBorderColor, lineWidth: 0.5)
                     }
-                    .onGeometryChange(for: CGPoint.self) { proxy in
-                        let f = proxy.frame(in: .global)
-                        return CGPoint(x: f.minX, y: f.minY)
-                    } action: { newValue in
-                        snapshotGlobalOrigin = newValue
+                    .mask {
+                        // Fade out the left edge as the snapshot approaches the window edge.
+                        let fadeWidth: CGFloat = 36
+                        let snapshotLeft = editorGlobalFrame.minX + slideOffset
+                        let overlap = max(0, windowGlobalMinX - snapshotLeft)
+
+                        HStack(spacing: 0) {
+                            if overlap > 0 {
+                                Color.clear.frame(width: overlap)
+                            }
+                            LinearGradient(
+                                colors: [.clear, .black],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                            .frame(width: fadeWidth)
+                            Color.black
+                        }
+                        .frame(maxHeight: .infinity)
                     }
-                    .layerEffect(
-                        ShaderLibrary.genieEffect(
-                            .float2(snapSize),
-                            .float2(CGPoint(
-                                x: genieTargetPoint.x - snapshotGlobalOrigin.x,
-                                y: genieTargetPoint.y - snapshotGlobalOrigin.y
-                            )),
-                            .float(genieProgress)
-                        ),
-                        maxSampleOffset: CGSize(width: snapSize.width, height: snapSize.height)
-                    )
+                    .offset(x: slideOffset)
                     .allowsHitTesting(false)
                     .padding(.bottom, peekAmount * 2)
             }

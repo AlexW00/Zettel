@@ -89,22 +89,13 @@ struct NoteSidebar: View {
                                 renameText: $renameText,
                                 onSelect: {
                                     renamingNoteId = nil
-                                    // Request animated open instead of direct load
-                                    let cardFrame = state.sidebarCardTracker.frame(for: note.id) ?? .zero
                                     state.openNoteValue = note
-                                    state.openNoteSourceFrame = cardFrame
                                     state.openNoteAnimationRequested = true
                                 },
                                 onDoubleClick: { beginRename(note) },
                                 onCommitRename: { commitRename(note) },
                                 onCancelRename: { renamingNoteId = nil }
                             )
-                            // Track each card's global frame for genie targeting
-                            .onGeometryChange(for: CGRect.self) { proxy in
-                                proxy.frame(in: .global)
-                            } action: { frame in
-                                state.sidebarCardTracker.updateFrame(for: note.id, frame: frame)
-                            }
                             .contextMenu {
                                 Button { beginRename(note) } label: {
                                     Label(
@@ -143,12 +134,6 @@ struct NoteSidebar: View {
                     .padding(.horizontal, 10)
                     .padding(.top, 4)
                     .padding(.bottom, 8)
-                }
-                // Track the sidebar scroll area's visible bounds
-                .onGeometryChange(for: CGRect.self) { proxy in
-                    proxy.frame(in: .global)
-                } action: { frame in
-                    state.sidebarCardTracker.sidebarVisibleBounds = frame
                 }
             }
         }

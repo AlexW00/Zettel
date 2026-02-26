@@ -29,23 +29,16 @@ final class ZettelWindowState {
     /// Whether the sidebar is visible
     var isSidebarVisible: Bool = false
 
-    /// Set to `true` to request the new-note genie animation from the view.
+    /// Set to `true` to request the new-note slide animation from the view.
     /// The view resets this to `false` once it starts the animation.
     var newNoteAnimationRequested: Bool = false
 
-    /// Set to `true` to request the open-from-sidebar reverse-genie animation.
+    /// Set to `true` to request the open-from-sidebar slide-in animation.
     /// The view resets this to `false` once it starts the animation.
     var openNoteAnimationRequested: Bool = false
 
     /// The note to open (set before `openNoteAnimationRequested`).
     var openNoteValue: Note? = nil
-
-    /// Global-coordinate frame of the sidebar card that was clicked.
-    var openNoteSourceFrame: CGRect = .zero
-
-    /// Tracks sidebar card positions for genie animation targeting.
-    /// NOT @Observable — mutations don't trigger view redraws.
-    let sidebarCardTracker = SidebarCardTracker()
 
     /// The title currently shown in the `.principal` toolbar item.
     /// Updated instantly or via the split-flap animation.
