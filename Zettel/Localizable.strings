@@ -89,7 +89,7 @@
 "overview.additional_tags" = "+%d";
 
 // Search
-"search.prompt" = "Search notes";
+"search.prompt" = "Search Zettel";
 "search.no_results_title" = "No results for \"%@\"";
 "search.no_results_message" = "Try a different keyword or clear filters.";
 

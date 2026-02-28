@@ -43,7 +43,7 @@ struct NoteSidebar: View {
                     .foregroundStyle(.secondary)
                     .font(.system(size: 12))
                 TextField(
-                    String(localized: "mac.sidebar.search_prompt", defaultValue: "Search Notes", comment: "Sidebar search placeholder"),
+                    String(localized: "mac.sidebar.search_prompt", defaultValue: "Search Zettel", comment: "Sidebar search placeholder"),
                     text: $searchText
                 )
                 .textFieldStyle(.plain)

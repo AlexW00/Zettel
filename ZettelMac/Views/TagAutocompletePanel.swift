@@ -21,6 +21,21 @@ final class TagSuggestionState: ObservableObject {
     /// 1 = navigating forward/down, -1 = navigating backward/up (drives barrel-roll direction).
     @Published var navigationDirection: Int = 1
     var onSelect: ((String) -> Void)?
+
+    /// Index clamped to valid suggestion bounds (safe for access).
+    var clampedIndex: Int {
+        guard !suggestions.isEmpty else { return 0 }
+        return min(max(selectedIndex, 0), suggestions.count - 1)
+    }
+
+    /// Reset all state to defaults. Use when hiding the panel to prevent stale
+    /// values from leaking into the next show cycle.
+    func reset() {
+        suggestions = []
+        selectedIndex = 0
+        navigationDirection = 1
+        onSelect = nil
+    }
 }
 
 // MARK: - SwiftUI Suggestion View
@@ -32,9 +47,11 @@ struct TagSuggestionsView: View {
     /// The window of suggestion indices currently on screen (at most `maxVisibleRows` items).
     private var visibleRange: Range<Int> {
         let total = state.suggestions.count
+        guard total > 0 else { return 0..<0 }
         guard total > maxVisibleRows else { return 0..<total }
         let half = maxVisibleRows / 2
-        let start = max(0, min(state.selectedIndex - half, total - maxVisibleRows))
+        let idx = state.clampedIndex
+        let start = max(0, min(idx - half, total - maxVisibleRows))
         return start..<(start + maxVisibleRows)
     }
 
@@ -58,12 +75,14 @@ struct TagSuggestionsView: View {
 
                 TagSuggestionRow(
                     tag: tag,
-                    isSelected: globalIndex == state.selectedIndex
-                ) { hovering in
-                    if hovering { state.selectedIndex = globalIndex }
-                }
+                    isSelected: globalIndex == state.clampedIndex
+                )
                 .contentShape(Rectangle())
                 .onTapGesture { state.onSelect?(tag) }
+                // Transitions only animate when wrapped in an explicit withAnimation
+                // (called by selectNext/selectPrevious). Structural changes from show()
+                // are not wrapped, so they appear instantly without any scroll-from-
+                // stale-position artifact.
                 .transition(.asymmetric(
                     insertion: .offset(y: insertionY).combined(with: .opacity),
                     removal:   .offset(y: removalY  ).combined(with: .opacity)
@@ -79,7 +98,6 @@ struct TagSuggestionsView: View {
                 PaginationIndicator(label: "↓  \(hiddenBelow) more")
             }
         }
-        .animation(.spring(duration: 0.22, bounce: 0.15), value: state.selectedIndex)
         .padding(.vertical, 4)
         .glassEffect(in: .rect(cornerRadius: 10))
         // No SwiftUI shadow — NSHostingView clips it to a hard rect.
@@ -150,11 +168,33 @@ final class TagAutocompleteController {
     private var panel: NSPanel?
     private var hostingView: NSHostingView<TagSuggestionsView>?
     private var clickMonitor: Any?
+    private var scrollMonitor: Any?
+    private var resignObserver: (any NSObjectProtocol)?
+    private var scrollAccumulator: CGFloat = 0
+    private static let scrollThreshold: CGFloat = 20
+
+    // MARK: - Lifecycle
+
+    init() {
+        resignObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.didResignActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.hide()
+        }
+    }
+
+    deinit {
+        if let observer = resignObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
 
     /// The currently highlighted suggestion (nil when panel is hidden).
     var selectedSuggestion: String? {
         guard isVisible, !state.suggestions.isEmpty else { return nil }
-        return state.suggestions[safe: state.selectedIndex]
+        return state.suggestions[safe: state.clampedIndex]
     }
 
     var isVisible: Bool { panel?.isVisible ?? false }
@@ -165,15 +205,24 @@ final class TagAutocompleteController {
     func show(suggestions: [String], near screenRect: NSRect, onSelect: @escaping (String) -> Void) {
         guard !suggestions.isEmpty else { hide(); return }
 
-        state.suggestions = suggestions
-        state.selectedIndex = 0
+        // Reset state without animation so the panel doesn't visually scroll
+        // from a stale position when reopening.
+        var t = Transaction()
+        t.disablesAnimations = true
+        withTransaction(t) {
+            state.suggestions = suggestions
+            state.selectedIndex = 0
+            state.navigationDirection = 1
+        }
         state.onSelect = onSelect
 
         let panel = panel ?? makePanel()
         self.panel = panel
 
-        // Re-size to fit content
+        // Force a synchronous layout pass so fittingSize reflects the new
+        // suggestions, not the stale content from the previous session.
         if let hostingView = hostingView {
+            hostingView.layout()
             let fittingHeight = hostingView.fittingSize.height
             let panelWidth: CGFloat = 220
             panel.setContentSize(CGSize(width: panelWidth, height: fittingHeight))
@@ -185,14 +234,24 @@ final class TagAutocompleteController {
         panel.setFrameOrigin(NSPoint(x: originX, y: originY))
         panel.orderFront(nil)
         installClickMonitor()
+        installScrollMonitor()
     }
 
     /// Update suggestions without repositioning.
     func update(suggestions: [String]) {
         guard isVisible else { return }
         guard !suggestions.isEmpty else { hide(); return }
-        state.suggestions = suggestions
-        state.selectedIndex = 0
+
+        // Atomically update suggestions and reset index without animation
+        // to avoid the view evaluating with a stale selectedIndex against
+        // the new (potentially shorter) suggestions array.
+        var t = Transaction()
+        t.disablesAnimations = true
+        withTransaction(t) {
+            state.suggestions = suggestions
+            state.selectedIndex = 0
+            state.navigationDirection = 1
+        }
 
         if let hostingView = hostingView, let panel = panel {
             let fittingHeight = hostingView.fittingSize.height
@@ -206,21 +265,30 @@ final class TagAutocompleteController {
 
     func selectNext() {
         guard !state.suggestions.isEmpty else { return }
-        guard state.selectedIndex < state.suggestions.count - 1 else { return }
-        state.navigationDirection = 1
-        state.selectedIndex += 1
+        let clamped = state.clampedIndex
+        guard clamped < state.suggestions.count - 1 else { return }
+        withAnimation(.spring(duration: 0.22, bounce: 0.15)) {
+            state.navigationDirection = 1
+            state.selectedIndex = clamped + 1
+        }
     }
 
     func selectPrevious() {
         guard !state.suggestions.isEmpty else { return }
-        guard state.selectedIndex > 0 else { return }
-        state.navigationDirection = -1
-        state.selectedIndex -= 1
+        let clamped = state.clampedIndex
+        guard clamped > 0 else { return }
+        withAnimation(.spring(duration: 0.15, bounce: 0.1)) {
+            state.navigationDirection = -1
+            state.selectedIndex = clamped - 1
+        }
     }
 
     func hide() {
         panel?.orderOut(nil)
         removeClickMonitor()
+        removeScrollMonitor()
+        scrollAccumulator = 0
+        state.reset()
     }
 
     // MARK: - Private
@@ -248,6 +316,40 @@ final class TagAutocompleteController {
         if let monitor = clickMonitor {
             NSEvent.removeMonitor(monitor)
             clickMonitor = nil
+        }
+    }
+
+    private func installScrollMonitor() {
+        removeScrollMonitor()
+        scrollMonitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [weak self] event in
+            guard let self, let panel = self.panel, panel.isVisible else { return event }
+            // Only intercept scroll events whose window is the panel or are over the panel
+            let screenPoint: NSPoint
+            if let win = event.window {
+                screenPoint = win.convertPoint(toScreen: event.locationInWindow)
+            } else {
+                screenPoint = event.locationInWindow
+            }
+            guard panel.frame.contains(screenPoint) else { return event }
+            // Accumulate delta and only step when threshold is crossed,
+            // preventing a single trackpad swipe from jumping many rows.
+            self.scrollAccumulator += event.scrollingDeltaY
+            while self.scrollAccumulator >= TagAutocompleteController.scrollThreshold {
+                self.selectPrevious()
+                self.scrollAccumulator -= TagAutocompleteController.scrollThreshold
+            }
+            while self.scrollAccumulator <= -TagAutocompleteController.scrollThreshold {
+                self.selectNext()
+                self.scrollAccumulator += TagAutocompleteController.scrollThreshold
+            }
+            return nil  // consume the event
+        }
+    }
+
+    private func removeScrollMonitor() {
+        if let monitor = scrollMonitor {
+            NSEvent.removeMonitor(monitor)
+            scrollMonitor = nil
         }
     }
 
