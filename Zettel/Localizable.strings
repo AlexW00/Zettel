@@ -105,6 +105,18 @@
 "mac.picker.opened" = "Opened";
 "mac.title_editor.placeholder" = "Note title";
 
+// macOS Sidebar
+"mac.sidebar.search_prompt" = "Search Zettel";
+"mac.sidebar.empty" = "No Notes";
+"mac.sidebar.no_results" = "No Results";
+"mac.sidebar.empty_description" = "Type to get started";
+"mac.sidebar.no_results_description" = "No notes matching your search";
+"mac.sidebar.rename" = "Rename";
+"mac.sidebar.open_new_window" = "Open in New Window";
+"mac.sidebar.show_in_finder" = "Show in Finder";
+"mac.sidebar.delete" = "Delete";
+"mac.sidebar.icloud" = "Available in iCloud";
+
 // Tags
 "tags.hashtag_prefix" = "#%@";
 "tags.no_tags" = "No tags";

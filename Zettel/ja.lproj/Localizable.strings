@@ -102,6 +102,18 @@
 "mac.picker.opened" = "最終更新";
 "mac.title_editor.placeholder" = "ノートのタイトル";
 
+// macOS サイドバー
+"mac.sidebar.search_prompt" = "Zettelを検索";
+"mac.sidebar.empty" = "ノートなし";
+"mac.sidebar.no_results" = "結果なし";
+"mac.sidebar.empty_description" = "入力して始めましょう";
+"mac.sidebar.no_results_description" = "検索に一致するノートがありません";
+"mac.sidebar.rename" = "名前を変更";
+"mac.sidebar.open_new_window" = "新しいウィンドウで開く";
+"mac.sidebar.show_in_finder" = "Finderで表示";
+"mac.sidebar.delete" = "削除";
+"mac.sidebar.icloud" = "iCloudで利用可能";
+
 // Tags
 "tags.hashtag_prefix" = "#%@";
 "tags.no_tags" = "タグなし";

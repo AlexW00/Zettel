@@ -102,6 +102,18 @@
 "mac.picker.opened" = "Geöffnet";
 "mac.title_editor.placeholder" = "Notiztitel";
 
+// macOS Seitenleiste
+"mac.sidebar.search_prompt" = "Zettel durchsuchen";
+"mac.sidebar.empty" = "Keine Notizen";
+"mac.sidebar.no_results" = "Keine Ergebnisse";
+"mac.sidebar.empty_description" = "Einfach losschreiben";
+"mac.sidebar.no_results_description" = "Keine Notizen entsprechen deiner Suche";
+"mac.sidebar.rename" = "Umbenennen";
+"mac.sidebar.open_new_window" = "In neuem Fenster öffnen";
+"mac.sidebar.show_in_finder" = "Im Finder anzeigen";
+"mac.sidebar.delete" = "Löschen";
+"mac.sidebar.icloud" = "In iCloud verfügbar";
+
 // Tags
 "tags.hashtag_prefix" = "#%@";
 "tags.no_tags" = "Keine Tags";

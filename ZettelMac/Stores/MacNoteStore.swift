@@ -17,6 +17,10 @@ extension Notification.Name {
     /// `userInfo` keys: `"filename"` (String), `"content"` (String),
     /// `"title"` (String), `"modifiedAt"` (Date), `"createdAt"` (Date).
     static let noteFileDidChangeOnDisk = Notification.Name("noteFileDidChangeOnDisk")
+
+    /// Posted when the storage directory is changed (e.g. from Settings).
+    /// Windows should flush pending saves and reset to a new note.
+    static let storageDirectoryDidChange = Notification.Name("storageDirectoryDidChange")
 }
 
 /// macOS-native note store — manages reading/writing .md files.
@@ -382,6 +386,9 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
         self._presentedItemURL = newDirectory
         createStorageDirectoryIfNeeded()
         startMonitoringFileSystem()
+
+        // Notify all windows so they can flush saves and reset
+        NotificationCenter.default.post(name: .storageDirectoryDidChange, object: nil)
 
         Task {
             await loadAllNotes()

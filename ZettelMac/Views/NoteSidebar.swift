@@ -38,33 +38,35 @@ struct NoteSidebar: View {
     var body: some View {
         VStack(spacing: 0) {
             // Inline search field
-            HStack(spacing: 6) {
-                Image(systemName: "magnifyingglass")
-                    .foregroundStyle(.secondary)
-                    .font(.system(size: 12))
-                TextField(
-                    String(localized: "mac.sidebar.search_prompt", defaultValue: "Search Zettel", comment: "Sidebar search placeholder"),
-                    text: $searchText
-                )
-                .textFieldStyle(.plain)
-                .font(.system(size: 13))
-                .onSubmit { renamingNoteId = nil }
+            if !store.allNotes.isEmpty || !searchText.isEmpty {
+                HStack(spacing: 6) {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundStyle(.secondary)
+                        .font(.system(size: 12))
+                    TextField(
+                        String(localized: "mac.sidebar.search_prompt", defaultValue: "Search Zettel", comment: "Sidebar search placeholder"),
+                        text: $searchText
+                    )
+                    .textFieldStyle(.plain)
+                    .font(.system(size: 13))
+                    .onSubmit { renamingNoteId = nil }
 
-                if !searchText.isEmpty {
-                    Button { searchText = "" } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.secondary)
-                            .font(.system(size: 11))
+                    if !searchText.isEmpty {
+                        Button { searchText = "" } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                                .font(.system(size: 11))
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(RoundedRectangle(cornerRadius: 6, style: .continuous).fill(.primary.opacity(0.06)))
-            .padding(.horizontal, 10)
-            .padding(.top, 8)
-            .padding(.bottom, 6)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(RoundedRectangle(cornerRadius: 6, style: .continuous).fill(.primary.opacity(0.06)))
+                .padding(.horizontal, 10)
+                .padding(.top, 8)
+                .padding(.bottom, 6)
+            } // end search bar
 
             if store.isLoading && store.allNotes.isEmpty {
                 ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -75,7 +77,7 @@ struct NoteSidebar: View {
                         : String(localized: "mac.sidebar.no_results", defaultValue: "No Results", comment: "Sidebar no results title"),
                     systemImage: searchText.isEmpty ? "note.text" : "magnifyingglass",
                     description: searchText.isEmpty
-                        ? Text(String(localized: "mac.sidebar.empty_description", defaultValue: "Create a note to get started", comment: "Sidebar empty state description"))
+                        ? Text(String(localized: "mac.sidebar.empty_description", defaultValue: "Type to get started", comment: "Sidebar empty state description"))
                         : Text(String(localized: "mac.sidebar.no_results_description", defaultValue: "No notes matching your search", comment: "Sidebar no results description"))
                 )
             } else {
