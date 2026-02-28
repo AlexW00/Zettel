@@ -282,21 +282,21 @@ struct ZettelEditorView: View {
 
     private var cardFill: Color {
         colorScheme == .dark
-            ? Color(red: 0.24, green: 0.24, blue: 0.25)
+            ? Color(red: 0.30, green: 0.30, blue: 0.31)
             : Color(nsColor: .textBackgroundColor)
     }
 
     /// Middle card — slightly darker than top in light mode for clearer separation
     private var card2Fill: Color {
         colorScheme == .dark
-            ? Color(red: 0.20, green: 0.20, blue: 0.21)
+            ? Color(red: 0.25, green: 0.25, blue: 0.26)
             : Color(red: 0.94, green: 0.94, blue: 0.94)
     }
 
     /// Back card — noticeably darker than middle to reinforce depth
     private var card3Fill: Color {
         colorScheme == .dark
-            ? Color(red: 0.17, green: 0.17, blue: 0.18)
+            ? Color(red: 0.21, green: 0.21, blue: 0.22)
             : Color(red: 0.88, green: 0.88, blue: 0.88)
     }
 

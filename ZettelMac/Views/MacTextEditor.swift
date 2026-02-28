@@ -406,7 +406,7 @@ struct MacTextEditor: NSViewRepresentable {
             let regex = TagParser.regexInternal
             let matches = regex.matches(in: text, options: [], range: fullRange)
 
-            let hashtagColor = NSColor(red: 0.196, green: 0.098, blue: 0.741, alpha: 1.0)
+            let hashtagColor = NSColor.controlAccentColor
             let hashtagFont = NSFont.systemFont(ofSize: fontSize, weight: .medium)
 
             for match in matches {
