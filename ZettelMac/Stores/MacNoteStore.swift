@@ -96,8 +96,10 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
 
     /// Load all notes from the storage directory
     public func loadAllNotes() async {
-        isLoading = true
-        defer { isLoading = false }
+        // Only show loading spinner on initial load, not on subsequent refreshes
+        let isInitialLoad = allNotes.isEmpty
+        if isInitialLoad { isLoading = true }
+        defer { if isInitialLoad { isLoading = false } }
 
         let didStartAccessing = storageDirectory.startAccessingSecurityScopedResource()
         defer {

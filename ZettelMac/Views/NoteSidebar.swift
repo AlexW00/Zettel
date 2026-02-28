@@ -19,6 +19,9 @@ struct NoteSidebar: View {
     @State private var renamingNoteId: String? = nil
     @State private var renameText: String = ""
 
+    /// ID of the note the mouse is currently hovering over.
+    @State private var hoveredNoteId: String? = nil
+
     private var store: MacNoteStore { MacNoteStore.shared }
 
     private var filteredNotes: [Note] {
@@ -63,7 +66,7 @@ struct NoteSidebar: View {
             .padding(.top, 8)
             .padding(.bottom, 6)
 
-            if store.isLoading {
+            if store.isLoading && store.allNotes.isEmpty {
                 ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if filteredNotes.isEmpty {
                 ContentUnavailableView(
@@ -84,52 +87,54 @@ struct NoteSidebar: View {
                         ForEach(filteredNotes) { note in
                             NoteSidebarCard(
                                 note: note,
-                                isSelected: note.id == state.note.id,
+                                isActive: note.id == state.note.id,
+                                isHovered: note.id == hoveredNoteId,
                                 isRenaming: renamingNoteId == note.id,
                                 renameText: $renameText,
                                 onSelect: {
-                                    renamingNoteId = nil
-                                    state.openNoteValue = note
-                                    state.openNoteAnimationRequested = true
+                                    selectNote(note)
                                 },
                                 onDoubleClick: { beginRename(note) },
                                 onCommitRename: { commitRename(note) },
-                                onCancelRename: { renamingNoteId = nil }
+                                onCancelRename: { renamingNoteId = nil },
+                                onHover: { isHovering in
+                                    hoveredNoteId = isHovering ? note.id : nil
+                                }
                             )
                             .contextMenu {
-                                Button { beginRename(note) } label: {
-                                    Label(
-                                        String(localized: "mac.sidebar.rename", defaultValue: "Rename", comment: "Sidebar rename action"),
-                                        systemImage: "pencil"
-                                    )
-                                }
-                                Button {
-                                    ZettelWindowManager.shared.createWindow(note: note)
-                                } label: {
-                                    Label(
-                                        String(localized: "mac.sidebar.open_new_window", defaultValue: "Open in New Window", comment: "Sidebar context menu action"),
-                                        systemImage: "macwindow.badge.plus"
-                                    )
-                                }
-                                Button {
-                                    let fileURL = MacNoteStore.shared.storageDirectory
-                                        .appendingPathComponent(note.filename)
-                                    NSWorkspace.shared.activateFileViewerSelecting([fileURL])
-                                } label: {
-                                    Label(
-                                        String(localized: "mac.sidebar.show_in_finder", defaultValue: "Show in Finder", comment: "Sidebar show in Finder action"),
-                                        systemImage: "folder"
-                                    )
-                                }
-                                Divider()
-                                Button(role: .destructive) { deleteNote(note) } label: {
-                                    Label(
-                                        String(localized: "mac.sidebar.delete", defaultValue: "Delete", comment: "Sidebar delete action"),
-                                        systemImage: "trash"
-                                    )
+                                    Button { beginRename(note) } label: {
+                                        Label(
+                                            String(localized: "mac.sidebar.rename", defaultValue: "Rename", comment: "Sidebar rename action"),
+                                            systemImage: "pencil"
+                                        )
+                                    }
+                                    Button {
+                                        ZettelWindowManager.shared.createWindow(note: note)
+                                    } label: {
+                                        Label(
+                                            String(localized: "mac.sidebar.open_new_window", defaultValue: "Open in New Window", comment: "Sidebar context menu action"),
+                                            systemImage: "macwindow.badge.plus"
+                                        )
+                                    }
+                                    Button {
+                                        let fileURL = MacNoteStore.shared.storageDirectory
+                                            .appendingPathComponent(note.filename)
+                                        NSWorkspace.shared.activateFileViewerSelecting([fileURL])
+                                    } label: {
+                                        Label(
+                                            String(localized: "mac.sidebar.show_in_finder", defaultValue: "Show in Finder", comment: "Sidebar show in Finder action"),
+                                            systemImage: "folder"
+                                        )
+                                    }
+                                    Divider()
+                                    Button(role: .destructive) { deleteNote(note) } label: {
+                                        Label(
+                                            String(localized: "mac.sidebar.delete", defaultValue: "Delete", comment: "Sidebar delete action"),
+                                            systemImage: "trash"
+                                        )
+                                    }
                                 }
                             }
-                        }
                     }
                     .padding(.horizontal, 10)
                     .padding(.top, 4)
@@ -141,6 +146,18 @@ struct NoteSidebar: View {
             state.saveNow()
             await store.loadAllNotes()
         }
+    }
+
+    // MARK: - Selection
+
+    private func selectNote(_ note: Note) {
+        renamingNoteId = nil
+
+        // Don't re-open the already-active note
+        guard note.id != state.note.id else { return }
+
+        state.openNoteValue = note
+        state.openNoteAnimationRequested = true
     }
 
     // MARK: - Rename
@@ -187,13 +204,17 @@ struct NoteSidebar: View {
 
 private struct NoteSidebarCard: View {
     let note: Note
-    let isSelected: Bool
+    /// Whether this note is loaded in the editor (the "active" note).
+    let isActive: Bool
+    /// Whether the mouse is hovering over this card.
+    let isHovered: Bool
     let isRenaming: Bool
     @Binding var renameText: String
     let onSelect: () -> Void
     let onDoubleClick: () -> Void
     let onCommitRename: () -> Void
     let onCancelRename: () -> Void
+    let onHover: (Bool) -> Void
 
     @Environment(\.colorScheme) private var colorScheme
     @FocusState private var isRenameFocused: Bool
@@ -206,10 +227,31 @@ private struct NoteSidebarCard: View {
             : Color(nsColor: .textBackgroundColor)
     }
 
-    private var cardBorderColor: Color {
-        colorScheme == .dark
-            ? Color.white.opacity(0.07)
-            : Color.black.opacity(0.08)
+    /// Border color:
+    /// - Hovered → subtle grey
+    /// - Active → muted accent (always marks "loaded in editor")
+    /// - Default → ultra-subtle structural border
+    private var borderStroke: some ShapeStyle {
+        if isActive {
+            return AnyShapeStyle(Color.accentColor.opacity(0.45))
+        }
+        if isHovered {
+            return AnyShapeStyle(
+                colorScheme == .dark
+                    ? Color.white.opacity(0.20)
+                    : Color.black.opacity(0.18)
+            )
+        }
+        return AnyShapeStyle(
+            colorScheme == .dark
+                ? Color.white.opacity(0.07)
+                : Color.black.opacity(0.08)
+        )
+    }
+
+    private var borderWidth: CGFloat {
+        if isHovered || isActive { return 1.5 }
+        return 0.5
     }
 
     var body: some View {
@@ -299,13 +341,9 @@ private struct NoteSidebarCard: View {
         }
         .overlay {
             RoundedRectangle(cornerRadius: cardCornerRadius, style: .continuous)
-                .strokeBorder(cardBorderColor, lineWidth: 0.5)
-        }
-        .overlay {
-            if isSelected {
-                RoundedRectangle(cornerRadius: cardCornerRadius, style: .continuous)
-                    .stroke(Color.accentColor, lineWidth: 2)
-            }
+                .strokeBorder(borderStroke, lineWidth: borderWidth)
+                .animation(.easeInOut(duration: 0.12), value: isHovered)
+                .animation(.easeInOut(duration: 0.12), value: isActive)
         }
         .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius, style: .continuous))
         .shadow(
@@ -318,6 +356,9 @@ private struct NoteSidebarCard: View {
         .simultaneousGesture(
             TapGesture(count: 2).onEnded { onDoubleClick() }
         )
+        .onHover { hovering in
+            onHover(hovering)
+        }
         .onChange(of: isRenaming) { _, renaming in
             if renaming {
                 Task { @MainActor in

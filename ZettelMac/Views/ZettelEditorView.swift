@@ -123,6 +123,15 @@ struct ZettelEditorView: View {
     private func animateNewNote() {
         guard animationPhase == .none else { return }
 
+        // If the current note was never saved (no content, never persisted), skip the
+        // swoosh animation — just swap content and update the title instantly.
+        let noteIsEmpty = state.persistedFilename == nil &&
+            state.note.content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        if noteIsEmpty {
+            state.clearToNewNote()
+            ZettelWindowManager.shared.updateWindowTitle(id: state.windowId)
+            return
+        }
         // Capture the top card as a plain NSImage *before* we start animating.
         let snap = editorHandle.snapshot()
 
@@ -480,24 +489,30 @@ struct ZettelEditorView: View {
                             .strokeBorder(cardBorderColor, lineWidth: 0.5)
                     }
                     .mask {
-                        // Fade out the left edge as the snapshot approaches the window edge.
-                        let fadeWidth: CGFloat = 36
-                        let snapshotLeft = editorGlobalFrame.minX + slideOffset
-                        let overlap = max(0, windowGlobalMinX - snapshotLeft)
+                        // Fade out the left edge as the snapshot approaches the window edge,
+                        // but only when the sidebar is expanded (otherwise the editor fills
+                        // the full window width and no left-edge clipping is needed).
+                        if columnVisibility != .detailOnly {
+                            let fadeWidth: CGFloat = 36
+                            let snapshotLeft = editorGlobalFrame.minX + slideOffset
+                            let overlap = max(0, windowGlobalMinX - snapshotLeft)
 
-                        HStack(spacing: 0) {
-                            if overlap > 0 {
-                                Color.clear.frame(width: overlap)
+                            HStack(spacing: 0) {
+                                if overlap > 0 {
+                                    Color.clear.frame(width: overlap)
+                                }
+                                LinearGradient(
+                                    colors: [.clear, .black],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                                .frame(width: fadeWidth)
+                                Color.black
                             }
-                            LinearGradient(
-                                colors: [.clear, .black],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                            .frame(width: fadeWidth)
+                            .frame(maxHeight: .infinity)
+                        } else {
                             Color.black
                         }
-                        .frame(maxHeight: .infinity)
                     }
                     .offset(x: slideOffset)
                     .allowsHitTesting(false)
