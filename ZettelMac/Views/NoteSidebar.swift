@@ -104,6 +104,10 @@ struct NoteSidebar: View {
                                     hoveredNoteId = isHovering ? note.id : nil
                                 }
                             )
+                            .transition(.asymmetric(
+                                insertion: .scale(scale: 0.85).combined(with: .opacity),
+                                removal: .scale(scale: 0.85).combined(with: .opacity)
+                            ))
                             .contextMenu {
                                     Button { beginRename(note) } label: {
                                         Label(
@@ -139,6 +143,7 @@ struct NoteSidebar: View {
                                 }
                             }
                     }
+                    .animation(.smooth(duration: 0.3), value: filteredNotes.map(\.id))
                     .padding(.horizontal, 10)
                     .padding(.top, 4)
                     .padding(.bottom, 8)
@@ -198,7 +203,9 @@ struct NoteSidebar: View {
 
     private func deleteNote(_ note: Note) {
         let isActiveNote = note.id == state.note.id
-        MacNoteStore.shared.deleteNote(note)
+        withAnimation(.smooth(duration: 0.3)) {
+            MacNoteStore.shared.deleteNote(note)
+        }
         if isActiveNote { state.resetToNewNote() }
     }
 }
@@ -253,7 +260,8 @@ private struct NoteSidebarCard: View {
     }
 
     private var borderWidth: CGFloat {
-        if isHovered || isActive { return 1.5 }
+        if isActive { return 2.0 }
+        if isHovered { return 1.5 }
         return 0.5
     }
 

@@ -113,6 +113,12 @@ struct MacTextEditor: NSViewRepresentable {
         scrollView.hasHorizontalScroller = false
         scrollView.drawsBackground = false
         scrollView.backgroundColor = .clear
+        // Ensure the scroll view clips its content at the AppKit layer level.
+        // SwiftUI's .clipShape() does not reliably mask the NSTextView's own
+        // CALayer rendering, which causes ghost-text artifacts at the card edges.
+        scrollView.wantsLayer = true
+        scrollView.layer?.masksToBounds = true
+        scrollView.layer?.cornerRadius = 18
         // Prevent macOS from automatically adding a top content inset for the
         // window toolbar. Without this, the document view is shifted down and
         // the last lines of text fall below the clip view, making them
