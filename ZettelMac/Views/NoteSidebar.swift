@@ -15,6 +15,7 @@ import ZettelKit
 struct NoteSidebar: View {
     @Bindable var state: ZettelWindowState
 
+    @Environment(\.colorScheme) private var colorScheme
     @State private var searchText = ""
     @State private var renamingNoteId: String? = nil
     @State private var renameText: String = ""
@@ -150,6 +151,8 @@ struct NoteSidebar: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(colorScheme == .dark ? Color(red: 0.20, green: 0.20, blue: 0.21) : .clear)
         .task {
             state.saveNow()
             await store.loadAllNotes()
