@@ -37,6 +37,9 @@
 "settings.storage_description" = "Notizen werden als .md-Dateien im ausgewählten Ordner gespeichert.";
 "settings.app_name" = "Zettel";
 "settings.app_description" = "Minimalistischer Notizblock für iOS";
+"settings.zettel_macos" = "Zettel für Mac";
+"settings.zettel_macos_description" = "Auch auf macOS verfügbar";
+"settings.source_code" = "Quellcode";
 "settings.developer" = "Entwickler";
 "settings.developer_description" = "Folge mir auf X ^^";
 "settings.view_on_github" = "Auf GitHub anzeigen";
@@ -50,6 +53,11 @@
 "settings.default_title_template_info_title" = "Vorlagenformat";
 "settings.default_title_template_info_message" = "Verfügbare Platzhalter:\n%@\n\nLasse das Feld leer, um die Standardvorlage zurückzusetzen (%@).";
 "settings.default_title_template_info_button" = "Vorlagenformat-Hilfe anzeigen";
+"settings.general_tab" = "Allgemein";
+"settings.template_tokens" = "Vorlagen-Tokens";
+"settings.change_ellipsis" = "Ändern…";
+"settings.version_format" = "Version %@ (%@)";
+"settings.app_description_mac" = "Eine minimalistische Notiz-App.";
 "dictation.settings.section_title" = "Diktieren";
 "dictation.settings.section_description" = "Wähle die Sprache für Sprachaufnahmen.";
 "dictation.locale.download.in_progress" = "Wird geladen…";
@@ -78,9 +86,33 @@
 "overview.additional_tags" = "+%d";
 
 // Suche
-"search.prompt" = "Notizen suchen";
+"search.prompt" = "Zettel suchen";
 "search.no_results_title" = "Keine Ergebnisse für \"%@\"";
 "search.no_results_message" = "Versuche ein anderes Suchwort oder entferne Filter.";
+
+// macOS Notizauswahl
+"mac.picker.filter_placeholder" = "Zettel durchsuchen";
+"mac.picker.empty" = "Noch keine Notizen";
+"mac.picker.no_results" = "Keine passenden Notizen";
+"mac.picker.delete_note" = "Notiz löschen";
+"mac.picker.pin_note" = "Angeheftet öffnen";
+"mac.picker.section_header" = "Notizen";
+"mac.picker.characters" = "Zeichen";
+"mac.picker.current" = "Aktuell";
+"mac.picker.opened" = "Geöffnet";
+"mac.title_editor.placeholder" = "Notiztitel";
+
+// macOS Seitenleiste
+"mac.sidebar.search_prompt" = "Zettel durchsuchen";
+"mac.sidebar.empty" = "Keine Notizen";
+"mac.sidebar.no_results" = "Keine Ergebnisse";
+"mac.sidebar.empty_description" = "Einfach losschreiben";
+"mac.sidebar.no_results_description" = "Keine Notizen entsprechen deiner Suche";
+"mac.sidebar.rename" = "Umbenennen";
+"mac.sidebar.open_new_window" = "In neuem Fenster öffnen";
+"mac.sidebar.show_in_finder" = "Im Finder anzeigen";
+"mac.sidebar.delete" = "Löschen";
+"mac.sidebar.icloud" = "In iCloud verfügbar";
 
 // Tags
 "tags.hashtag_prefix" = "#%@";
@@ -146,9 +178,13 @@
 "debug.localization_test.force_update" = "Lokalisierung aktualisieren erzwingen";
 "debug.localization_test.current_id" = "Aktuelle Language Update ID: %@";
 
-// Welcome Note
+// Welcome Note (iOS)
 "welcome.title" = "Willkommen bei Zettel";
-"welcome.content" = "In Zettel kannst du:\n\n* nach ← wischen um alle Zettel zu sehen\n* nach → wischen um einen neuen Zettel zu erstellen\n\nViel Spaß beim #notieren ^^";
+"welcome.content" = "👋 Willkommen bei Zettel\n\nIn Zettel kannst du:\n\n* nach ← wischen um alle Zettel zu sehen\n* nach → wischen um einen neuen Zettel zu erstellen\n\nPS: Zettel ist auch für macOS verfügbar\n\nViel Spaß beim #notieren ^^";
+
+// Welcome Note (macOS)
+"mac.welcome.title" = "Willkommen bei Zettel";
+"mac.welcome.content" = "👋 Willkommen bei Zettel\n\nKurzanleitung:\n\n* ⌘O - Zettel durchsuchen\n* ⌘P - Fenster anheften\n* ⌘N - neuer Zettel (⇧⌘N in neuem Fenster)\n\nEinfach losschreiben - deine Notizen speichern automatisch.\n\nPS: Zettel ist auch für iOS verfügbar\n\nViel Spaß beim #notieren ^^";
 
 // Changelog
 "changelog.whats_new" = "Was ist neu";

@@ -8,7 +8,7 @@ final class DefaultTitleTemplateManager {
     private let storageKey = "defaultTitleTemplate"
     
     /// Built-in fallback template used when no custom template is set.
-    let fallbackTemplate = "{{time}} – {{date}}"
+    let fallbackTemplate = "{{shortDate}} – {{time}}"
     
     private init() {}
     

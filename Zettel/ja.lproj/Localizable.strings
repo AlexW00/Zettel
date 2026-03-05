@@ -37,6 +37,9 @@
 "settings.storage_description" = "ノートは選択したフォルダに.mdファイルとして保存されます。";
 "settings.app_name" = "Zettel";
 "settings.app_description" = "iOS用ミニマリストメモ帳";
+"settings.zettel_macos" = "Zettel for Mac";
+"settings.zettel_macos_description" = "macOSでも利用可能";
+"settings.source_code" = "ソースコード";
 "settings.developer" = "開発者";
 "settings.developer_description" = "X（旧Twitter）でフォローしてください ^^";
 "settings.view_on_github" = "GitHubで表示";
@@ -50,6 +53,11 @@
 "settings.default_title_template_info_title" = "テンプレート形式";
 "settings.default_title_template_info_message" = "使用できるプレースホルダ:\n%@\n\nフィールドを空にすると既定のテンプレート (%@) に戻ります。";
 "settings.default_title_template_info_button" = "テンプレート形式の説明を表示";
+"settings.general_tab" = "一般";
+"settings.template_tokens" = "テンプレートトークン";
+"settings.change_ellipsis" = "変更…";
+"settings.version_format" = "バージョン %@ (%@)";
+"settings.app_description_mac" = "ミニマルなメモアプリです。";
 "dictation.settings.section_title" = "音声入力";
 "dictation.settings.section_description" = "音声入力に使用する言語を選択します。";
 "dictation.locale.download.in_progress" = "ダウンロード中…";
@@ -78,9 +86,33 @@
 "overview.additional_tags" = "+%d";
 
 // Search
-"search.prompt" = "ノートを検索";
+"search.prompt" = "Zettelを検索";
 "search.no_results_title" = "\"%@\" の結果は見つかりませんでした";
 "search.no_results_message" = "別のキーワードを試すかフィルターを解除してください。";
+
+// macOS ノートピッカー
+"mac.picker.filter_placeholder" = "Zettelを検索";
+"mac.picker.empty" = "ノートがまだありません";
+"mac.picker.no_results" = "一致するノートがありません";
+"mac.picker.delete_note" = "ノートを削除";
+"mac.picker.pin_note" = "ピン留めして開く";
+"mac.picker.section_header" = "ノート";
+"mac.picker.characters" = "文字";
+"mac.picker.current" = "現在";
+"mac.picker.opened" = "最終更新";
+"mac.title_editor.placeholder" = "ノートのタイトル";
+
+// macOS サイドバー
+"mac.sidebar.search_prompt" = "Zettelを検索";
+"mac.sidebar.empty" = "ノートなし";
+"mac.sidebar.no_results" = "結果なし";
+"mac.sidebar.empty_description" = "入力して始めましょう";
+"mac.sidebar.no_results_description" = "検索に一致するノートがありません";
+"mac.sidebar.rename" = "名前を変更";
+"mac.sidebar.open_new_window" = "新しいウィンドウで開く";
+"mac.sidebar.show_in_finder" = "Finderで表示";
+"mac.sidebar.delete" = "削除";
+"mac.sidebar.icloud" = "iCloudで利用可能";
 
 // Tags
 "tags.hashtag_prefix" = "#%@";
@@ -146,9 +178,13 @@
 "debug.localization_test.force_update" = "ローカライズ更新を強制";
 "debug.localization_test.current_id" = "現在のLanguage Update ID: %@";
 
-// Welcome Note
+// Welcome Note (iOS)
 "welcome.title" = "Zettelへようこそ";
-"welcome.content" = "Zettelでは:\n\n* ←スワイプでメモを表示\n* →スワイプで新しいメモを作成\n\n楽しい#メモライフを ^^";
+"welcome.content" = "👋 Zettelへようこそ\n\nZettelでは:\n\n* ←スワイプでメモを表示\n* →スワイプで新しいメモを作成\n\nPS: ZettelはmacOSでも利用できます\n\n楽しい#メモライフを ^^";
+
+// Welcome Note (macOS)
+"mac.welcome.title" = "Zettelへようこそ";
+"mac.welcome.content" = "👋 Zettelへようこそ\n\n基本操作:\n\n* ⌘O - メモを一覧表示\n* ⌘P - ウィンドウを最前面に固定\n* ⌘N - 新しいメモ（⇧⌘Nで新しいウィンドウ）\n\n入力するだけ - メモは自動保存されます。\n\nPS: ZettelはiOSでも利用できます\n\n楽しい#メモライフを ^^";
 
 // Changelog
 "changelog.whats_new" = "新機能";

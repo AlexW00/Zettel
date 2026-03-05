@@ -37,6 +37,9 @@
 "settings.storage_description" = "Notes are saved as .md files in the selected folder.";
 "settings.app_name" = "Zettel";
 "settings.app_description" = "Minimalist notepad for iOS";
+"settings.zettel_macos" = "Zettel for Mac";
+"settings.zettel_macos_description" = "Also available on macOS";
+"settings.source_code" = "Source Code";
 "settings.developer" = "Developer";
 "settings.developer_description" = "Follow me on X ^^";
 "settings.view_on_github" = "View on GitHub";
@@ -50,6 +53,11 @@
 "settings.default_title_template_info_title" = "Template Format";
 "settings.default_title_template_info_message" = "Available placeholders:\n%@\n\nLeave the field empty to reset to the default template (%@).";
 "settings.default_title_template_info_button" = "Show template format help";
+"settings.general_tab" = "General";
+"settings.template_tokens" = "Template Tokens";
+"settings.change_ellipsis" = "Change…";
+"settings.version_format" = "Version %@ (%@)";
+"settings.app_description_mac" = "A minimal note-taking app.";
 "dictation.settings.section_title" = "Dictation";
 "dictation.settings.section_description" = "Select which speech language to use when dictating notes.";
 "dictation.locale.download.in_progress" = "Downloading…";
@@ -81,9 +89,33 @@
 "overview.additional_tags" = "+%d";
 
 // Search
-"search.prompt" = "Search notes";
+"search.prompt" = "Search Zettel";
 "search.no_results_title" = "No results for \"%@\"";
 "search.no_results_message" = "Try a different keyword or clear filters.";
+
+// macOS Note Picker
+"mac.picker.filter_placeholder" = "Search Zettel";
+"mac.picker.empty" = "No notes yet";
+"mac.picker.no_results" = "No matching notes";
+"mac.picker.delete_note" = "Delete Note";
+"mac.picker.pin_note" = "Open Pinned";
+"mac.picker.section_header" = "Notes";
+"mac.picker.characters" = "Characters";
+"mac.picker.current" = "Current";
+"mac.picker.opened" = "Opened";
+"mac.title_editor.placeholder" = "Note title";
+
+// macOS Sidebar
+"mac.sidebar.search_prompt" = "Search Zettel";
+"mac.sidebar.empty" = "No Notes";
+"mac.sidebar.no_results" = "No Results";
+"mac.sidebar.empty_description" = "Type to get started";
+"mac.sidebar.no_results_description" = "No notes matching your search";
+"mac.sidebar.rename" = "Rename";
+"mac.sidebar.open_new_window" = "Open in New Window";
+"mac.sidebar.show_in_finder" = "Show in Finder";
+"mac.sidebar.delete" = "Delete";
+"mac.sidebar.icloud" = "Available in iCloud";
 
 // Tags
 "tags.hashtag_prefix" = "#%@";
@@ -149,9 +181,13 @@
 "debug.localization_test.force_update" = "Force Localization Update";
 "debug.localization_test.current_id" = "Current Language Update ID: %@";
 
-// Welcome Note
+// Welcome Note (iOS)
 "welcome.title" = "Welcome to Zettel";
-"welcome.content" = "In Zettel, you can:\n\n* swipe ← to see your notes\n* swipe → to create a new note\n\nHappy #notetaking ^^";
+"welcome.content" = "👋 Welcome to Zettel\n\nIn Zettel, you can:\n\n* swipe ← to see your notes\n* swipe → to create a new note\n\nPS: Zettel is also available for macOS\n\nHappy #notetaking ^^";
+
+// Welcome Note (macOS)
+"mac.welcome.title" = "Welcome to Zettel";
+"mac.welcome.content" = "👋 Welcome to Zettel\n\nQuick start:\n\n* ⌘O - browse your notes\n* ⌘P - pin window on top\n* ⌘N - new note (⇧⌘N for a new window)\n\nJust start typing - your notes auto-save.\n\nPS: Zettel is also available for iOS\n\nHappy #notetaking ^^";
 
 // Changelog
 "changelog.whats_new" = "What's New";

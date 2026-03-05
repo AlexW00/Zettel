@@ -42,7 +42,9 @@ You can download Zettel on the App Store for free: [link](https://apps.apple.com
 ## Building
 
 ```bash
-./build.sh
+./build.sh ios
+# or
+./build.sh macos
 ```
 
 Or run the configuration and build separately:
@@ -55,7 +57,7 @@ Or run the configuration and build separately:
 ## Development Scripts
 
 - `./configure.sh` - Configure Xcode project with environment variables
-- `./build.sh` - Configure and build the project
+- `./build.sh <ios|macos>` - Configure and build for the specified platform
 - `./clean.sh` - Reset project configuration to clean state
 
 ## Contributing

@@ -40,7 +40,7 @@ Thank you for your interest in contributing to Zettel! This guide will help you 
 4. **Configure and Build**
    ```bash
    ./configure.sh  # Sets up Xcode project with your credentials
-   ./build.sh      # Builds and runs tests
+   ./build.sh ios  # Builds for iOS (or use ./build.sh macos)
    ```
 
 ## Project Structure
@@ -56,18 +56,15 @@ Thank you for your interest in contributing to Zettel! This guide will help you 
 ## Development Workflow
 
 1. **Before Making Changes**
-
    - Create a new branch: `git checkout -b feature/your-feature`
-   - Make sure the project builds: `./build.sh`
+   - Make sure the project builds: `./build.sh ios` (or `./build.sh macos`)
 
 2. **Making Changes**
-
    - Follow Swift coding conventions
    - Add tests for new functionality
    - Test on iOS Simulator
 
 3. **Before Committing**
-
    - Run `./clean.sh` to remove personal configuration
    - Ensure `.env` is not committed (it's in `.gitignore`)
    - Test that the project builds from a clean state
@@ -86,7 +83,7 @@ Never commit your personal `.env` file as it contains sensitive information.
 ## Scripts
 
 - `./configure.sh` - Configure Xcode project with environment variables
-- `./build.sh` - Build and test the project
+- `./build.sh <ios|macos>` - Build the project for the selected platform
 - `./clean.sh` - Reset project to clean state (removes personal config)
 
 ## Troubleshooting
