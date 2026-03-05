@@ -2,23 +2,36 @@
 
 ![English  en  _ iPhone - 6 9_ Display - 5 _ 2025-07-22_17-56-17-imageonline co-merged](https://github.com/user-attachments/assets/355c20f2-6bb8-4438-8d44-2498fc7ce37c)
 
+Zettel is a minimal, distraction-free note-taking app available for **iPhone and Mac**.
+
 ## App Store
 
-You can download Zettel on the App Store for free: [link](https://apps.apple.com/de/app/zettel-quick-notes/id6748525244)
+You can download Zettel for free:
+
+- **iOS / macOS**: [App Store](https://apps.apple.com/de/app/zettel-quick-notes/id6748525244)
 
 ## Features
 
 - **Single-note focus**: Edit one note at a time with full-screen interface
-- **Tear gesture**: Archive notes by swiping right anywhere on the note (mimics tearing paper)
 - **Tag system**: Organize notes with hashtags (#tag)
 - **Markdown support**: Plain text with markdown formatting
-- **File integration**: Works with iOS Files app, exports/imports .md files
 - **Themes**: Light, dark, and system theme options
+- **Tear gesture** _(iOS)_: Archive notes by swiping right anywhere on the note (mimics tearing paper)
+- **File integration** _(iOS)_: Works with iOS Files app
 
 ## Requirements
 
+### iOS
+
 - iOS 17.6+
 - iPhone only (portrait orientation)
+
+### macOS
+
+- macOS 15+
+
+### Development
+
 - Xcode 16.4+
 - Apple Developer Account (for device deployment)
 
@@ -66,12 +79,22 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and contribution gu
 
 ## Usage
 
+### iOS
+
 - **Create**: Start typing to create a new note
 - **Archive**: Swipe from left/right edge and drag across screen to archive
 - **View notes**: Swipe left to see archived notes
 - **Tags**: Use #hashtags in your notes for organization
 - **Settings**: Tap gear icon to change theme and storage location
 
+### macOS
+
+- **Create**: Start typing to create a new note
+- **Archive**: Use the toolbar button or keyboard shortcut to archive a note
+- **View notes**: Browse archived notes from the sidebar
+- **Tags**: Use #hashtags in your notes for organization
+- **Settings**: Open Preferences to change theme and storage location
+
 ## Storage
 
-Notes are stored as Markdown files in your selected directory (default: Documents/). You can change the storage location in Settings and access files through the iOS Files app.
+Notes are stored as Markdown files in your selected directory (default: Documents/). You can change the storage location in Settings and access files through Finder (macOS) or the Files app (iOS).

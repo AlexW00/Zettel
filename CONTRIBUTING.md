@@ -45,12 +45,17 @@ Thank you for your interest in contributing to Zettel! This guide will help you 
 
 ## Project Structure
 
-- `Zettel/` - Main app source code
+- `Zettel/` - iOS app source code
   - `Views/` - SwiftUI views
   - `Models/` - Data models
   - `Stores/` - State management
   - `Constants/` - App constants
   - `Extensions/` - Swift extensions
+- `ZettelMac/` - macOS app source code
+  - `Views/` - macOS-specific SwiftUI views
+  - `Stores/` - macOS state management
+  - `Extensions/` - macOS-specific extensions
+- `Packages/ZettelKit/` - Shared Swift package (models, stores, utilities used by both targets)
 - `ZettelTests/` - Unit tests
 
 ## Development Workflow
@@ -62,7 +67,8 @@ Thank you for your interest in contributing to Zettel! This guide will help you 
 2. **Making Changes**
    - Follow Swift coding conventions
    - Add tests for new functionality
-   - Test on iOS Simulator
+   - Shared logic should live in `Packages/ZettelKit/` so both iOS and macOS targets benefit
+   - Test on iOS Simulator and macOS
 
 3. **Before Committing**
    - Run `./clean.sh` to remove personal configuration
