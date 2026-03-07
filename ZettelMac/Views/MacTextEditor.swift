@@ -67,8 +67,14 @@ struct MacTextEditor: NSViewRepresentable {
     func makeNSView(context: Context) -> NSScrollView {
         let textContainer = NSTextContainer()
         textContainer.widthTracksTextView = true
+        textContainer.heightTracksTextView = false
+        textContainer.containerSize = NSSize(
+            width: 0,
+            height: CGFloat.greatestFiniteMagnitude
+        )
 
         let layoutManager = NSLayoutManager()
+        layoutManager.allowsNonContiguousLayout = false
         layoutManager.addTextContainer(textContainer)
 
         let textStorage = NSTextStorage()
@@ -147,6 +153,7 @@ struct MacTextEditor: NSViewRepresentable {
         if textView.font?.pointSize != targetFontSize {
             textView.font = .systemFont(ofSize: targetFontSize, weight: .regular)
             context.coordinator.applyHashtagHighlighting(to: textView)
+            (textView as? InteractionTextView)?.refreshRendering()
         }
 
         // Only update if the text actually differs (avoid cursor jumping)
@@ -155,6 +162,7 @@ struct MacTextEditor: NSViewRepresentable {
             textView.string = text
             textView.selectedRanges = selectedRanges
             context.coordinator.applyHashtagHighlighting(to: textView)
+            (textView as? InteractionTextView)?.refreshRendering()
         }
     }
 
@@ -166,6 +174,11 @@ struct MacTextEditor: NSViewRepresentable {
 
     final class InteractionTextView: NSTextView {
         var onInteraction: (() -> Void)?
+
+        override func didChangeText() {
+            super.didChangeText()
+            refreshRendering()
+        }
 
         override func insertNewline(_ sender: Any?) {
             handleNewlineForAutoBullet()
@@ -266,6 +279,24 @@ struct MacTextEditor: NSViewRepresentable {
 
             // Insert the newline and next bullet
             super.insertText(nextBulletPrefix, replacementRange: selectedRange())
+        }
+
+        func refreshRendering() {
+            guard let layoutManager = layoutManager,
+                  let textContainer = textContainer else {
+                needsDisplay = true
+                enclosingScrollView?.contentView.needsDisplay = true
+                return
+            }
+
+            let fullRange = NSRange(location: 0, length: (string as NSString).length)
+            layoutManager.invalidateLayout(forCharacterRange: fullRange, actualCharacterRange: nil)
+            layoutManager.invalidateDisplay(forCharacterRange: fullRange)
+            layoutManager.ensureLayout(for: textContainer)
+
+            needsDisplay = true
+            enclosingScrollView?.contentView.needsDisplay = true
+            enclosingScrollView?.reflectScrolledClipView(enclosingScrollView?.contentView ?? NSClipView())
         }
     }
 

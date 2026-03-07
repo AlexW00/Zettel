@@ -15,12 +15,14 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
     private let hasLaunchedBeforeKey = "hasLaunchedBefore"
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Show welcome note on first launch, otherwise create empty window
+        // Show welcome note on first launch, otherwise restore the last opened note
         if isFirstLaunch() {
             let welcomeNote = createWelcomeNote()
             ZettelWindowManager.shared.createWindow(note: welcomeNote)
         } else {
-            ZettelWindowManager.shared.createWindow()
+            // Try to restore the last opened note
+            let restoredNote = restoreLastOpenedNote()
+            ZettelWindowManager.shared.createWindow(note: restoredNote)
         }
     }
 
@@ -52,10 +54,20 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
         return Note(title: title, content: content)
     }
 
+    /// Restores the last opened note from the previous session.
+    private func restoreLastOpenedNote() -> Note? {
+        guard let filename = UserDefaults.standard.string(forKey: "lastOpenedNoteFilename") else {
+            return nil
+        }
+        let fileURL = MacNoteStore.shared.storageDirectory.appendingPathComponent(filename)
+        return MacNoteStore.shared.loadNoteFromFile(fileURL)
+    }
+
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         if !flag {
-            // No visible windows — create a new one
-            ZettelWindowManager.shared.createWindow()
+            // No visible windows — restore last note or create a new one
+            let restoredNote = restoreLastOpenedNote()
+            ZettelWindowManager.shared.createWindow(note: restoredNote)
         } else {
             // Focus all existing windows
             ZettelWindowManager.shared.focusAllWindows()

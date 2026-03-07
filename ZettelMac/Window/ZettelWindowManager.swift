@@ -38,10 +38,11 @@ final class ZettelWindowManager: NSObject, ObservableObject {
     @discardableResult
     func createWindow(note: Note? = nil) -> UUID {
         let windowId = UUID()
+        let isPrimaryWindow = windowStates.isEmpty
         let state = ZettelWindowState(windowId: windowId, note: note)
         windowStates[windowId] = state
 
-        let panel = createPanel(windowId: windowId, state: state)
+        let panel = createPanel(windowId: windowId, state: state, isPrimaryWindow: isPrimaryWindow)
         nsWindows[windowId] = panel
 
         showWindow(id: windowId)
@@ -128,6 +129,10 @@ final class ZettelWindowManager: NSObject, ObservableObject {
 
     func saveAllWindows() {
         for (_, state) in windowStates {
+            // Persist the last opened note filename before saving
+            if let filename = state.persistedFilename {
+                UserDefaults.standard.set(filename, forKey: "lastOpenedNoteFilename")
+            }
             state.saveNow()
         }
     }
@@ -164,6 +169,10 @@ final class ZettelWindowManager: NSObject, ObservableObject {
     }
 
     fileprivate func windowWillClose(id: UUID) {
+        // Persist the last opened note filename so it can be restored on next launch
+        if let filename = windowStates[id]?.persistedFilename {
+            UserDefaults.standard.set(filename, forKey: "lastOpenedNoteFilename")
+        }
         windowStates[id]?.cleanup()
         windowStates.removeValue(forKey: id)
         windowDelegates.removeValue(forKey: id)
@@ -177,7 +186,7 @@ final class ZettelWindowManager: NSObject, ObservableObject {
 
     // MARK: - Private: Panel Construction
 
-    private func createPanel(windowId: UUID, state: ZettelWindowState) -> ZettelPanel {
+    private func createPanel(windowId: UUID, state: ZettelWindowState, isPrimaryWindow: Bool = false) -> ZettelPanel {
         // Build SwiftUI view
         let editorView = ZettelEditorView(state: state)
         let hostingController = NSHostingController(rootView: editorView)
@@ -218,6 +227,10 @@ final class ZettelWindowManager: NSObject, ObservableObject {
         panel.title = title
 
         panel.contentViewController = hostingController
+
+        // Persist and restore window frame across launches
+        let autosaveName = isPrimaryWindow ? "ZettelPrimaryWindow" : "ZettelWindow-\\(windowId)"
+        panel.setFrameAutosaveName(autosaveName)
 
         // Delegate
         let delegate = ZettelWindowDelegate(windowId: windowId, manager: self)

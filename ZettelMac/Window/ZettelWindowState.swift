@@ -241,6 +241,7 @@ final class ZettelWindowState {
         if let savedFilename {
             persistedFilename = savedFilename
             isDirty = false
+            UserDefaults.standard.set(savedFilename, forKey: "lastOpenedNoteFilename")
         }
     }
 
@@ -276,6 +277,7 @@ final class ZettelWindowState {
                     self.note = downloaded
                     self.persistedFilename = downloaded.filename
                     self.isDirty = false
+                    UserDefaults.standard.set(downloaded.filename, forKey: "lastOpenedNoteFilename")
                 } catch {
                     var errorNote = newNote
                     errorNote.content = "Failed to load from iCloud: \(error.localizedDescription)"
@@ -288,6 +290,7 @@ final class ZettelWindowState {
             note = newNote
             persistedFilename = newNote.filename
             isDirty = false
+            UserDefaults.standard.set(newNote.filename, forKey: "lastOpenedNoteFilename")
         }
     }
 
