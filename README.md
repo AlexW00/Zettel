@@ -1,6 +1,10 @@
 # Zettel
 
-![English  en  _ iPhone - 6 9_ Display - 5 _ 2025-07-22_17-56-17-imageonline co-merged](https://github.com/user-attachments/assets/355c20f2-6bb8-4438-8d44-2498fc7ce37c)
+<p align="center">
+  <img src="res/sc1.png" alt="Zettel screenshot 1" width="32%">
+  <img src="res/sc2.png" alt="Zettel screenshot 2" width="32%">
+  <img src="res/sc3.png" alt="Zettel screenshot 3" width="32%">
+</p>
 
 Zettel is a minimal, distraction-free note-taking app available for **iPhone and Mac**.
 
