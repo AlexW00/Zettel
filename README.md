@@ -1,7 +1,7 @@
 # Zettel
 
 <p align="center">
-  <img src="res/sc1.png" alt="Zettel screenshot 1" width="32%">
+  <img src="res/sc1_1.png" alt="Zettel screenshot 1" width="32%">
   <img src="res/sc2.png" alt="Zettel screenshot 2" width="32%">
   <img src="res/sc3.png" alt="Zettel screenshot 3" width="32%">
 </p>
