@@ -14,6 +14,7 @@ import ZettelKit
 struct MacSettingsView: View {
     @State private var selectedAppearance: MacAppearanceOption = .fromUserDefaults()
     @Environment(\.openURL) private var openURL
+    @State private var hideDockIcon = MacDockIconPreference.isEnabled()
     @State private var fontSize: Double = UserDefaults.standard.double(forKey: "editorFontSize").clamped(to: 12...28, fallback: 15)
     @State private var titleTemplate: String = DefaultTitleTemplateManager.shared.savedTemplate() ?? ""
     @State private var storageDirectory: URL = MacNoteStore.shared.storageDirectory
@@ -33,12 +34,16 @@ struct MacSettingsView: View {
         .frame(width: 450, height: 380)
         .onAppear {
             selectedAppearance = .fromUserDefaults()
+            hideDockIcon = MacDockIconPreference.isEnabled()
             fontSize = UserDefaults.standard.double(forKey: "editorFontSize").clamped(to: 12...28, fallback: 15)
             titleTemplate = DefaultTitleTemplateManager.shared.savedTemplate() ?? ""
             storageDirectory = MacNoteStore.shared.storageDirectory
         }
         .onChange(of: selectedAppearance) { _, newValue in
             newValue.apply()
+        }
+        .onChange(of: hideDockIcon) { _, newValue in
+            MacDockIconPreference.apply(isEnabled: newValue)
         }
         .onChange(of: fontSize) { _, newValue in
             UserDefaults.standard.set(newValue, forKey: "editorFontSize")
@@ -57,6 +62,13 @@ struct MacSettingsView: View {
                 ForEach(MacAppearanceOption.allCases) { option in
                     Text(option.displayName).tag(option)
                 }
+            }
+
+            Section {
+                Toggle("Hide Dock Icon", isOn: $hideDockIcon)
+                Text("Keeps Zettel out of the Dock while it’s open.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             // Font Size
@@ -291,6 +303,27 @@ enum MacAppearanceOption: String, CaseIterable, Identifiable {
     static func fromUserDefaults() -> Self {
         let savedValue = UserDefaults.standard.string(forKey: storageKey) ?? Self.system.rawValue
         return Self(rawValue: savedValue) ?? .system
+    }
+}
+
+enum MacDockIconPreference {
+    static let storageKey = "hideDockIcon"
+    static let defaultValue = true
+
+    static func isEnabled() -> Bool {
+        UserDefaults.standard.register(defaults: [storageKey: defaultValue])
+        return UserDefaults.standard.bool(forKey: storageKey)
+    }
+
+    @MainActor
+    static func apply(isEnabled: Bool) {
+        UserDefaults.standard.set(isEnabled, forKey: storageKey)
+        NSApplication.shared.setActivationPolicy(isEnabled ? .accessory : .regular)
+    }
+
+    @MainActor
+    static func applyCurrentValue() {
+        NSApplication.shared.setActivationPolicy(isEnabled() ? .accessory : .regular)
     }
 }
 

@@ -76,7 +76,7 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return false // Keep app alive even with no windows (like TextEdit)
+        return MacDockIconPreference.isEnabled()
     }
 
     func applicationWillTerminate(_ notification: Notification) {

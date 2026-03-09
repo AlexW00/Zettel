@@ -16,6 +16,7 @@ struct ZettelMacApp: App {
 
     init() {
         MacAppearanceOption.fromUserDefaults().apply()
+        MacDockIconPreference.applyCurrentValue()
     }
 
     var body: some Scene {
