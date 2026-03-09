@@ -64,35 +64,36 @@ public final class TagParser: Sendable {
         return allTags
     }
     
-    /// Finds the position of hashtag being typed at cursor position
+    /// Finds the position of hashtag being typed at a UTF-16 cursor position
     public static func findHashtagAtPosition(_ text: String, position: Int) -> (range: NSRange, partial: String)? {
-        guard position <= text.count else { return nil }
+        let cursorRange = NSRange(location: position, length: 0)
+        guard position >= 0,
+              let textRangeToCursor = Range(cursorRange, in: text) else { return nil }
         
-        let textUpToCursor = String(text.prefix(position))
+        let cursorIndex = textRangeToCursor.lowerBound
+        let textUpToCursor = text[..<cursorIndex]
         
         if let lastHashIndex = textUpToCursor.lastIndex(of: "#") {
-            if lastHashIndex > textUpToCursor.startIndex {
-                let previousIndex = textUpToCursor.index(before: lastHashIndex)
-                guard textUpToCursor[previousIndex].isWhitespace else {
+            if lastHashIndex > text.startIndex {
+                let previousIndex = text.index(before: lastHashIndex)
+                guard text[previousIndex].isWhitespace else {
                     return nil
                 }
             }
             
-            let hashPosition = textUpToCursor.distance(from: textUpToCursor.startIndex, to: lastHashIndex)
-            
-            let textAfterHash = String(textUpToCursor.suffix(from: textUpToCursor.index(after: lastHashIndex)))
+            let textAfterHash = text[text.index(after: lastHashIndex)..<cursorIndex]
             if textAfterHash.contains(where: { $0.isWhitespace }) {
                 return nil
             }
             
-            let partialTag = textAfterHash
+            let partialTag = String(textAfterHash)
             
             let validCharacterSet = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_"))
             if partialTag.rangeOfCharacter(from: validCharacterSet.inverted) != nil {
                 return nil
             }
             
-            let range = NSRange(location: hashPosition, length: partialTag.count + 1)
+            let range = NSRange(lastHashIndex..<cursorIndex, in: text)
             return (range: range, partial: partialTag)
         }
         
