@@ -37,8 +37,8 @@ struct SelectableTextField: UIViewRepresentable {
         textField.backgroundColor = .clear
         textField.contentVerticalAlignment = .center
         textField.autocapitalizationType = autocapitalizationType
-        textField.autocorrectionType = .no
-        textField.spellCheckingType = .no
+        textField.autocorrectionType = .default
+        textField.spellCheckingType = .default
         textField.placeholder = placeholder
         textField.clearButtonMode = .never
         textField.setContentHuggingPriority(.required, for: .vertical)

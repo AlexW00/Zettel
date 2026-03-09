@@ -65,9 +65,9 @@ struct TagTextViewRepresentable: UIViewRepresentable {
         textView.noteStore = noteStore
         textView.highlightedRange = highlightRange
         
-        // Disable autocorrect and other automatic text features
-        textView.autocorrectionType = .no
-        textView.spellCheckingType = .no
+        // Keep keyboard writing assistance enabled for note editing
+        textView.autocorrectionType = .default
+        textView.spellCheckingType = .default
         textView.autocapitalizationType = .sentences
         textView.smartQuotesType = .no
         textView.smartDashesType = .no
@@ -178,9 +178,9 @@ class TagTextView: UITextView {
     }
     
     private func setupTextInputTraits() {
-        // Disable autocorrect and other automatic text features
-        autocorrectionType = .no
-        spellCheckingType = .no
+        // Keep keyboard writing assistance enabled for note editing
+        autocorrectionType = .default
+        spellCheckingType = .default
         autocapitalizationType = .sentences
         smartQuotesType = .no
         smartDashesType = .no
