@@ -15,6 +15,7 @@ struct MacSettingsView: View {
     @State private var selectedAppearance: MacAppearanceOption = .fromUserDefaults()
     @Environment(\.openURL) private var openURL
     @State private var hideDockIcon = MacDockIconPreference.isHidden()
+    @State private var isSyncingDockIconToggle = false
     @State private var fontSize: Double = UserDefaults.standard.double(forKey: "editorFontSize").clamped(to: 12...28, fallback: 15)
     @State private var titleTemplate: String = DefaultTitleTemplateManager.shared.savedTemplate() ?? ""
     @State private var storageDirectory: URL = MacNoteStore.shared.storageDirectory
@@ -43,7 +44,16 @@ struct MacSettingsView: View {
             newValue.apply()
         }
         .onChange(of: hideDockIcon) { _, newValue in
-            MacDockIconPreference.apply(isHidden: newValue)
+            guard !isSyncingDockIconToggle else {
+                isSyncingDockIconToggle = false
+                return
+            }
+
+            guard MacDockIconPreference.apply(isHidden: newValue) else {
+                isSyncingDockIconToggle = true
+                hideDockIcon = MacDockIconPreference.isHidden()
+                return
+            }
         }
         .onChange(of: fontSize) { _, newValue in
             UserDefaults.standard.set(newValue, forKey: "editorFontSize")
@@ -65,8 +75,21 @@ struct MacSettingsView: View {
             }
 
             Section {
-                Toggle("Hide Dock Icon", isOn: $hideDockIcon)
-                Text("Keeps Zettel out of the Dock and quits when all windows close.")
+                Toggle(
+                    String(
+                        localized: "settings.hideDockIcon.title",
+                        defaultValue: "Hide Dock Icon",
+                        comment: "Settings toggle label to hide the app's Dock icon on macOS."
+                    ),
+                    isOn: $hideDockIcon
+                )
+                Text(
+                    String(
+                        localized: "settings.hideDockIcon.explanation",
+                        defaultValue: "Keeps Zettel out of the Dock and quits when all windows close.",
+                        comment: "Explanation shown under the 'Hide Dock Icon' toggle in macOS Settings."
+                    )
+                )
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -303,32 +326,6 @@ enum MacAppearanceOption: String, CaseIterable, Identifiable {
     static func fromUserDefaults() -> Self {
         let savedValue = UserDefaults.standard.string(forKey: storageKey) ?? Self.system.rawValue
         return Self(rawValue: savedValue) ?? .system
-    }
-}
-
-enum MacDockIconPreference {
-    static let storageKey = "hideDockIcon"
-    static let defaultIsHidden = true
-
-    static func registerDefault() {
-        UserDefaults.standard.register(defaults: [storageKey: defaultIsHidden])
-    }
-
-    static func isHidden() -> Bool {
-        return UserDefaults.standard.bool(forKey: storageKey)
-    }
-
-    @MainActor
-    static func apply(isHidden: Bool) {
-        let activationPolicy: NSApplication.ActivationPolicy = isHidden ? .accessory : .regular
-        guard NSApplication.shared.setActivationPolicy(activationPolicy) else { return }
-        UserDefaults.standard.set(isHidden, forKey: storageKey)
-    }
-
-    @MainActor
-    static func applyCurrentValue() {
-        let activationPolicy: NSApplication.ActivationPolicy = isHidden() ? .accessory : .regular
-        _ = NSApplication.shared.setActivationPolicy(activationPolicy)
     }
 }
 
