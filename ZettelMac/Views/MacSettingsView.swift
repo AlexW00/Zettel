@@ -14,6 +14,8 @@ import ZettelKit
 struct MacSettingsView: View {
     @State private var selectedAppearance: MacAppearanceOption = .fromUserDefaults()
     @Environment(\.openURL) private var openURL
+    @State private var hideDockIcon = MacDockIconPreference.isHidden()
+    @State private var isSyncingDockIconToggle = false
     @State private var fontSize: Double = UserDefaults.standard.double(forKey: "editorFontSize").clamped(to: 12...28, fallback: 15)
     @State private var titleTemplate: String = DefaultTitleTemplateManager.shared.savedTemplate() ?? ""
     @State private var storageDirectory: URL = MacNoteStore.shared.storageDirectory
@@ -33,12 +35,25 @@ struct MacSettingsView: View {
         .frame(width: 450, height: 380)
         .onAppear {
             selectedAppearance = .fromUserDefaults()
+            hideDockIcon = MacDockIconPreference.isHidden()
             fontSize = UserDefaults.standard.double(forKey: "editorFontSize").clamped(to: 12...28, fallback: 15)
             titleTemplate = DefaultTitleTemplateManager.shared.savedTemplate() ?? ""
             storageDirectory = MacNoteStore.shared.storageDirectory
         }
         .onChange(of: selectedAppearance) { _, newValue in
             newValue.apply()
+        }
+        .onChange(of: hideDockIcon) { _, newValue in
+            guard !isSyncingDockIconToggle else {
+                isSyncingDockIconToggle = false
+                return
+            }
+
+            guard MacDockIconPreference.apply(isHidden: newValue) else {
+                isSyncingDockIconToggle = true
+                hideDockIcon = MacDockIconPreference.isHidden()
+                return
+            }
         }
         .onChange(of: fontSize) { _, newValue in
             UserDefaults.standard.set(newValue, forKey: "editorFontSize")
@@ -57,6 +72,26 @@ struct MacSettingsView: View {
                 ForEach(MacAppearanceOption.allCases) { option in
                     Text(option.displayName).tag(option)
                 }
+            }
+
+            Section {
+                Toggle(
+                    String(
+                        localized: "settings.hideDockIcon.title",
+                        defaultValue: "Hide Dock Icon",
+                        comment: "Settings toggle label to hide the app's Dock icon on macOS."
+                    ),
+                    isOn: $hideDockIcon
+                )
+                Text(
+                    String(
+                        localized: "settings.hideDockIcon.explanation",
+                        defaultValue: "Keeps Zettel out of the Dock and quits when all windows close.",
+                        comment: "Explanation shown under the 'Hide Dock Icon' toggle in macOS Settings."
+                    )
+                )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             // Font Size

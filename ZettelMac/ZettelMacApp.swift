@@ -15,7 +15,9 @@ struct ZettelMacApp: App {
     @NSApplicationDelegateAdaptor(ZettelAppDelegate.self) var appDelegate
 
     init() {
+        MacDockIconPreference.registerDefault()
         MacAppearanceOption.fromUserDefaults().apply()
+        MacDockIconPreference.applyCurrentValue()
     }
 
     var body: some Scene {
