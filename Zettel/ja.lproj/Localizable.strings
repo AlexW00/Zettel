@@ -87,6 +87,7 @@
 
 // Search
 "search.prompt" = "Zettelを検索";
+"search.popular_tags" = "よく使うタグ";
 "search.no_results_title" = "\"%@\" の結果は見つかりませんでした";
 "search.no_results_message" = "別のキーワードを試すかフィルターを解除してください。";
 
