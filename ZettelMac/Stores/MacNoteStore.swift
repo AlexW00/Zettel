@@ -44,6 +44,10 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
     // MARK: - Private
 
     private let storageDirectoryBookmarkKey = "macStorageDirectoryBookmark"
+    private let userDefaults: UserDefaults
+    private let notificationCenter: NotificationCenter
+    private let repository: NoteFileRepository
+    private let monitorsFileSystem: Bool
     private var refreshDebounceTask: Task<Void, Never>?
     private var activationObserver: (any NSObjectProtocol)?
 
@@ -66,32 +70,47 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
 
     // MARK: - Init
 
-    private override init() {
+    init(
+        storageDirectory: URL? = nil,
+        userDefaults: UserDefaults = .standard,
+        notificationCenter: NotificationCenter = .default,
+        repository: NoteFileRepository = NoteFileRepository(),
+        shouldStartMonitoringFileSystem: Bool = true,
+        observeActivation: Bool = true
+    ) {
         // Default to ~/Documents/Zettel
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
             ?? FileManager.default.temporaryDirectory
-        self.storageDirectory = documentsURL.appendingPathComponent("Zettel", isDirectory: true)
+        self.storageDirectory = storageDirectory ?? documentsURL.appendingPathComponent("Zettel", isDirectory: true)
+        self.userDefaults = userDefaults
+        self.notificationCenter = notificationCenter
+        self.repository = repository
+        self.monitorsFileSystem = shouldStartMonitoringFileSystem
 
         super.init()
 
         // Restore saved directory
-        if let restored = restoreStorageDirectory() {
+        if storageDirectory == nil, let restored = restoreStorageDirectory() {
             self.storageDirectory = restored
         }
 
         self._presentedItemURL = self.storageDirectory
         createStorageDirectoryIfNeeded()
-        startMonitoringFileSystem()
+        if shouldStartMonitoringFileSystem {
+            startMonitoringFileSystem()
+        }
 
         // Reload notes when app regains focus (catches external file changes)
-        activationObserver = NotificationCenter.default.addObserver(
-            forName: NSApplication.didBecomeActiveNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self else { return }
-            Task { @MainActor in
-                await self.loadAllNotes()
+        if observeActivation {
+            activationObserver = notificationCenter.addObserver(
+                forName: NSApplication.didBecomeActiveNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self else { return }
+                Task { @MainActor in
+                    await self.loadAllNotes()
+                }
             }
         }
     }
@@ -113,6 +132,7 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
         }
 
         let directory = storageDirectory
+        let repository = self.repository
         let notes = await Task.detached { () -> [Note] in
             let fm = FileManager.default
             guard let files = try? fm.contentsOfDirectory(
@@ -149,8 +169,7 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
                 }
 
                 if isDownloaded {
-                    if let content = try? String(contentsOf: url, encoding: .utf8) {
-                        let note = Note.fromSerializedContent(content, fallbackTitle: title, createdAt: createdAt, modifiedAt: modifiedAt)
+                    if let note = repository.loadNote(from: url) {
                         result.append(note)
                     }
                 } else {
@@ -188,44 +207,37 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
             }
         }
 
-        // Delete old file if renamed
-        if let original = originalFilename, original != note.filename {
-            let oldURL = storageDirectory.appendingPathComponent(original)
-            try? FileManager.default.removeItem(at: oldURL)
-        }
-
-        // Determine the filename: reuse original if not renamed, otherwise generate unique
-        let targetFilename: String
-        if let original = originalFilename, original == note.filename {
-            targetFilename = original
-        } else {
-            targetFilename = note.generateUniqueFilename(in: storageDirectory)
-        }
-
-        // Track old file deletion as "ours" to suppress echo from file monitor
-        if let original = originalFilename, original != note.filename {
-            recentlyOwnedFiles[original] = Date()
-        }
-
-        let fileURL = storageDirectory.appendingPathComponent(targetFilename)
-
         do {
-            try note.serializedContent.write(to: fileURL, atomically: true, encoding: .utf8)
+            let saveResult = try repository.save(note, in: storageDirectory, originalFilename: originalFilename)
 
             // Track this save to suppress echo from file monitor
-            recentlyOwnedFiles[targetFilename] = Date()
-
-            // Update allNotes cache
-            if let index = allNotes.firstIndex(where: { $0.id == targetFilename || $0.id == (originalFilename ?? "") }) {
-                var updated = note
-                // Ensure the note's title matches the filename we used
-                allNotes[index] = updated
-            } else {
-                // New note — add to front
-                allNotes.insert(note, at: 0)
+            recentlyOwnedFiles[saveResult.filename] = Date()
+            if let originalFilename, originalFilename != saveResult.filename {
+                recentlyOwnedFiles[originalFilename] = Date()
             }
 
-            return targetFilename
+            // Update allNotes cache
+            if let index = allNotes.firstIndex(where: { $0.id == (originalFilename ?? note.id) || $0.id == saveResult.filename }) {
+                allNotes[index] = Note.fromSerializedContent(
+                    note.serializedContent,
+                    fallbackTitle: saveResult.fileURL.deletingPathExtension().lastPathComponent,
+                    createdAt: allNotes[index].createdAt,
+                    modifiedAt: note.modifiedAt
+                )
+            } else {
+                // New note — add to front
+                let persistedNote = Note.fromSerializedContent(
+                    note.serializedContent,
+                    fallbackTitle: saveResult.fileURL.deletingPathExtension().lastPathComponent,
+                    createdAt: note.createdAt,
+                    modifiedAt: note.modifiedAt
+                )
+                allNotes.insert(persistedNote, at: 0)
+            }
+
+            allNotes.sort { $0.modifiedAt > $1.modifiedAt }
+
+            return saveResult.filename
         } catch {
             print("[MacNoteStore] Error saving note: \(error)")
             return nil
@@ -241,16 +253,13 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
             }
         }
 
-        let fileURL = storageDirectory.appendingPathComponent(note.filename)
         recentlyOwnedFiles[note.filename] = Date()
-        try? FileManager.default.trashItem(at: fileURL, resultingItemURL: nil)
+        try? repository.delete(note, from: storageDirectory)
         allNotes.removeAll { $0.id == note.id }
     }
 
     /// Load a single note from a file URL
     public func loadNoteFromFile(_ url: URL) -> Note? {
-        guard url.pathExtension == "md" else { return nil }
-
         let didStartAccessing = url.startAccessingSecurityScopedResource()
         defer {
             if didStartAccessing {
@@ -258,13 +267,7 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
             }
         }
 
-        guard let content = try? String(contentsOf: url, encoding: .utf8) else { return nil }
-        let title = url.deletingPathExtension().lastPathComponent
-        let resourceValues = try? url.resourceValues(forKeys: [.contentModificationDateKey, .creationDateKey])
-        let modifiedAt = resourceValues?.contentModificationDate ?? Date()
-        let createdAt = resourceValues?.creationDate ?? modifiedAt
-
-        return Note.fromSerializedContent(content, fallbackTitle: title, createdAt: createdAt, modifiedAt: modifiedAt)
+        return repository.loadNote(from: url)
     }
 
     // MARK: - Cloud File Support
@@ -372,7 +375,9 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
 
     /// Update storage directory
     public func updateStorageDirectory(_ newDirectory: URL) {
-        stopMonitoringFileSystem()
+        if monitorsFileSystem {
+            stopMonitoringFileSystem()
+        }
 
         let didStartAccessing = newDirectory.startAccessingSecurityScopedResource()
         defer {
@@ -385,10 +390,12 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
         self.storageDirectory = newDirectory
         self._presentedItemURL = newDirectory
         createStorageDirectoryIfNeeded()
-        startMonitoringFileSystem()
+        if monitorsFileSystem {
+            startMonitoringFileSystem()
+        }
 
         // Notify all windows so they can flush saves and reset
-        NotificationCenter.default.post(name: .storageDirectoryDidChange, object: nil)
+        notificationCenter.post(name: .storageDirectoryDidChange, object: nil)
 
         Task {
             await loadAllNotes()
@@ -471,7 +478,7 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
             let title = url.deletingPathExtension().lastPathComponent
 
             await MainActor.run {
-                NotificationCenter.default.post(
+                self.notificationCenter.post(
                     name: .noteFileDidChangeOnDisk,
                     object: nil,
                     userInfo: [
@@ -495,7 +502,7 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
                 storageDirectory.stopAccessingSecurityScopedResource()
             }
         }
-        try? FileManager.default.createDirectory(at: storageDirectory, withIntermediateDirectories: true)
+        try? repository.createDirectoryIfNeeded(at: storageDirectory)
     }
 
     private func saveStorageDirectoryBookmark(_ url: URL) {
@@ -505,14 +512,14 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
-            UserDefaults.standard.set(bookmark, forKey: storageDirectoryBookmarkKey)
+            userDefaults.set(bookmark, forKey: storageDirectoryBookmarkKey)
         } catch {
             print("[MacNoteStore] Error saving bookmark: \(error)")
         }
     }
 
     private func restoreStorageDirectory() -> URL? {
-        guard let bookmark = UserDefaults.standard.data(forKey: storageDirectoryBookmarkKey) else {
+        guard let bookmark = userDefaults.data(forKey: storageDirectoryBookmarkKey) else {
             return nil
         }
 

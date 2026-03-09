@@ -68,6 +68,21 @@ Or run the configuration and build separately:
 - `./build.sh <ios|macos>` - Configure and build for the specified platform
 - `./clean.sh` - Reset project configuration to clean state
 
+## Testing
+
+Run package tests without app configuration:
+
+```bash
+swift test --package-path Packages/ZettelKit
+```
+
+Run app-target tests after `./configure.sh`:
+
+```bash
+xcodebuild test -project Zettel.xcodeproj -scheme ZettelMac -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
+xcodebuild test -project Zettel.xcodeproj -scheme Zettel -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and contribution guidelines.

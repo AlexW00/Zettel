@@ -1,0 +1,60 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Configure project for CI
+        run: |
+          cp .env.example .env
+          {
+            echo "DEVELOPMENT_TEAM=AAAAAAAAAA"
+            echo "BUNDLE_IDENTIFIER=com.example.zettel"
+            echo "CONFIGURATION=Debug"
+          } >> .env
+          ./configure.sh
+
+      - name: Run ZettelKit package tests
+        run: swift test --package-path Packages/ZettelKit
+
+      - name: Run macOS tests
+        run: xcodebuild test -project Zettel.xcodeproj -scheme ZettelMac -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
+
+      - name: Resolve iOS simulator destination
+        id: ios-destination
+        shell: bash
+        run: |
+          set -euo pipefail
+          destination=$(xcrun simctl list devices available --json | ruby -rjson -e '
+            devices = JSON.parse(STDIN.read).fetch("devices")
+            candidates = devices.flat_map do |runtime, entries|
+              next [] unless runtime.include?("iOS")
+              entries.select { |entry| entry["isAvailable"] && entry["name"].include?("iPhone") }
+                    .map { |entry| [runtime, entry["udid"]] }
+            end
+            abort("No available iOS simulator found") if candidates.empty?
+
+            best = candidates.max_by do |runtime, _|
+              version = runtime[/iOS[- ](.+)$/, 1].to_s
+              version.split(/[-.]/).map(&:to_i)
+            end
+
+            puts "platform=iOS Simulator,id=#{best[1]}"
+          ')
+          echo "value=$destination" >> "$GITHUB_OUTPUT"
+
+      - name: Run iOS tests
+        run: xcodebuild test -project Zettel.xcodeproj -scheme Zettel -destination '${{ steps.ios-destination.outputs.value }}' CODE_SIGNING_ALLOWED=NO

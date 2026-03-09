@@ -18,5 +18,9 @@ let package = Package(
         .target(
             name: "ZettelKit"
         ),
+        .testTarget(
+            name: "ZettelKitTests",
+            dependencies: ["ZettelKit"]
+        ),
     ]
 )

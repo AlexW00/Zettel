@@ -8,28 +8,32 @@
 import Foundation
 
 /// Manages the template used for generating default note titles.
-public final class DefaultTitleTemplateManager: Sendable {
+public final class DefaultTitleTemplateManager: @unchecked Sendable {
     public static let shared = DefaultTitleTemplateManager()
     
     /// Storage key for persisting the custom template.
-    private let storageKey = "defaultTitleTemplate"
+    private let storageKey: String
+    private let userDefaults: UserDefaults
     
     /// Built-in fallback template used when no custom template is set.
     public let fallbackTemplate = "{{shortDate}} – {{time}}"
     
-    private init() {}
+    public init(userDefaults: UserDefaults = .standard, storageKey: String = "defaultTitleTemplate") {
+        self.userDefaults = userDefaults
+        self.storageKey = storageKey
+    }
     
     /// Returns the saved custom template if present.
     public func savedTemplate() -> String? {
-        UserDefaults.standard.string(forKey: storageKey)
+        userDefaults.string(forKey: storageKey)
     }
     
     /// Persists a new template.
     public func saveTemplate(_ template: String) {
         if template.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            UserDefaults.standard.removeObject(forKey: storageKey)
+            userDefaults.removeObject(forKey: storageKey)
         } else {
-            UserDefaults.standard.set(template, forKey: storageKey)
+            userDefaults.set(template, forKey: storageKey)
         }
     }
     
