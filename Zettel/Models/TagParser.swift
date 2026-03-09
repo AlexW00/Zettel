@@ -19,8 +19,8 @@ import Foundation
  * - Normalizing hashtag formatting
  */
 class TagParser {
-    /// Regex pattern to match hashtags: #followed by alphanumeric characters and underscores
-    private static let hashtagPattern = #"#[a-zA-Z0-9_]+(?![a-zA-Z0-9_])"#
+    /// Regex pattern to match standalone hashtags: start of text or whitespace, then # and valid tag characters
+    private static let hashtagPattern = #"(?<!\S)#[a-zA-Z0-9_]+(?![a-zA-Z0-9_])"#
     private static let regex = try! NSRegularExpression(pattern: hashtagPattern, options: [])
     
     // Internal accessors for performance (used by TagStore)
@@ -86,6 +86,13 @@ class TagParser {
         
         // Find the last # before the cursor
         if let lastHashIndex = textUpToCursor.lastIndex(of: "#") {
+            if lastHashIndex > textUpToCursor.startIndex {
+                let previousIndex = textUpToCursor.index(before: lastHashIndex)
+                guard textUpToCursor[previousIndex].isWhitespace else {
+                    return nil
+                }
+            }
+            
             let hashPosition = textUpToCursor.distance(from: textUpToCursor.startIndex, to: lastHashIndex)
             
             // Check if there's any whitespace between # and cursor

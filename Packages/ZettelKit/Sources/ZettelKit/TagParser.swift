@@ -9,8 +9,8 @@ import Foundation
 
 /// Utility class for parsing hashtags from note content.
 public final class TagParser: Sendable {
-    /// Regex pattern to match hashtags: #followed by alphanumeric characters and underscores
-    private static let hashtagPattern = #"#[a-zA-Z0-9_]+(?![a-zA-Z0-9_])"#
+    /// Regex pattern to match standalone hashtags: start of text or whitespace, then # and valid tag characters
+    private static let hashtagPattern = #"(?<!\S)#[a-zA-Z0-9_]+(?![a-zA-Z0-9_])"#
     // nonisolated(unsafe) because NSRegularExpression is inherently thread-safe for matching
     nonisolated(unsafe) private static let regex = try! NSRegularExpression(pattern: hashtagPattern, options: [])
     
@@ -71,6 +71,13 @@ public final class TagParser: Sendable {
         let textUpToCursor = String(text.prefix(position))
         
         if let lastHashIndex = textUpToCursor.lastIndex(of: "#") {
+            if lastHashIndex > textUpToCursor.startIndex {
+                let previousIndex = textUpToCursor.index(before: lastHashIndex)
+                guard textUpToCursor[previousIndex].isWhitespace else {
+                    return nil
+                }
+            }
+            
             let hashPosition = textUpToCursor.distance(from: textUpToCursor.startIndex, to: lastHashIndex)
             
             let textAfterHash = String(textUpToCursor.suffix(from: textUpToCursor.index(after: lastHashIndex)))
