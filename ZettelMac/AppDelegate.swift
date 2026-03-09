@@ -76,7 +76,7 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return MacDockIconPreference.isEnabled()
+        return MacDockIconPreference.isHidden()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
