@@ -56,7 +56,8 @@ Thank you for your interest in contributing to Zettel! This guide will help you 
   - `Stores/` - macOS state management
   - `Extensions/` - macOS-specific extensions
 - `Packages/ZettelKit/` - Shared Swift package (models, stores, utilities used by both targets)
-- `ZettelTests/` - Unit tests
+- `ZettelTests/` - iOS logic tests
+- `ZettelMacTests/` - macOS logic tests
 
 ## Development Workflow
 
@@ -73,6 +74,10 @@ Thank you for your interest in contributing to Zettel! This guide will help you 
 3. **Before Committing**
    - Run `./clean.sh` to remove personal configuration
    - Ensure `.env` is not committed (it's in `.gitignore`)
+   - Run the logic test suites:
+     - `swift test --package-path Packages/ZettelKit`
+     - `xcodebuild test -project Zettel.xcodeproj -scheme ZettelMac -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO`
+     - `xcodebuild test -project Zettel.xcodeproj -scheme Zettel -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO`
    - Test that the project builds from a clean state
 
 4. **Submitting Changes**

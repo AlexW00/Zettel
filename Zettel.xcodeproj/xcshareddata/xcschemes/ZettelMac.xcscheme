@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9ED9FFA12E09D9AF0000CCCD"
+               BlueprintIdentifier = "265B02BCDB83B24B5A542C82"
                BuildableName = "Zettel.app"
-               BlueprintName = "Zettel"
+               BlueprintName = "ZettelMac"
                ReferencedContainer = "container:Zettel.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -35,9 +35,9 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5721BCFF635BFA1E6D16E75B"
-               BuildableName = "ZettelTests.xctest"
-               BlueprintName = "ZettelTests"
+               BlueprintIdentifier = "DBED6DC964BC5D8EEEC07C91"
+               BuildableName = "ZettelMacTests.xctest"
+               BlueprintName = "ZettelMacTests"
                ReferencedContainer = "container:Zettel.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -57,18 +57,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9ED9FFA12E09D9AF0000CCCD"
+            BlueprintIdentifier = "265B02BCDB83B24B5A542C82"
             BuildableName = "Zettel.app"
-            BlueprintName = "Zettel"
+            BlueprintName = "ZettelMac"
             ReferencedContainer = "container:Zettel.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = ""
-            isEnabled = "NO">
-         </CommandLineArgument>
-      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -80,9 +74,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9ED9FFA12E09D9AF0000CCCD"
+            BlueprintIdentifier = "265B02BCDB83B24B5A542C82"
             BuildableName = "Zettel.app"
-            BlueprintName = "Zettel"
+            BlueprintName = "ZettelMac"
             ReferencedContainer = "container:Zettel.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

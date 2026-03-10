@@ -7,14 +7,46 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03CDF98D51107E82E94104B3 /* ChangelogManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D872536B4F6FA5D1E2CEE29 /* ChangelogManagerTests.swift */; };
+		148510A4C0DC13EB4BE9AC24 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDAF2D88C05FC49730ED0CDB /* Foundation.framework */; };
 		4BB769962F47B4CF006075B1 /* ZettelKit in Frameworks */ = {isa = PBXBuildFile; productRef = CE005BFF1E3238B24810B42F /* ZettelKit */; };
+		809BD1513AA4665F2AC46FFE /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F309D07E5A49AC8761C88C52 /* TestSupport.swift */; };
+		8E42EF412618517CBD344751 /* TagStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC5151DCC46A06CCD09405F /* TagStoreTests.swift */; };
 		9919791BA4923E353DD9080A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8723AD39BFE4641DD8E888B /* Cocoa.framework */; };
+		DAD38E88283E89BE88723785 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8723AD39BFE4641DD8E888B /* Cocoa.framework */; };
+		DEC01668F08939B9D297C06B /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB3357F551F5276B36DEB28 /* TestSupport.swift */; };
+		F10B49A8D770B34019B496AD /* MacNoteStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBD6C4343891DDA08EDE158 /* MacNoteStoreTests.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		7AC9C9522C8D3AEC03D130D9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9ED9FF9A2E09D9AF0000CCCD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 265B02BCDB83B24B5A542C82;
+			remoteInfo = ZettelMac;
+		};
+		F2324013284DE73D54E9B51A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9ED9FF9A2E09D9AF0000CCCD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9ED9FFA12E09D9AF0000CCCD;
+			remoteInfo = Zettel;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		2CBD6C4343891DDA08EDE158 /* MacNoteStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacNoteStoreTests.swift; sourceTree = "<group>"; };
+		2D872536B4F6FA5D1E2CEE29 /* ChangelogManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChangelogManagerTests.swift; sourceTree = "<group>"; };
+		3B7956C0137F2709CB35D08E /* ZettelMacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZettelMacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3EB3357F551F5276B36DEB28 /* TestSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
 		9ED9FFA22E09D9AF0000CCCD /* Zettel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zettel.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A87D8161A3FAF30630573C10 /* ZettelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZettelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBC5151DCC46A06CCD09405F /* TagStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagStoreTests.swift; sourceTree = "<group>"; };
 		D9F21730384B9E76C684CD7C /* Zettel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zettel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8723AD39BFE4641DD8E888B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		EDAF2D88C05FC49730ED0CDB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		F309D07E5A49AC8761C88C52 /* TestSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -54,6 +86,22 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0A14333874C9B908CE93ED86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAD38E88283E89BE88723785 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4107B0D0040EEF96F37B852D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				148510A4C0DC13EB4BE9AC24 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9ED9FF9F2E09D9AF0000CCCD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -77,8 +125,27 @@
 			isa = PBXGroup;
 			children = (
 				BE8241F5BFF75FB72B00DF9C /* OS X */,
+				652921153D0F6C21661F2589 /* iOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		17BDE4ADE8F893CC0675B4E0 /* ZettelMacTests */ = {
+			isa = PBXGroup;
+			children = (
+				2CBD6C4343891DDA08EDE158 /* MacNoteStoreTests.swift */,
+				3EB3357F551F5276B36DEB28 /* TestSupport.swift */,
+			);
+			name = ZettelMacTests;
+			path = ZettelMacTests;
+			sourceTree = "<group>";
+		};
+		652921153D0F6C21661F2589 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				EDAF2D88C05FC49730ED0CDB /* Foundation.framework */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 		9ED9FF992E09D9AF0000CCCD = {
@@ -88,6 +155,8 @@
 				9ED9FFA32E09D9AF0000CCCD /* Products */,
 				06822BD6ADE5F429388586F1 /* Frameworks */,
 				8A9AF4FCF7B1540CF84A1C9E /* ZettelMac */,
+				A393DF4F986D23CBCFD794B8 /* ZettelTests */,
+				17BDE4ADE8F893CC0675B4E0 /* ZettelMacTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -96,8 +165,21 @@
 			children = (
 				9ED9FFA22E09D9AF0000CCCD /* Zettel.app */,
 				D9F21730384B9E76C684CD7C /* Zettel.app */,
+				A87D8161A3FAF30630573C10 /* ZettelTests.xctest */,
+				3B7956C0137F2709CB35D08E /* ZettelMacTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A393DF4F986D23CBCFD794B8 /* ZettelTests */ = {
+			isa = PBXGroup;
+			children = (
+				2D872536B4F6FA5D1E2CEE29 /* ChangelogManagerTests.swift */,
+				BBC5151DCC46A06CCD09405F /* TagStoreTests.swift */,
+				F309D07E5A49AC8761C88C52 /* TestSupport.swift */,
+			);
+			name = ZettelTests;
+			path = ZettelTests;
 			sourceTree = "<group>";
 		};
 		BE8241F5BFF75FB72B00DF9C /* OS X */ = {
@@ -134,6 +216,24 @@
 			productReference = D9F21730384B9E76C684CD7C /* Zettel.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5721BCFF635BFA1E6D16E75B /* ZettelTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3BA09DB0DCCEB51C6985BB84 /* Build configuration list for PBXNativeTarget "ZettelTests" */;
+			buildPhases = (
+				87A6662729F4DB46FCF5AC63 /* Sources */,
+				4107B0D0040EEF96F37B852D /* Frameworks */,
+				EC0C5EF4CC01D600AB8F7A81 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B85DD79C95DA06D89E0E611A /* PBXTargetDependency */,
+			);
+			name = ZettelTests;
+			productName = ZettelTests;
+			productReference = A87D8161A3FAF30630573C10 /* ZettelTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		9ED9FFA12E09D9AF0000CCCD /* Zettel */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9ED9FFC32E09D9B00000CCCD /* Build configuration list for PBXNativeTarget "Zettel" */;
@@ -153,6 +253,24 @@
 			productName = Zettel;
 			productReference = 9ED9FFA22E09D9AF0000CCCD /* Zettel.app */;
 			productType = "com.apple.product-type.application";
+		};
+		DBED6DC964BC5D8EEEC07C91 /* ZettelMacTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BECB03737512764A029D8105 /* Build configuration list for PBXNativeTarget "ZettelMacTests" */;
+			buildPhases = (
+				4C765E02DE1308C3F665A51C /* Sources */,
+				0A14333874C9B908CE93ED86 /* Frameworks */,
+				D2D0403DAB04699C9AAAEFD5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				436254CD7BC6A1FF29336301 /* PBXTargetDependency */,
+			);
+			name = ZettelMacTests;
+			productName = ZettelMacTests;
+			productReference = 3B7956C0137F2709CB35D08E /* ZettelMacTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -181,7 +299,7 @@
 			mainGroup = 9ED9FF992E09D9AF0000CCCD;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "Packages/ZettelKit" */,
+				ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "ZettelKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9ED9FFA32E09D9AF0000CCCD /* Products */;
@@ -190,6 +308,8 @@
 			targets = (
 				9ED9FFA12E09D9AF0000CCCD /* Zettel */,
 				265B02BCDB83B24B5A542C82 /* ZettelMac */,
+				5721BCFF635BFA1E6D16E75B /* ZettelTests */,
+				DBED6DC964BC5D8EEEC07C91 /* ZettelMacTests */,
 			);
 		};
 /* End PBXProject section */
@@ -209,9 +329,42 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D2D0403DAB04699C9AAAEFD5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC0C5EF4CC01D600AB8F7A81 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4C765E02DE1308C3F665A51C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F10B49A8D770B34019B496AD /* MacNoteStoreTests.swift in Sources */,
+				DEC01668F08939B9D297C06B /* TestSupport.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		87A6662729F4DB46FCF5AC63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03CDF98D51107E82E94104B3 /* ChangelogManagerTests.swift in Sources */,
+				8E42EF412618517CBD344751 /* TagStoreTests.swift in Sources */,
+				809BD1513AA4665F2AC46FFE /* TestSupport.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		94DC1E8B6B2B827D63D000BF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -228,7 +381,61 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		436254CD7BC6A1FF29336301 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ZettelMac;
+			target = 265B02BCDB83B24B5A542C82 /* ZettelMac */;
+			targetProxy = 7AC9C9522C8D3AEC03D130D9 /* PBXContainerItemProxy */;
+		};
+		B85DD79C95DA06D89E0E611A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Zettel;
+			target = 9ED9FFA12E09D9AF0000CCCD /* Zettel */;
+			targetProxy = F2324013284DE73D54E9B51A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		075534F03DEE17553EF01CA5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_MODULE_NAME = ZettelTests;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Zettel.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Zettel";
+				TEST_TARGET_NAME = Zettel;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0BD3CEBB77859E3F2425AFBC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_MODULE_NAME = ZettelMacTests;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Zettel.app/Contents/MacOS/Zettel";
+				TEST_TARGET_NAME = ZettelMac;
+			};
+			name = Debug;
+		};
 		0D26BE367FBB2E38A1CE731A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -473,6 +680,26 @@
 			};
 			name = Release;
 		};
+		BFB278E67755389FDF6CEEE9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_MODULE_NAME = ZettelTests;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Zettel.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Zettel";
+				TEST_TARGET_NAME = Zettel;
+			};
+			name = Debug;
+		};
 		F639BA6086368C486748005C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -509,9 +736,36 @@
 			};
 			name = Release;
 		};
+		FF4F4C2F23FA2C2FA40FC06A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_MODULE_NAME = ZettelMacTests;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Zettel.app/Contents/MacOS/Zettel";
+				TEST_TARGET_NAME = ZettelMac;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3BA09DB0DCCEB51C6985BB84 /* Build configuration list for PBXNativeTarget "ZettelTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				075534F03DEE17553EF01CA5 /* Release */,
+				BFB278E67755389FDF6CEEE9 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		3D9218D505FF7FC14C2F04F0 /* Build configuration list for PBXNativeTarget "ZettelMac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -539,10 +793,19 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		BECB03737512764A029D8105 /* Build configuration list for PBXNativeTarget "ZettelMacTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF4F4C2F23FA2C2FA40FC06A /* Release */,
+				0BD3CEBB77859E3F2425AFBC /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "Packages/ZettelKit" */ = {
+		ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "ZettelKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/ZettelKit;
 		};
@@ -551,7 +814,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		CE005BFF1E3238B24810B42F /* ZettelKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "Packages/ZettelKit" */;
+			package = ED3041C0714E7176580832BD /* XCLocalSwiftPackageReference "ZettelKit" */;
 			productName = ZettelKit;
 		};
 /* End XCSwiftPackageProductDependency section */

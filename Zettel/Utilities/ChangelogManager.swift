@@ -81,10 +81,14 @@ class ChangelogManager: ObservableObject {
     static let shared = ChangelogManager()
     
     /// Key for storing the last seen app version in UserDefaults
-    private let lastSeenVersionKey = "lastSeenAppVersion"
+    private let lastSeenVersionKey: String
     
     /// Key used by NoteStore to track if the user has launched before (not a first-time user)
-    private let hasLaunchedBeforeKey = "hasLaunchedBefore"
+    private let hasLaunchedBeforeKey: String
+
+    private let userDefaults: UserDefaults
+    private let currentVersionProvider: () -> AppVersion?
+    private let changelogDataProvider: () -> [(version: String, title: String, content: String)]
     
     /// All available changelog entries, sorted by version (newest first)
     @Published private(set) var changelogEntries: [ChangelogEntry] = []
@@ -92,7 +96,18 @@ class ChangelogManager: ObservableObject {
     /// The changelog entry to display (if any)
     @Published private(set) var pendingChangelog: ChangelogEntry?
     
-    private init() {
+    init(
+        userDefaults: UserDefaults = .standard,
+        lastSeenVersionKey: String = "lastSeenAppVersion",
+        hasLaunchedBeforeKey: String = "hasLaunchedBefore",
+        currentVersionProvider: @escaping () -> AppVersion? = { AppVersion.current },
+        changelogDataProvider: @escaping () -> [(version: String, title: String, content: String)] = { ChangelogData.entries }
+    ) {
+        self.userDefaults = userDefaults
+        self.lastSeenVersionKey = lastSeenVersionKey
+        self.hasLaunchedBeforeKey = hasLaunchedBeforeKey
+        self.currentVersionProvider = currentVersionProvider
+        self.changelogDataProvider = changelogDataProvider
         loadChangelogEntries()
     }
     
@@ -105,7 +120,7 @@ class ChangelogManager: ObservableObject {
         #endif
         
         // Load from static Swift data (most reliable)
-        for data in ChangelogData.entries {
+        for data in changelogDataProvider() {
             if let version = AppVersion(from: data.version) {
                 let entry = ChangelogEntry(
                     version: version,
@@ -135,7 +150,7 @@ class ChangelogManager: ObservableObject {
         print("[Changelog] Available changelogs: \(changelogEntries.map { $0.version.displayString })")
         #endif
         
-        guard let currentVersion = AppVersion.current else {
+        guard let currentVersion = currentVersionProvider() else {
             #if DEBUG
             print("[Changelog] ERROR: Could not get current app version from bundle")
             #endif
@@ -162,7 +177,7 @@ class ChangelogManager: ObservableObject {
         #endif
         
         // Check if user has launched before (not a first-time user showing the tutorial)
-        let hasLaunchedBefore = UserDefaults.standard.bool(forKey: hasLaunchedBeforeKey)
+        let hasLaunchedBefore = userDefaults.bool(forKey: hasLaunchedBeforeKey)
         
         #if DEBUG
         print("[Changelog] Has launched before: \(hasLaunchedBefore)")
@@ -192,7 +207,7 @@ class ChangelogManager: ObservableObject {
     
     /// Called when user dismisses the changelog
     func dismissChangelog() {
-        guard let currentVersion = AppVersion.current else {
+        guard let currentVersion = currentVersionProvider() else {
             return
         }
         setLastSeenVersion(currentVersion)
@@ -201,7 +216,7 @@ class ChangelogManager: ObservableObject {
     
     /// Gets the last seen app version from UserDefaults
     private func getLastSeenVersion() -> AppVersion? {
-        guard let versionString = UserDefaults.standard.string(forKey: lastSeenVersionKey) else {
+        guard let versionString = userDefaults.string(forKey: lastSeenVersionKey) else {
             return nil
         }
         return AppVersion(from: versionString)
@@ -209,12 +224,12 @@ class ChangelogManager: ObservableObject {
     
     /// Saves the last seen app version to UserDefaults
     private func setLastSeenVersion(_ version: AppVersion) {
-        UserDefaults.standard.set(version.description, forKey: lastSeenVersionKey)
+        userDefaults.set(version.description, forKey: lastSeenVersionKey)
     }
     
     /// Returns the changelog entry for the current app version (if available)
     func getChangelogForCurrentVersion() -> ChangelogEntry? {
-        guard let currentVersion = AppVersion.current else {
+        guard let currentVersion = currentVersionProvider() else {
             return nil
         }
         return changelogEntries.first(where: { $0.version == currentVersion })
@@ -222,7 +237,7 @@ class ChangelogManager: ObservableObject {
     
     /// For debugging: clears the last seen version to force changelog display
     func resetLastSeenVersion() {
-        UserDefaults.standard.removeObject(forKey: lastSeenVersionKey)
+        userDefaults.removeObject(forKey: lastSeenVersionKey)
         pendingChangelog = nil
         checkForNewChangelog()
     }

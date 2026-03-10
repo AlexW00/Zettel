@@ -16,6 +16,7 @@ class TagStore: ObservableObject {
     
     // Debouncing support
     private var updateTimer: Timer?
+    private var updateTask: Task<Void, Never>?
     private let updateDelay: TimeInterval = CacheConstants.tagUpdateDelay
     
     // Application lifecycle support
@@ -44,6 +45,7 @@ class TagStore: ObservableObject {
     }
     
     deinit {
+        updateTask?.cancel()
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -87,52 +89,14 @@ class TagStore: ObservableObject {
     func updateTagsImmediately(from notes: [Note]) {
         // Capture light-weight copies for background work
         let lightweightNotes = notes.map { (title: $0.title, content: $0.content) }
-        
-        Task.detached {
-            // Compute in background
-            var tagCounts: [String: Int] = [:]
-            var tagDisplayNames: [String: String] = [:]
-            
-            for note in lightweightNotes {
-                // Single-pass extraction over title and content
-                var noteText = note.title
-                noteText.append(" ")
-                noteText.append(note.content)
-                
-                // Use TagParser once per note text for both normalized and display names
-                let (normalizedToDisplay, uniqueNormalized) = TagParser.extractNormalizedAndDisplay(from: noteText)
-                
-                for tagName in uniqueNormalized {
-                    tagCounts[tagName, default: 0] += 1
-                    if tagDisplayNames[tagName] == nil {
-                        tagDisplayNames[tagName] = normalizedToDisplay[tagName] ?? tagName
-                    }
-                }
-            }
-            
-            // Build Tag objects
-            var newTagsByName: [String: Tag] = [:]
-            for (normalizedName, count) in tagCounts {
-                let displayName = tagDisplayNames[normalizedName] ?? normalizedName
-                var tag = Tag(name: displayName)
-                tag.usageCount = count
-                newTagsByName[normalizedName] = tag
-            }
-            
-            // Prepare immutable values to avoid capturing mutable vars across await
-            let finalTagCounts = tagCounts
-            let finalTagsByName = newTagsByName
-            let finalSortedTags = Array(finalTagsByName.values).sorted { t1, t2 in
-                if t1.usageCount != t2.usageCount { return t1.usageCount > t2.usageCount }
-                return t1.displayName < t2.displayName
-            }
-            
-            // Publish on main
-            await MainActor.run {
-                self.tagUsageCounts = finalTagCounts
-                self.tagsByName = finalTagsByName
-                self.sortedTags = finalSortedTags
-            }
+
+        updateTask?.cancel()
+        updateTask = Task { [weak self] in
+            let result = await Self.buildTagIndex(from: lightweightNotes)
+            guard let self, !Task.isCancelled else { return }
+            self.tagUsageCounts = result.tagCounts
+            self.tagsByName = result.tagsByName
+            self.sortedTags = result.sortedTags
         }
     }
     
@@ -140,11 +104,56 @@ class TagStore: ObservableObject {
     func updateTags(from notes: [Note]) {
         updateTagsImmediately(from: notes)
     }
+
+    func waitForPendingUpdates() async {
+        await updateTask?.value
+    }
     
     /// Single-scan extractor that returns mapping normalized->display and the set of unique normalized tags
-    private static func extractNormalizedAndDisplay(from text: String) -> ([String: String], Set<String>) {
+    nonisolated private static func extractNormalizedAndDisplay(from text: String) -> ([String: String], Set<String>) {
         // moved to TagParser to avoid @MainActor isolation issues
         return TagParser.extractNormalizedAndDisplay(from: text)
+    }
+
+    private static func buildTagIndex(from notes: [(title: String, content: String)]) async -> (
+        tagCounts: [String: Int],
+        tagsByName: [String: Tag],
+        sortedTags: [Tag]
+    ) {
+        await Task.detached {
+            var tagCounts: [String: Int] = [:]
+            var tagDisplayNames: [String: String] = [:]
+
+            for note in notes {
+                var noteText = note.title
+                noteText.append(" ")
+                noteText.append(note.content)
+
+                let (normalizedToDisplay, uniqueNormalized) = extractNormalizedAndDisplay(from: noteText)
+
+                for tagName in uniqueNormalized {
+                    tagCounts[tagName, default: 0] += 1
+                    if tagDisplayNames[tagName] == nil {
+                        tagDisplayNames[tagName] = normalizedToDisplay[tagName] ?? tagName
+                    }
+                }
+            }
+
+            var newTagsByName: [String: Tag] = [:]
+            for (normalizedName, count) in tagCounts {
+                let displayName = tagDisplayNames[normalizedName] ?? normalizedName
+                var tag = Tag(name: displayName)
+                tag.usageCount = count
+                newTagsByName[normalizedName] = tag
+            }
+
+            let finalSortedTags = Array(newTagsByName.values).sorted { t1, t2 in
+                if t1.usageCount != t2.usageCount { return t1.usageCount > t2.usageCount }
+                return t1.id < t2.id
+            }
+
+            return (tagCounts, newTagsByName, finalSortedTags)
+        }.value
     }
     
     /// Helper to find original case of a tag in text (no longer used)

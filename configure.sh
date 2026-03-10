@@ -48,7 +48,7 @@ fi
 
 # Update project file with environment variables
 sed -i '' "s/DEVELOPMENT_TEAM = \"\";/DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM;/g" Zettel.xcodeproj/project.pbxproj
-sed -i '' "s/PRODUCT_BUNDLE_IDENTIFIER = \"\";/PRODUCT_BUNDLE_IDENTIFIER = $BUNDLE_IDENTIFIER;/g" Zettel.xcodeproj/project.pbxproj
+sed -E -i '' "s/PRODUCT_BUNDLE_IDENTIFIER = [^;]+;/PRODUCT_BUNDLE_IDENTIFIER = $BUNDLE_IDENTIFIER;/g" Zettel.xcodeproj/project.pbxproj
 
 echo -e "${GREEN}✓ Configured project with:${NC}"
 echo "  Development Team: $DEVELOPMENT_TEAM"

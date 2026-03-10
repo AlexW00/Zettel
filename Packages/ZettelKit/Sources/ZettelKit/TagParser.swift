@@ -11,8 +11,7 @@ import Foundation
 public final class TagParser: Sendable {
     /// Regex pattern to match standalone hashtags: start of text or whitespace, then # and valid tag characters
     private static let hashtagPattern = #"(?<!\S)#[a-zA-Z0-9_]+(?![a-zA-Z0-9_])"#
-    // nonisolated(unsafe) because NSRegularExpression is inherently thread-safe for matching
-    nonisolated(unsafe) private static let regex = try! NSRegularExpression(pattern: hashtagPattern, options: [])
+    private static let regex = try! NSRegularExpression(pattern: hashtagPattern, options: [])
     
     /// Internal accessors for performance (used by TagStore)
     public static var hashtagPatternInternal: String { hashtagPattern }
