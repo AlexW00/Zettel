@@ -149,7 +149,7 @@ class TagStore: ObservableObject {
 
             let finalSortedTags = Array(newTagsByName.values).sorted { t1, t2 in
                 if t1.usageCount != t2.usageCount { return t1.usageCount > t2.usageCount }
-                return t1.displayName < t2.displayName
+                return t1.id < t2.id
             }
 
             return (tagCounts, newTagsByName, finalSortedTags)

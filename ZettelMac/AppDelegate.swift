@@ -13,8 +13,13 @@ import ZettelKit
 final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
 
     private let hasLaunchedBeforeKey = "hasLaunchedBefore"
+    private var isRunningTests: Bool {
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        guard !isRunningTests else { return }
+
         // Show welcome note on first launch, otherwise restore the last opened note
         if isFirstLaunch() {
             let welcomeNote = createWelcomeNote()
@@ -64,6 +69,8 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        guard !isRunningTests else { return true }
+
         if !flag {
             // No visible windows — restore last note or create a new one
             let restoredNote = restoreLastOpenedNote()
@@ -80,11 +87,15 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        guard !isRunningTests else { return }
+
         // Flush all pending saves before quitting
         ZettelWindowManager.shared.saveAllWindows()
     }
 
     func application(_ sender: NSApplication, openFile filename: String) -> Bool {
+        guard !isRunningTests else { return false }
+
         let url = URL(fileURLWithPath: filename)
         guard url.pathExtension == "md" else { return false }
 
@@ -97,6 +108,8 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {
+        guard !isRunningTests else { return }
+
         for url in urls {
             guard url.pathExtension == "md" else { continue }
             Task { @MainActor in
