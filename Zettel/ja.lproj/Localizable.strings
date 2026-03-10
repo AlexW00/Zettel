@@ -54,6 +54,8 @@
 "settings.default_title_template_info_message" = "使用できるプレースホルダ:\n%@\n\nフィールドを空にすると既定のテンプレート (%@) に戻ります。";
 "settings.default_title_template_info_button" = "テンプレート形式の説明を表示";
 "settings.general_tab" = "一般";
+"settings.hideDockIcon.title" = "Dockアイコンを隠す";
+"settings.hideDockIcon.explanation" = "ZettelをDockに表示せず、すべてのウィンドウを閉じると終了します。";
 "settings.template_tokens" = "テンプレートトークン";
 "settings.change_ellipsis" = "変更…";
 "settings.version_format" = "バージョン %@ (%@)";
@@ -87,6 +89,7 @@
 
 // Search
 "search.prompt" = "Zettelを検索";
+"search.popular_tags" = "よく使うタグ";
 "search.no_results_title" = "\"%@\" の結果は見つかりませんでした";
 "search.no_results_message" = "別のキーワードを試すかフィルターを解除してください。";
 

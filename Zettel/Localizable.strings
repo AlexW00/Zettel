@@ -54,6 +54,8 @@
 "settings.default_title_template_info_message" = "Available placeholders:\n%@\n\nLeave the field empty to reset to the default template (%@).";
 "settings.default_title_template_info_button" = "Show template format help";
 "settings.general_tab" = "General";
+"settings.hideDockIcon.title" = "Hide Dock Icon";
+"settings.hideDockIcon.explanation" = "Keeps Zettel out of the Dock and quits when all windows close.";
 "settings.template_tokens" = "Template Tokens";
 "settings.change_ellipsis" = "Change…";
 "settings.version_format" = "Version %@ (%@)";
@@ -90,6 +92,7 @@
 
 // Search
 "search.prompt" = "Search Zettel";
+"search.popular_tags" = "Popular tags";
 "search.no_results_title" = "No results for \"%@\"";
 "search.no_results_message" = "Try a different keyword or clear filters.";
 

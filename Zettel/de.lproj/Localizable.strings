@@ -54,6 +54,8 @@
 "settings.default_title_template_info_message" = "Verfügbare Platzhalter:\n%@\n\nLasse das Feld leer, um die Standardvorlage zurückzusetzen (%@).";
 "settings.default_title_template_info_button" = "Vorlagenformat-Hilfe anzeigen";
 "settings.general_tab" = "Allgemein";
+"settings.hideDockIcon.title" = "Dock-Symbol ausblenden";
+"settings.hideDockIcon.explanation" = "Blendet Zettel im Dock aus und beendet die App, wenn alle Fenster geschlossen sind.";
 "settings.template_tokens" = "Vorlagen-Tokens";
 "settings.change_ellipsis" = "Ändern…";
 "settings.version_format" = "Version %@ (%@)";
@@ -87,6 +89,7 @@
 
 // Suche
 "search.prompt" = "Zettel suchen";
+"search.popular_tags" = "Beliebte Tags";
 "search.no_results_title" = "Keine Ergebnisse für \"%@\"";
 "search.no_results_message" = "Versuche ein anderes Suchwort oder entferne Filter.";
 
