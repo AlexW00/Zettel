@@ -13,14 +13,20 @@ public final class DefaultTitleTemplateManager: @unchecked Sendable {
     
     /// Storage key for persisting the custom template.
     private let storageKey: String
+    private let timeZone: TimeZone
     private let userDefaults: UserDefaults
     
     /// Built-in fallback template used when no custom template is set.
     public let fallbackTemplate = "{{shortDate}} – {{time}}"
     
-    public init(userDefaults: UserDefaults = .standard, storageKey: String = "defaultTitleTemplate") {
+    public init(
+        userDefaults: UserDefaults = .standard,
+        storageKey: String = "defaultTitleTemplate",
+        timeZone: TimeZone = .autoupdatingCurrent
+    ) {
         self.userDefaults = userDefaults
         self.storageKey = storageKey
+        self.timeZone = timeZone
     }
     
     /// Returns the saved custom template if present.
@@ -57,6 +63,7 @@ public final class DefaultTitleTemplateManager: @unchecked Sendable {
     public func fallbackTitle(for date: Date) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = timeZone
         formatter.dateFormat = "HH-mm-ss – d MMM yyyy"
         return formatter.string(from: date)
     }
@@ -85,6 +92,7 @@ public final class DefaultTitleTemplateManager: @unchecked Sendable {
     private func makeFormatter(_ format: String) -> DateFormatter {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = timeZone
         formatter.dateFormat = format
         return formatter
     }

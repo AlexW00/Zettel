@@ -49,11 +49,12 @@ public final class TagCacheManager: @unchecked Sendable {
     }
     
     public func getExtractedTags(for note: Note) -> Set<String> {
-        let noteId = NSString(string: note.id)
+        let noteId = note.id
         let contentHash = (note.title + note.content).hashValue
 
         return cacheQueue.sync {
-            if let cached = cache.object(forKey: noteId), cached.hash == contentHash {
+            let cacheKey = NSString(string: noteId)
+            if let cached = cache.object(forKey: cacheKey), cached.hash == contentHash {
                 return cached.tags
             }
 
@@ -61,7 +62,7 @@ public final class TagCacheManager: @unchecked Sendable {
             let cachedTags = CachedTags(hash: contentHash, tags: tags)
             
             cacheQueue.async(flags: .barrier) {
-                self.cache.setObject(cachedTags, forKey: noteId)
+                self.cache.setObject(cachedTags, forKey: NSString(string: noteId))
             }
 
             return tags

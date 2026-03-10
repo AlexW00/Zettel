@@ -6,7 +6,11 @@ struct TemplateAndRepositoryTests {
     @Test
     func templateRenderingSupportsBuiltInPlaceholders() {
         let defaults = makeIsolatedDefaults()
-        let manager = DefaultTitleTemplateManager(userDefaults: defaults, storageKey: "titleTemplate")
+        let manager = DefaultTitleTemplateManager(
+            userDefaults: defaults,
+            storageKey: "titleTemplate",
+            timeZone: TimeZone(identifier: "Europe/Berlin")!
+        )
         let date = makeDate(year: 2025, month: 10, day: 19, hour: 8, minute: 5, second: 4)
 
         manager.saveTemplate("{{weekday}} {{date}} {{shortDate}} {{time}}")
@@ -17,7 +21,11 @@ struct TemplateAndRepositoryTests {
     @Test
     func blankTemplateFallsBackToLegacyTitleFormat() {
         let defaults = makeIsolatedDefaults()
-        let manager = DefaultTitleTemplateManager(userDefaults: defaults, storageKey: "blankTemplate")
+        let manager = DefaultTitleTemplateManager(
+            userDefaults: defaults,
+            storageKey: "blankTemplate",
+            timeZone: TimeZone(identifier: "Europe/Berlin")!
+        )
         let date = makeDate(year: 2025, month: 10, day: 19, hour: 8, minute: 5, second: 4)
 
         manager.saveTemplate("   ")
