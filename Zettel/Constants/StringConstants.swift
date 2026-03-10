@@ -74,6 +74,7 @@ enum StringConstants {
     // MARK: - Search
     enum Search {
         static let prompt = "search.prompt"
+        static let popularTags = "search.popular_tags"
         static let noResultsTitle = "search.no_results_title"
         static let noResultsMessage = "search.no_results_message"
     }

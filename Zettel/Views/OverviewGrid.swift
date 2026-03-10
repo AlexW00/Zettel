@@ -23,6 +23,8 @@ struct OverviewGrid: View {
     private let cardCornerRadius: CGFloat = 14
     private let shadowRadius: CGFloat = 3
     private let verticalStackSpacing: CGFloat = 24
+    private let popularTagLimit = 50
+    private let popularTagsGridMinimumWidth: CGFloat = 96
 
     // Dynamic sizing based on screen width
 
@@ -62,7 +64,7 @@ struct OverviewGrid: View {
     }
     
     private var popularSearchTags: [Tag] {
-        noteStore.tagStore.getMostPopularTags(limit: 10)
+        noteStore.tagStore.getMostPopularTags(limit: popularTagLimit)
     }
 
     // Filtered notes based on selected tags
@@ -100,6 +102,35 @@ struct OverviewGrid: View {
                         hasCustomBackground: backgroundStore.hasCustomBackground
                     ) {
                         VStack(alignment: .leading, spacing: verticalStackSpacing) {
+                            if searchBarRevealed && !popularSearchTags.isEmpty {
+                                VStack(alignment: .leading, spacing: LayoutConstants.Padding.medium) {
+                                    Text(StringConstants.Search.popularTags.localized)
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundStyle(.secondaryText)
+                                    
+                                    LazyVGrid(
+                                        columns: [
+                                            GridItem(
+                                                .adaptive(minimum: popularTagsGridMinimumWidth),
+                                                spacing: LayoutConstants.Padding.medium,
+                                                alignment: .leading
+                                            )
+                                        ],
+                                        alignment: .leading,
+                                        spacing: LayoutConstants.Padding.medium
+                                    ) {
+                                        ForEach(popularSearchTags) { tag in
+                                            Button {
+                                                searchText = tag.displayName
+                                            } label: {
+                                                TagChipView(tagName: tag.displayName)
+                                            }
+                                            .buttonStyle(.plain)
+                                        }
+                                    }
+                                }
+                            }
+                            
                             if noteStore.isInitialLoadingNotes {
                                 LoadingStateView(
                                     error: noteStore.loadingError,

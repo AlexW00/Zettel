@@ -92,6 +92,7 @@
 
 // Search
 "search.prompt" = "Search Zettel";
+"search.popular_tags" = "Popular tags";
 "search.no_results_title" = "No results for \"%@\"";
 "search.no_results_message" = "Try a different keyword or clear filters.";
 
