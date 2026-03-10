@@ -36,7 +36,7 @@ enum MacDockIconPreference {
         let activationPolicy: NSApplication.ActivationPolicy = shouldHide ? .accessory : .regular
         let didSet = NSApplication.shared.setActivationPolicy(activationPolicy)
         if !didSet {
-            let currentIsHidden = NSApplication.shared.activationPolicy == .accessory
+            let currentIsHidden = NSApplication.shared.activationPolicy() == .accessory
             UserDefaults.standard.set(currentIsHidden, forKey: storageKey)
         }
     }

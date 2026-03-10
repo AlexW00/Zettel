@@ -99,7 +99,7 @@ struct TagSuggestionsView: View {
             }
         }
         .padding(.vertical, 4)
-        .glassEffect(in: .rect(cornerRadius: 10))
+        .modifier(GlassEffectFallback(cornerRadius: 10))
         // No SwiftUI shadow — NSHostingView clips it to a hard rect.
         // p.hasShadow = true on the NSPanel gives the correct shaped shadow.
     }
@@ -154,6 +154,21 @@ private struct TagSuggestionRow: View {
             onHoverChanged?(hovering)
         }
         .animation(.easeInOut(duration: 0.1), value: isHovered)
+    }
+}
+
+// MARK: - Glass Effect Fallback
+
+/// Applies `.glassEffect` on macOS 26+, falls back to `.background(.ultraThinMaterial)` on earlier versions.
+private struct GlassEffectFallback: ViewModifier {
+    let cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        if #available(macOS 26, *) {
+            content.glassEffect(in: .rect(cornerRadius: cornerRadius))
+        } else {
+            content.background(.ultraThinMaterial, in: .rect(cornerRadius: cornerRadius))
+        }
     }
 }
 
