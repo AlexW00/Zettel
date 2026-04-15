@@ -25,6 +25,9 @@ final class ZettelWindowManager: NSObject, ObservableObject {
     /// Delegates kept alive keyed by window ID
     private var windowDelegates: [UUID: ZettelWindowDelegate] = [:]
 
+    /// Whether all note windows have been closed.
+    var hasNoWindows: Bool { windowStates.isEmpty }
+
     /// Last focused window (for keyboard shortcut routing)
     private(set) var lastFocusedWindowId: UUID?
 

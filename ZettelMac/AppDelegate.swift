@@ -80,7 +80,11 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return MacDockIconPreference.isHidden()
+        // Only quit when the Dock icon is hidden AND no note windows remain.
+        // The Settings window doesn't count — without this check, closing
+        // Settings as the last window would quit the app unexpectedly.
+        guard MacDockIconPreference.isHidden() else { return false }
+        return ZettelWindowManager.shared.hasNoWindows
     }
 
     func applicationWillTerminate(_ notification: Notification) {
