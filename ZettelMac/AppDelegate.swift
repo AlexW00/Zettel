@@ -68,15 +68,15 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        if !flag {
-            // No visible windows — restore last note or create a new one
+        if ZettelWindowManager.shared.hasNoWindows {
+            // No note windows — create one
             let restoredNote = restoreLastOpenedNote()
             ZettelWindowManager.shared.createWindow(note: restoredNote)
         } else {
-            // Focus all existing windows
-            ZettelWindowManager.shared.focusAllWindows()
+            // Focus the last active note window
+            ZettelWindowManager.shared.focusLastWindow()
         }
-        return true
+        return false
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {

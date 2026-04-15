@@ -114,6 +114,21 @@ final class ZettelWindowManager: NSObject, ObservableObject {
         window.level = pinned ? .floating : .normal
     }
 
+    /// Focus just the last active note window (used by Dock click).
+    func focusLastWindow() {
+        NSApp.activate(ignoringOtherApps: true)
+
+        if let lastId = lastFocusedWindowId, let window = nsWindows[lastId] {
+            if window.isMiniaturized { window.deminiaturize(nil) }
+            window.makeKeyAndOrderFront(nil)
+        } else if let (id, window) = nsWindows.first {
+            if window.isMiniaturized { window.deminiaturize(nil) }
+            window.makeKeyAndOrderFront(nil)
+            lastFocusedWindowId = id
+        }
+    }
+
+    /// Bring all note windows to the front.
     func focusAllWindows() {
         guard !nsWindows.isEmpty else { return }
         NSApp.activate(ignoringOtherApps: true)
