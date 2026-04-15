@@ -19,6 +19,10 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
         if isFirstLaunch() {
             let welcomeNote = createWelcomeNote()
             ZettelWindowManager.shared.createWindow(note: welcomeNote)
+        } else if let changelogNote = MacChangelogManager.shared.pendingChangelogNote() {
+            // Show changelog note for this update
+            ZettelWindowManager.shared.createWindow(note: changelogNote)
+            MacChangelogManager.shared.markSeen()
         } else {
             // Try to restore the last opened note
             let restoredNote = restoreLastOpenedNote()
