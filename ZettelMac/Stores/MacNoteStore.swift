@@ -115,15 +115,19 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
         let directory = storageDirectory
         let notes = await Task.detached { () -> [Note] in
             let fm = FileManager.default
-            guard let files = try? fm.contentsOfDirectory(
-                at: directory,
-                includingPropertiesForKeys: [
-                    .contentModificationDateKey,
-                    .creationDateKey,
-                    .ubiquitousItemDownloadingStatusKey
-                ],
-                options: [.skipsHiddenFiles]
-            ) else {
+            let files: [URL]
+            do {
+                files = try fm.contentsOfDirectory(
+                    at: directory,
+                    includingPropertiesForKeys: [
+                        .contentModificationDateKey,
+                        .creationDateKey,
+                        .ubiquitousItemDownloadingStatusKey
+                    ],
+                    options: [.skipsHiddenFiles]
+                )
+            } catch {
+                print("[MacNoteStore] Error listing directory \(directory.path): \(error)")
                 return []
             }
 
@@ -501,7 +505,7 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
     private func saveStorageDirectoryBookmark(_ url: URL) {
         do {
             let bookmark = try url.bookmarkData(
-                options: [],
+                options: .withSecurityScope,
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
@@ -520,7 +524,7 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
             var isStale = false
             let url = try URL(
                 resolvingBookmarkData: bookmark,
-                options: [],
+                options: .withSecurityScope,
                 relativeTo: nil,
                 bookmarkDataIsStale: &isStale
             )
@@ -529,7 +533,9 @@ public final class MacNoteStore: NSObject, NSFilePresenter {
                 saveStorageDirectoryBookmark(url)
             }
 
-            _ = url.startAccessingSecurityScopedResource()
+            if !url.startAccessingSecurityScopedResource() {
+                print("[MacNoteStore] Warning: failed to start security-scoped access for \(url.path)")
+            }
             return url
         } catch {
             print("[MacNoteStore] Error restoring bookmark: \(error)")
