@@ -458,7 +458,39 @@ struct SettingsView: View {
                             ShareSheet(activityItems: [appStoreURL])
                         }
                     }
-                    
+
+                    Button(action: {
+                        if let url = URL(string: "https://apps.weichart.de") {
+                            openURL(url)
+                        }
+                    }) {
+                        HStack {
+                            Image("WeichartApps")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 24, height: 24)
+                                .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("settings.more_apps".localized)
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(.primary)
+
+                                Text("settings.more_apps_description".localized)
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.secondary)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "arrow.up.right")
+                                .font(.system(size: 14))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.vertical, 4)
+
                     HStack {
                         Image(systemName: "chevron.left.forwardslash.chevron.right")
                             .foregroundColor(.iconTint)

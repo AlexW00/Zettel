@@ -106,7 +106,7 @@ struct OverviewGrid: View {
                                 VStack(alignment: .leading, spacing: LayoutConstants.Padding.medium) {
                                     Text(StringConstants.Search.popularTags.localized)
                                         .font(.system(size: 14, weight: .semibold))
-                                        .foregroundStyle(.secondaryText)
+                                        .foregroundColor(.secondaryText)
                                     
                                     LazyVGrid(
                                         columns: [

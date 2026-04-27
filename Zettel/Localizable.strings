@@ -39,6 +39,8 @@
 "settings.app_description" = "Minimalist notepad for iOS";
 "settings.zettel_macos" = "Zettel for Mac";
 "settings.zettel_macos_description" = "Also available on macOS";
+"settings.more_apps" = "More Apps";
+"settings.more_apps_description" = "Discover other apps by Weichart";
 "settings.source_code" = "Source Code";
 "settings.developer" = "Developer";
 "settings.developer_description" = "Follow me on X ^^";

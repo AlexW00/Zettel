@@ -15,6 +15,19 @@ enum ChangelogData {
     /// All changelog entries - add new versions at the TOP
     static let entries: [(version: String, title: String, content: String)] = [
         (
+            version: "3.2",
+            title: "v3.2 - More Apps",
+            content: """
+            ## ✨ New
+
+            - **More Apps**: Settings now links to [apps.weichart.de](https://apps.weichart.de), where you can find my other apps ^^
+
+            ---
+
+            Thank you for using Zettel! 💛
+            """
+        ),
+        (
             version: "3.1",
             title: "v3.1 - 🖥 Zettel for Mac",
             content: """

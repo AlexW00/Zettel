@@ -32,7 +32,7 @@ struct MacSettingsView: View {
                 aboutTab
             }
         }
-        .frame(width: 450, height: 380)
+        .frame(width: 450, height: 420)
         .onAppear {
             selectedAppearance = .fromUserDefaults()
             hideDockIcon = MacDockIconPreference.isHidden()
@@ -216,6 +216,30 @@ struct MacSettingsView: View {
                             .font(.callout)
                         Spacer()
                         Image(systemName: "square.and.arrow.up")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .buttonStyle(.plain)
+
+                Divider()
+
+                // More Apps
+                Button(action: {
+                    if let url = URL(string: "https://apps.weichart.de") {
+                        openURL(url)
+                    }
+                }) {
+                    HStack {
+                        Image("WeichartApps")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 20, height: 20)
+                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                        Text("More Apps")
+                            .font(.callout)
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }

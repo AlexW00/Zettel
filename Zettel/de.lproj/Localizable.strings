@@ -39,6 +39,8 @@
 "settings.app_description" = "Minimalistischer Notizblock für iOS";
 "settings.zettel_macos" = "Zettel für Mac";
 "settings.zettel_macos_description" = "Auch auf macOS verfügbar";
+"settings.more_apps" = "Weitere Apps";
+"settings.more_apps_description" = "Weitere Apps von Weichart entdecken";
 "settings.source_code" = "Quellcode";
 "settings.developer" = "Entwickler";
 "settings.developer_description" = "Folge mir auf X ^^";

@@ -13,6 +13,24 @@ enum MacChangelogData {
     /// All changelog entries - add new versions at the TOP
     static let entries: [(version: String, title: String, content: String)] = [
         (
+            version: "1.4",
+            title: "v1.4 - Settings, More Apps & Dock Fix",
+            content: """
+            ## ✨ New
+
+            - **Settings in Toolbar**: A gear icon now sits at the top-right of every window so you can jump into Settings without hunting through the menu bar.
+            - **More Apps**: Settings now links to [apps.weichart.de](https://apps.weichart.de), where you can find my other apps ^^
+
+            ## 🛠 Fix
+
+            - **Dock & App Switcher**: Zettel now opens as a regular Dock app on first launch, with a running-indicator dot, its own Stage Manager space, and Cmd+Tab support. You can still hide the Dock icon any time from Settings.
+
+            ---
+
+            Thank you for using Zettel!
+            """
+        ),
+        (
             version: "1.3",
             title: "v1.3 - Reliability Update",
             content: """

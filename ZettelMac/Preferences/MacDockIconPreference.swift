@@ -9,7 +9,7 @@ import AppKit
 
 enum MacDockIconPreference {
     static let storageKey = "hideDockIcon"
-    static let defaultIsHidden = true
+    static let defaultIsHidden = false
 
     static func registerDefault() {
         UserDefaults.standard.register(defaults: [storageKey: defaultIsHidden])

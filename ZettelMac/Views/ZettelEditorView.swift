@@ -56,6 +56,12 @@ struct ZettelEditorView: View {
             }
 
             ToolbarItemGroup(placement: .primaryAction) {
+                SettingsLink {
+                    Label("Settings", systemImage: "gearshape")
+                }
+                .help("Settings (⌘,)")
+                .pointingHandCursor()
+
                 Button {
                     ZettelWindowManager.shared.togglePin(id: state.windowId)
                 } label: {
