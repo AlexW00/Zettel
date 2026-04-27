@@ -19,6 +19,10 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
         if isFirstLaunch() {
             let welcomeNote = createWelcomeNote()
             ZettelWindowManager.shared.createWindow(note: welcomeNote)
+        } else if let changelogNote = MacChangelogManager.shared.pendingChangelogNote() {
+            // Show changelog note for this update
+            ZettelWindowManager.shared.createWindow(note: changelogNote)
+            MacChangelogManager.shared.markSeen()
         } else {
             // Try to restore the last opened note
             let restoredNote = restoreLastOpenedNote()
@@ -64,19 +68,23 @@ final class ZettelAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        if !flag {
-            // No visible windows — restore last note or create a new one
+        if ZettelWindowManager.shared.hasNoWindows {
+            // No note windows — create one
             let restoredNote = restoreLastOpenedNote()
             ZettelWindowManager.shared.createWindow(note: restoredNote)
         } else {
-            // Focus all existing windows
-            ZettelWindowManager.shared.focusAllWindows()
+            // Focus the last active note window
+            ZettelWindowManager.shared.focusLastWindow()
         }
-        return true
+        return false
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return MacDockIconPreference.isHidden()
+        // Only quit when the Dock icon is hidden AND no note windows remain.
+        // The Settings window doesn't count — without this check, closing
+        // Settings as the last window would quit the app unexpectedly.
+        guard MacDockIconPreference.isHidden() else { return false }
+        return ZettelWindowManager.shared.hasNoWindows
     }
 
     func applicationWillTerminate(_ notification: Notification) {
