@@ -13,6 +13,19 @@ enum MacChangelogData {
     /// All changelog entries - add new versions at the TOP
     static let entries: [(version: String, title: String, content: String)] = [
         (
+            version: "1.5",
+            title: "v1.5 - Japanese Input Fix",
+            content: """
+            ## 🛠 Fix
+
+            - **Japanese Keyboard (IME)**: Fixed a bug where characters would disappear when cycling through kanji candidates. Composing text with the Japanese input method now works reliably.
+
+            ---
+
+            Thank you for using Zettel!
+            """
+        ),
+        (
             version: "1.4",
             title: "v1.4 - Settings, More Apps & Dock Fix",
             content: """

@@ -156,8 +156,10 @@ struct MacTextEditor: NSViewRepresentable {
             (textView as? InteractionTextView)?.refreshRendering()
         }
 
-        // Only update if the text actually differs (avoid cursor jumping)
-        if textView.string != text {
+        // Only update if the text actually differs (avoid cursor jumping).
+        // Never replace text while the IME has uncommitted (marked) input —
+        // doing so destroys the composition session and drops characters.
+        if textView.string != text && !textView.hasMarkedText() {
             let selectedRanges = textView.selectedRanges
             textView.string = text
             textView.selectedRanges = selectedRanges
@@ -177,6 +179,7 @@ struct MacTextEditor: NSViewRepresentable {
 
         override func didChangeText() {
             super.didChangeText()
+            guard !hasMarkedText() else { return }
             refreshRendering()
         }
 
@@ -317,6 +320,7 @@ struct MacTextEditor: NSViewRepresentable {
 
         func textDidChange(_ notification: Notification) {
             guard !isUpdating, let textView = notification.object as? NSTextView else { return }
+            guard !textView.hasMarkedText() else { return }
             isUpdating = true
             text.wrappedValue = textView.string
             applyHashtagHighlighting(to: textView)
@@ -422,7 +426,8 @@ struct MacTextEditor: NSViewRepresentable {
 
         @MainActor
         func applyHashtagHighlighting(to textView: NSTextView) {
-            guard let textStorage = textView.textStorage else { return }
+            guard let textStorage = textView.textStorage,
+                  !textView.hasMarkedText() else { return }
             let fullRange = NSRange(location: 0, length: textStorage.length)
             let text = textStorage.string
             let fontSize = MacTextEditor.resolvedEditorFontSize
