@@ -13,6 +13,21 @@ enum MacChangelogData {
     /// All changelog entries - add new versions at the TOP
     static let entries: [(version: String, title: String, content: String)] = [
         (
+            version: "1.6",
+            title: "v1.6 - Font Alignment with iOS",
+            content: """
+            ## ✨ Improvements
+
+            - **Monospaced Editor Font**: The note editor now uses the same monospaced system font as the iOS app, so notes look consistent across both platforms.
+            - **Live Font Size Slider**: Dragging the **Font Size** slider in Settings now updates open editors immediately — no need to reopen a window.
+            - **Matching Title & Tag Fonts**: The toolbar title, sidebar rename popover, and tag autocomplete suggestions now use the monospaced design used on iOS.
+
+            ---
+
+            Thank you for using Zettel!
+            """
+        ),
+        (
             version: "1.5",
             title: "v1.5 - Japanese Input Fix",
             content: """

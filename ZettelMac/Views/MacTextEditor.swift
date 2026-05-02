@@ -460,14 +460,14 @@ struct MacTextEditor: NSViewRepresentable {
 
 // MARK: - Editor Font Preference
 
-/// Shared accessor for the editor's body font size preference. The range and
-/// default match iOS's `LayoutConstants.FontSize.contentMinSize/Max/Default`
-/// so the slider, settings clamp, and editor stay in lockstep across platforms.
+/// Shared accessor for the editor's body font size preference. The default
+/// (15 pt) and range (12–28 pt) preserve the previous macOS behavior so
+/// existing users don't see their font size change after this update.
 enum EditorFontPreference {
     static let key = "editorFontSize"
     static let minSize: Double = 12
-    static let maxSize: Double = 24
-    static let defaultSize: Double = 16
+    static let maxSize: Double = 28
+    static let defaultSize: Double = 15
 
     /// Clamp a stored value into the supported range, mapping the legacy
     /// "unset = 0" sentinel to the default.
