@@ -127,10 +127,10 @@ private struct TagSuggestionRow: View {
     var body: some View {
         HStack(spacing: 6) {
             Text("#")
-                .font(.system(size: 12, weight: .medium, design: .monospaced))
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
                 .foregroundStyle(isSelected ? Color.accentColor : .secondary)
             Text(tag)
-                .font(.system(size: 13, weight: .medium))
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
                 .foregroundStyle(Color.primary)
         }
         .padding(.horizontal, 10)
