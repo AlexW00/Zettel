@@ -16,7 +16,7 @@ struct MacSettingsView: View {
     @Environment(\.openURL) private var openURL
     @State private var hideDockIcon = MacDockIconPreference.isHidden()
     @State private var isSyncingDockIconToggle = false
-    @State private var fontSize: Double = UserDefaults.standard.double(forKey: "editorFontSize").clamped(to: 12...28, fallback: 15)
+    @State private var fontSize: Double = EditorFontPreference.savedValue
     @State private var titleTemplate: String = DefaultTitleTemplateManager.shared.savedTemplate() ?? ""
     @State private var storageDirectory: URL = MacNoteStore.shared.storageDirectory
     @State private var showingFolderPicker = false
@@ -36,7 +36,7 @@ struct MacSettingsView: View {
         .onAppear {
             selectedAppearance = .fromUserDefaults()
             hideDockIcon = MacDockIconPreference.isHidden()
-            fontSize = UserDefaults.standard.double(forKey: "editorFontSize").clamped(to: 12...28, fallback: 15)
+            fontSize = EditorFontPreference.savedValue
             titleTemplate = DefaultTitleTemplateManager.shared.savedTemplate() ?? ""
             storageDirectory = MacNoteStore.shared.storageDirectory
         }
@@ -56,7 +56,7 @@ struct MacSettingsView: View {
             }
         }
         .onChange(of: fontSize) { _, newValue in
-            UserDefaults.standard.set(newValue, forKey: "editorFontSize")
+            UserDefaults.standard.set(newValue, forKey: EditorFontPreference.key)
         }
         .onChange(of: titleTemplate) { _, newValue in
             DefaultTitleTemplateManager.shared.saveTemplate(newValue)
@@ -97,8 +97,12 @@ struct MacSettingsView: View {
             // Font Size
             LabeledContent {
                 HStack(spacing: 8) {
-                    Slider(value: $fontSize, in: 12...28, step: 1)
-                        .frame(width: 160)
+                    Slider(
+                        value: $fontSize,
+                        in: EditorFontPreference.minSize...EditorFontPreference.maxSize,
+                        step: 1
+                    )
+                    .frame(width: 160)
                     Text("\(Int(fontSize)) pt")
                         .monospacedDigit()
                         .foregroundStyle(.secondary)
@@ -353,11 +357,3 @@ enum MacAppearanceOption: String, CaseIterable, Identifiable {
     }
 }
 
-// MARK: - Helpers
-
-private extension Double {
-    func clamped(to range: ClosedRange<Double>, fallback: Double) -> Double {
-        if self == 0 { return fallback }
-        return min(max(self, range.lowerBound), range.upperBound)
-    }
-}

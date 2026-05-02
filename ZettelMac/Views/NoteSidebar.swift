@@ -277,7 +277,7 @@ private struct NoteSidebarCard: View {
                 .lineLimit(1)
                 .popover(isPresented: $isRenaming, arrowEdge: .bottom) {
                     TextField("", text: $renameText)
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.system(size: 13, weight: .semibold, design: .monospaced))
                         .textFieldStyle(.plain)
                         .focused($isRenameFocused)
                         .onSubmit { onCommitRename() }

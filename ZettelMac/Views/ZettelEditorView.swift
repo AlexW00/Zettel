@@ -541,7 +541,7 @@ private struct PrincipalTitleView: View {
 
     var body: some View {
         Text(state.displayTitle)
-            .font(.system(size: 13, weight: .semibold))
+            .font(.system(size: 13, weight: .semibold, design: .monospaced))
             .lineLimit(1)
             .truncationMode(.middle)
             .frame(minWidth: 40, maxWidth: 300)
@@ -551,7 +551,7 @@ private struct PrincipalTitleView: View {
             .padding(.horizontal, 8)
             .popover(isPresented: $isEditing, arrowEdge: .bottom) {
                 TextField("", text: $editText)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(size: 13, weight: .semibold, design: .monospaced))
                     .textFieldStyle(.plain)
                     .focused($isFocused)
                     .onSubmit { commitEdit() }

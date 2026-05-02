@@ -58,10 +58,12 @@ struct MacTextEditor: NSViewRepresentable {
     /// callers can snapshot the view before running Metal layer effects.
     var handle: MacTextEditorHandle? = nil
 
-    private static var resolvedEditorFontSize: CGFloat {
-        let value = UserDefaults.standard.double(forKey: "editorFontSize")
-        let normalized = value == 0 ? 15 : value
-        return CGFloat(min(max(normalized, 12), 28))
+    /// Font size driven by the Settings slider. Mirrors the iOS app's
+    /// `themeStore.contentFontSize` so changes apply live without a relaunch.
+    @AppStorage(EditorFontPreference.key) private var editorFontSizeRaw: Double = EditorFontPreference.defaultSize
+
+    private var resolvedEditorFontSize: CGFloat {
+        EditorFontPreference.resolve(editorFontSizeRaw)
     }
 
     func makeNSView(context: Context) -> NSScrollView {
@@ -96,7 +98,7 @@ struct MacTextEditor: NSViewRepresentable {
         textView.isIncrementalSearchingEnabled = true
 
         // Appearance
-        textView.font = .systemFont(ofSize: Self.resolvedEditorFontSize, weight: .regular)
+        textView.font = .monospacedSystemFont(ofSize: resolvedEditorFontSize, weight: .regular)
         textView.textColor = .labelColor
         textView.backgroundColor = .clear
         textView.drawsBackground = false
@@ -149,9 +151,10 @@ struct MacTextEditor: NSViewRepresentable {
         (textView as? InteractionTextView)?.onInteraction = onInteraction
         context.coordinator.allTags = allTags
 
-        let targetFontSize = Self.resolvedEditorFontSize
+        let targetFontSize = resolvedEditorFontSize
+        context.coordinator.editorFontSize = targetFontSize
         if textView.font?.pointSize != targetFontSize {
-            textView.font = .systemFont(ofSize: targetFontSize, weight: .regular)
+            textView.font = .monospacedSystemFont(ofSize: targetFontSize, weight: .regular)
             context.coordinator.applyHashtagHighlighting(to: textView)
             (textView as? InteractionTextView)?.refreshRendering()
         }
@@ -169,7 +172,7 @@ struct MacTextEditor: NSViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(text: $text, allTags: allTags)
+        Coordinator(text: $text, allTags: allTags, editorFontSize: resolvedEditorFontSize)
     }
 
     // MARK: - Coordinator
@@ -306,6 +309,7 @@ struct MacTextEditor: NSViewRepresentable {
     final class Coordinator: NSObject, NSTextViewDelegate {
         var text: Binding<String>
         var allTags: [String]
+        var editorFontSize: CGFloat
         private var isUpdating = false
 
         // MARK: Autocomplete
@@ -313,9 +317,10 @@ struct MacTextEditor: NSViewRepresentable {
         /// NSRange covering `#partialTag` currently being typed (in the text view's string).
         private var currentTagRange: NSRange?
 
-        init(text: Binding<String>, allTags: [String]) {
+        init(text: Binding<String>, allTags: [String], editorFontSize: CGFloat) {
             self.text = text
             self.allTags = allTags
+            self.editorFontSize = editorFontSize
         }
 
         func textDidChange(_ notification: Notification) {
@@ -430,10 +435,10 @@ struct MacTextEditor: NSViewRepresentable {
                   !textView.hasMarkedText() else { return }
             let fullRange = NSRange(location: 0, length: textStorage.length)
             let text = textStorage.string
-            let fontSize = MacTextEditor.resolvedEditorFontSize
+            let fontSize = editorFontSize
 
             // Reset to default style
-            let defaultFont = NSFont.systemFont(ofSize: fontSize, weight: .regular)
+            let defaultFont = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .regular)
             let defaultColor = NSColor.labelColor
             textStorage.addAttribute(.foregroundColor, value: defaultColor, range: fullRange)
             textStorage.addAttribute(.font, value: defaultFont, range: fullRange)
@@ -443,12 +448,39 @@ struct MacTextEditor: NSViewRepresentable {
             let matches = regex.matches(in: text, options: [], range: fullRange)
 
             let hashtagColor = NSColor.controlAccentColor
-            let hashtagFont = NSFont.systemFont(ofSize: fontSize, weight: .medium)
+            let hashtagFont = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .medium)
 
             for match in matches {
                 textStorage.addAttribute(.foregroundColor, value: hashtagColor, range: match.range)
                 textStorage.addAttribute(.font, value: hashtagFont, range: match.range)
             }
         }
+    }
+}
+
+// MARK: - Editor Font Preference
+
+/// Shared accessor for the editor's body font size preference. The default
+/// (15 pt) and range (12–28 pt) preserve the previous macOS behavior so
+/// existing users don't see their font size change after this update.
+enum EditorFontPreference {
+    static let key = "editorFontSize"
+    static let minSize: Double = 12
+    static let maxSize: Double = 28
+    static let defaultSize: Double = 15
+
+    /// Clamp a stored value into the supported range, mapping the legacy
+    /// "unset = 0" sentinel to the default.
+    static func resolve(_ raw: Double) -> CGFloat {
+        let normalized = raw == 0 ? defaultSize : raw
+        return CGFloat(min(max(normalized, minSize), maxSize))
+    }
+
+    /// The current preference clamped into the supported range, suitable
+    /// for seeding a `Slider` whose bounds are `minSize...maxSize`.
+    static var savedValue: Double {
+        let raw = UserDefaults.standard.double(forKey: key)
+        let normalized = raw == 0 ? defaultSize : raw
+        return min(max(normalized, minSize), maxSize)
     }
 }
