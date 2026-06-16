@@ -328,16 +328,16 @@ final class NoteDictationController: ObservableObject {
         highlightedRange = nil
 
         do {
-            // Only touch the asset/download machinery when the model isn't
-            // already installed. The UI gates dictation behind an explicit
-            // download prompt, so on the common path this is skipped entirely
-            // and the spinner reflects a single, uninterrupted preparing phase
-            // instead of a download flicker followed by a second prepare.
-            if localeManager.localeRequiresDownload(locale) {
-                let installed = await ensureLocaleInstalled(locale)
-                if !installed || localeManager.localeRequiresDownload(locale) {
-                    throw DictationError.localeAssetsMissing
-                }
+            // Ensure the model assets are installed for the analysis preset.
+            // This is idempotent and fast when the locale is already ready, but
+            // it must run every time: a locale can be broadly "installed" while
+            // the specific transcriber preset still needs its assets primed, and
+            // resolveModuleForAnalysis requires that preset to report `.installed`.
+            // We run it here (after `.preparing`) so the spinner stays continuous
+            // rather than flickering between a download and a prepare phase.
+            let installed = await ensureLocaleInstalled(locale)
+            if !installed || localeManager.localeRequiresDownload(locale) {
+                throw DictationError.localeAssetsMissing
             }
 
             try await prepareAudioSession()
