@@ -276,20 +276,40 @@ final class NoteDictationController: ObservableObject {
 
     // MARK: - Dictation lifecycle
 
+    /// Centralised, logged state mutation. Every transition flows through here
+    /// so the dictation lifecycle can be traced from the console (e.g. via
+    /// `xclog`) when diagnosing button-state flicker or stuck-pipeline issues.
+    private func setState(_ newState: State) {
+        guard newState != state else { return }
+        logger.debug("Dictation state \(String(describing: self.state), privacy: .public) -> \(String(describing: newState), privacy: .public)")
+        state = newState
+    }
+
     func toggleDictation(with locale: Locale, noteStore: NoteStore) {
         attach(noteStore: noteStore)
         if isDictationRunning {
+            logger.debug("toggleDictation: stop requested (state=\(String(describing: self.state), privacy: .public))")
             Task { await stopDictation() }
         } else {
+            logger.debug("toggleDictation: start requested (state=\(String(describing: self.state), privacy: .public))")
             Task { await startDictation(locale: locale) }
         }
     }
 
     func startDictation(locale: Locale) async {
-        guard state == .idle else { return }
+        // Synchronous re-entrancy guard. `state` is moved off `.idle` *before*
+        // the first `await` below, so a second toggle that arrives while we are
+        // suspended (a fast double tap, or a SwiftUI Menu `primaryAction` firing
+        // twice) hits this guard and bails out instead of spinning up a second,
+        // leaked pipeline. Spawning two pipelines was what made the button flash
+        // spinner -> stop -> spinner -> stop on a single press.
+        guard state == .idle else {
+            logger.debug("startDictation ignored; already \(String(describing: self.state), privacy: .public)")
+            return
+        }
         guard #available(iOS 26, *) else {
             activeError = .analyzerUnavailable
-            state = .failed
+            setState(.failed)
             return
         }
         guard let noteStore else {
@@ -298,19 +318,8 @@ final class NoteDictationController: ObservableObject {
             return
         }
 
-        let installed = await ensureLocaleInstalled(locale)
-        let stillMissing = localeManager.localeRequiresDownload(locale)
-        if !installed || stillMissing {
-            state = .failed
-            activeError = .localeAssetsMissing
-            highlightedRange = nil
-            interimTranscription = ""
-            localeInUse = nil
-            state = .idle
-            return
-        }
-
-        state = .preparing
+        logger.debug("startDictation begin for \(locale.identifier, privacy: .public)")
+        setState(.preparing)
         localeInUse = locale
         baseContent = noteStore.currentNote.content
         startLocationUTF16 = baseContent.utf16.count
@@ -319,54 +328,59 @@ final class NoteDictationController: ObservableObject {
         highlightedRange = nil
 
         do {
+            // Only touch the asset/download machinery when the model isn't
+            // already installed. The UI gates dictation behind an explicit
+            // download prompt, so on the common path this is skipped entirely
+            // and the spinner reflects a single, uninterrupted preparing phase
+            // instead of a download flicker followed by a second prepare.
+            if localeManager.localeRequiresDownload(locale) {
+                let installed = await ensureLocaleInstalled(locale)
+                if !installed || localeManager.localeRequiresDownload(locale) {
+                    throw DictationError.localeAssetsMissing
+                }
+            }
+
             try await prepareAudioSession()
             try await preparePipeline(locale: locale)
             try await startCaptureTasks(noteStore: noteStore)
-            state = .recording
-        } catch DictationError.microphonePermissionDenied {
-            state = .failed
+            setState(.recording)
+            logger.debug("startDictation: recording")
+        } catch {
+            await handleStartFailure(error, locale: locale)
+        }
+    }
+
+    private func handleStartFailure(_ error: Error, locale: Locale) async {
+        await teardownPipeline()
+        highlightedRange = nil
+        interimTranscription = ""
+        localeInUse = nil
+
+        switch error {
+        case DictationError.microphonePermissionDenied:
             activeError = .microphonePermissionDenied
-            await teardownPipeline()
-            highlightedRange = nil
-            interimTranscription = ""
-            localeInUse = nil
-            state = .idle
-        } catch DictationError.localeAssetsMissing {
-            state = .failed
-            activeError = .localeAssetsMissing
+        case DictationError.localeAssetsMissing:
             logger.error("Locale assets missing when starting dictation for \(locale.identifier, privacy: .public)")
-            await teardownPipeline()
-            highlightedRange = nil
-            interimTranscription = ""
-            localeInUse = nil
-            state = .idle
-        } catch is CancellationError {
+            activeError = .localeAssetsMissing
+        case is CancellationError:
             // Dictation was cancelled before it finished starting (e.g. the
             // user stopped it again immediately). Clean up without alerting.
             logger.debug("Dictation start cancelled before recording began")
-            await teardownPipeline()
-            highlightedRange = nil
-            interimTranscription = ""
-            localeInUse = nil
-            state = .idle
-        } catch {
-            state = .failed
+        case let dictationError as DictationError:
+            activeError = dictationError
+        default:
             logger.error("Failed to start dictation: \(error.localizedDescription)")
             activeError = .transcriptionFailed(error.localizedDescription)
-            await teardownPipeline()
-            highlightedRange = nil
-            interimTranscription = ""
-            localeInUse = nil
-            state = .idle
         }
+        setState(.idle)
     }
 
     func stopDictation() async {
         guard isDictationRunning else { return }
-        logger.debug("Stopping dictation pipeline")
-        state = .finishing
+        logger.debug("Stopping dictation pipeline (state=\(String(describing: self.state), privacy: .public))")
+        setState(.finishing)
         await teardownPipeline()
-        state = .idle
+        setState(.idle)
         highlightedRange = nil
         interimTranscription = ""
         localeInUse = nil
