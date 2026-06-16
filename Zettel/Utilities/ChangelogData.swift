@@ -15,6 +15,20 @@ enum ChangelogData {
     /// All changelog entries - add new versions at the TOP
     static let entries: [(version: String, title: String, content: String)] = [
         (
+            version: "3.3",
+            title: "v3.3 - Dictation Fixes",
+            content: """
+            ## 🛠 Fixes
+
+            - **Dictation**: Tapping the dictation button no longer flickers between loading and stop — it now starts reliably on the first press.
+            - **Language Packs**: Fixed a spurious "Language Pack Needed" error for languages that were already installed.
+
+            ---
+
+            Thank you for using Zettel! 💛
+            """
+        ),
+        (
             version: "3.2",
             title: "v3.2 - More Apps",
             content: """
