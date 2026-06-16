@@ -340,6 +340,15 @@ final class NoteDictationController: ObservableObject {
             interimTranscription = ""
             localeInUse = nil
             state = .idle
+        } catch is CancellationError {
+            // Dictation was cancelled before it finished starting (e.g. the
+            // user stopped it again immediately). Clean up without alerting.
+            logger.debug("Dictation start cancelled before recording began")
+            await teardownPipeline()
+            highlightedRange = nil
+            interimTranscription = ""
+            localeInUse = nil
+            state = .idle
         } catch {
             state = .failed
             logger.error("Failed to start dictation: \(error.localizedDescription)")
@@ -452,6 +461,10 @@ final class NoteDictationController: ObservableObject {
                     try Task.checkCancellation()
                     await self.handleTranscriptionResult(result, noteStore: noteStore)
                 }
+            } catch is CancellationError {
+                // Expected when dictation is stopped: finishing the analyzer
+                // cancels the results stream. This is not a user-facing failure.
+                NoteDictationController.audioLogger.debug("Results stream cancelled during teardown")
             } catch {
                 NoteDictationController.audioLogger.error("Results task error: \(error.localizedDescription, privacy: .public)")
                 await self.handleTranscriptionError(error)
@@ -486,6 +499,11 @@ final class NoteDictationController: ObservableObject {
 
     @MainActor
     private func handleTranscriptionError(_ error: Error) {
+        // A cancellation is a normal part of stopping dictation, not a failure.
+        if error is CancellationError {
+            logger.debug("Ignoring cancellation reported by results stream")
+            return
+        }
         logger.error("Transcription error: \(error.localizedDescription)")
         activeError = .transcriptionFailed(error.localizedDescription)
     }
@@ -512,14 +530,29 @@ final class NoteDictationController: ObservableObject {
         analyzerInputTask?.cancel()
         analyzerInputTask = nil
 
-        transcriber = nil
-        analyzer = nil
-        captureFormat = nil
+        // Gracefully finish the analyzer so the results stream completes
+        // naturally. Deallocating the analyzer while results are still being
+        // delivered makes the stream throw a CancellationError, which would
+        // otherwise surface to the user as a spurious "dictation failed" alert.
+        if let analyzer {
+            do {
+                try await analyzer.finalizeAndFinishThroughEndOfInput()
+            } catch {
+                logger.debug("finalizeAndFinishThroughEndOfInput failed (\(error.localizedDescription, privacy: .public)); cancelling analyzer")
+                await analyzer.cancelAndFinishNow()
+            }
+        }
 
+        // Drain the results task before releasing the modules so it observes
+        // the clean end-of-stream rather than a deallocation mid-iteration.
         if let resultsTask {
             _ = await resultsTask.result
         }
         resultsTask = nil
+
+        transcriber = nil
+        analyzer = nil
+        captureFormat = nil
 
         if let reservedLocale {
             await AssetInventory.release(reservedLocale: reservedLocale)
