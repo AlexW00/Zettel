@@ -2,13 +2,9 @@
   "extraKnownMarketplaces": {
     "axiom-marketplace": {
       "source": { "source": "github", "repo": "CharlesWiltgen/Axiom" }
-    },
-    "claude-plugins-official": {
-      "source": { "source": "github", "repo": "anthropics/claude-plugins-official" }
     }
   },
   "enabledPlugins": {
-    "axiom@axiom-marketplace": true,
-    "superpowers@claude-plugins-official": true
+    "axiom@axiom-marketplace": true
   }
 }
