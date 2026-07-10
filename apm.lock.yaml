@@ -1,10 +1,14 @@
 lockfile_version: '1'
-generated_at: '2026-07-10T05:21:39.038376+00:00'
+generated_at: '2026-07-10T05:36:22.816619+00:00'
 apm_version: 0.24.0
 dependencies:
-- repo_url: _local/ios-core
+- repo_url: AlexW00/apm
   name: ios-core
+  host: github.com
+  resolved_commit: e7aacca67ece7f2ed2beb8479a8f2f2742bf0e1b
   version: 0.1.0
+  virtual_path: packages/ios-core
+  is_virtual: true
   package_type: apm_package
   deployed_files:
   - .claude/skills/metal-motion-effects
@@ -17,15 +21,17 @@ dependencies:
     .claude/skills/metal-motion-effects/SKILL.md: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
     .claude/skills/msl-techniques/SKILL.md: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
     .claude/skills/swiftui-metal-shaders/SKILL.md: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
-  source: local
-  local_path: ~/Developer/apm/packages/ios-core
+  content_hash: sha256:699316748317e98711d4d77ec36072517cbffd380d0662f39b39b6831143e3af
   declared_license: MIT
-- repo_url: _local/ios-ship
+- repo_url: AlexW00/apm
   name: ios-ship
+  host: github.com
+  resolved_commit: e7aacca67ece7f2ed2beb8479a8f2f2742bf0e1b
   version: 0.1.0
+  virtual_path: packages/ios-ship
+  is_virtual: true
   package_type: apm_package
-  source: local
-  local_path: ~/Developer/apm/packages/ios-ship
+  content_hash: sha256:6f071834640fe3d76b33ce022dce6d45d4d5835e3a1b4daa84aa5ab5b340a98c
   declared_license: MIT
 - repo_url: affaan-m/everything-claude-code
   name: everything-claude-code
@@ -36,7 +42,7 @@ dependencies:
   virtual_path: skills/liquid-glass-design
   is_virtual: true
   depth: 2
-  resolved_by: _local/ios-core
+  resolved_by: AlexW00/apm
   package_type: claude_skill
   deployed_files:
   - .claude/skills/liquid-glass-design
@@ -53,7 +59,7 @@ dependencies:
   virtual_path: skills/widgetkit
   is_virtual: true
   depth: 2
-  resolved_by: _local/ios-core
+  resolved_by: AlexW00/apm
   package_type: claude_skill
   deployed_files:
   - .claude/skills/widgetkit
@@ -74,7 +80,7 @@ dependencies:
   virtual_path: skills/apple-appstore-reviewer
   is_virtual: true
   depth: 2
-  resolved_by: _local/ios-core
+  resolved_by: AlexW00/apm
   package_type: claude_skill
   deployed_files:
   - .claude/skills/apple-appstore-reviewer
@@ -89,7 +95,7 @@ dependencies:
   resolved_ref: 0886ecb04f7a0af1050d809b4bc031b67a50657b
   version: unknown
   depth: 2
-  resolved_by: _local/ios-ship
+  resolved_by: AlexW00/apm
   package_type: skill_bundle
   deployed_files:
   - .claude/skills/asc-app-create-ui
@@ -180,16 +186,11 @@ dependencies:
   virtual_path: swift-concurrency-pro
   is_virtual: true
   depth: 2
-  resolved_by: _local/ios-core
+  resolved_by: AlexW00/apm
   package_type: marketplace_plugin
   deployed_files:
   - .claude/skills/swift-concurrency-pro
-  - .claude/skills/swift-concurrency-pro/.claude-plugin/plugin.json
   - .claude/skills/swift-concurrency-pro/SKILL.md
-  - .claude/skills/swift-concurrency-pro/agents/openai.yaml
-  - .claude/skills/swift-concurrency-pro/apm.yml
-  - .claude/skills/swift-concurrency-pro/assets/swift-concurrency-pro-icon.png
-  - .claude/skills/swift-concurrency-pro/assets/swift-concurrency-pro-icon.svg
   - .claude/skills/swift-concurrency-pro/references/actors.md
   - .claude/skills/swift-concurrency-pro/references/async-streams.md
   - .claude/skills/swift-concurrency-pro/references/bridging.md
@@ -202,26 +203,8 @@ dependencies:
   - .claude/skills/swift-concurrency-pro/references/structured.md
   - .claude/skills/swift-concurrency-pro/references/testing.md
   - .claude/skills/swift-concurrency-pro/references/unstructured.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/SKILL.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/actors.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/async-streams.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/bridging.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/bug-patterns.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/cancellation.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/diagnostics.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/hotspots.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/interop.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/new-features.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/structured.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/testing.md
-  - .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/unstructured.md
   deployed_file_hashes:
-    .claude/skills/swift-concurrency-pro/.claude-plugin/plugin.json: sha256:2f3669516dfa9bcdb47b49abdcc1f9ba2d90fbdab576cefadb288439c707a56b
-    .claude/skills/swift-concurrency-pro/SKILL.md: sha256:95d3098b038a38f163259cb7404070f786fed846a5e8b864e6b34fa7600247f9
-    .claude/skills/swift-concurrency-pro/agents/openai.yaml: sha256:c9aeb1a570575ef05eecfabf4657236591081f7c13cb832d6029981f7d72e0dc
-    .claude/skills/swift-concurrency-pro/apm.yml: sha256:4676db3272504f0c9523ef9fce031e740a000f685246460d68fe592a7412b089
-    .claude/skills/swift-concurrency-pro/assets/swift-concurrency-pro-icon.png: sha256:f1552e2844ae6382bd2575f40c48e0f199db2b42574aa1bdcb87ec92ddc901a1
-    .claude/skills/swift-concurrency-pro/assets/swift-concurrency-pro-icon.svg: sha256:da92910ec6329966729d6e9bcd27bb2be8c079d95b779c1081641dd9b64a344a
+    .claude/skills/swift-concurrency-pro/SKILL.md: sha256:809362b3e932b3bbf9b3f2f79953bae617573e3e24ea135576bbc1b020d89ce0
     .claude/skills/swift-concurrency-pro/references/actors.md: sha256:7a77a0f06d0040a6813ec02cd4b1360df4bcfa501f93710bfb4296de9911d64f
     .claude/skills/swift-concurrency-pro/references/async-streams.md: sha256:589ba0dad544b28b158702e239fe6a4077b6d1484c83b8fd51290192bf1ffc9a
     .claude/skills/swift-concurrency-pro/references/bridging.md: sha256:c8eb60dcdd90f67cb3b8b1213fc55a56dd5c4a04f465d7aff7fdbd5c451e0498
@@ -234,19 +217,6 @@ dependencies:
     .claude/skills/swift-concurrency-pro/references/structured.md: sha256:1655b610fd1dafb7cf42b61457ff8229117c06879d0e9cc40460f437ba97895b
     .claude/skills/swift-concurrency-pro/references/testing.md: sha256:4a1fc1aefb572bbdbd75a502a74df795af7e2212eec6836a4f353f9b725abffc
     .claude/skills/swift-concurrency-pro/references/unstructured.md: sha256:d8063edf18bbe5abc9c628548b0100c4dd8defe3340c017d6fa4936eca17c456
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/SKILL.md: sha256:809362b3e932b3bbf9b3f2f79953bae617573e3e24ea135576bbc1b020d89ce0
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/actors.md: sha256:7a77a0f06d0040a6813ec02cd4b1360df4bcfa501f93710bfb4296de9911d64f
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/async-streams.md: sha256:589ba0dad544b28b158702e239fe6a4077b6d1484c83b8fd51290192bf1ffc9a
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/bridging.md: sha256:c8eb60dcdd90f67cb3b8b1213fc55a56dd5c4a04f465d7aff7fdbd5c451e0498
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/bug-patterns.md: sha256:2233f58e784a9b6cf13620133485fcf7e3150192a40e713369ebbddc820dec85
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/cancellation.md: sha256:c83b4134b44ea5a0ee06e785bd0cb85616234469833f9677297b6fcddea1e1fa
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/diagnostics.md: sha256:cc2debc6f430ed13fc3be3a7ce942e55bb1cf02a9804ebfb272f295b502c9569
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/hotspots.md: sha256:199a9fa4beea4a550b3f63e07cddd441d72fd41d1e17e6f3255071a661ce1e6d
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/interop.md: sha256:b86cd716bd22b38d718e86b37b3d7dd1225b5ce93a53f88842ff6993e93ca566
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/new-features.md: sha256:c721a187b57e9d94112972c9685c57f7129187df2d36add4df1a9c9e9aa9e541
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/structured.md: sha256:1655b610fd1dafb7cf42b61457ff8229117c06879d0e9cc40460f437ba97895b
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/testing.md: sha256:4a1fc1aefb572bbdbd75a502a74df795af7e2212eec6836a4f353f9b725abffc
-    .claude/skills/swift-concurrency-pro/skills/swift-concurrency-pro/references/unstructured.md: sha256:d8063edf18bbe5abc9c628548b0100c4dd8defe3340c017d6fa4936eca17c456
   content_hash: sha256:3e1d7ae55e6d4c98d2f0156132fa1b4f245e44cb30587feb7e8725a944349f91
   declared_license: MIT
 - repo_url: twostraws/swift-testing-agent-skill
@@ -258,45 +228,23 @@ dependencies:
   virtual_path: swift-testing-pro
   is_virtual: true
   depth: 2
-  resolved_by: _local/ios-core
+  resolved_by: AlexW00/apm
   package_type: marketplace_plugin
   deployed_files:
   - .claude/skills/swift-testing-pro
-  - .claude/skills/swift-testing-pro/.claude-plugin/plugin.json
   - .claude/skills/swift-testing-pro/SKILL.md
-  - .claude/skills/swift-testing-pro/agents/openai.yaml
-  - .claude/skills/swift-testing-pro/apm.yml
-  - .claude/skills/swift-testing-pro/assets/swift-testing-pro-icon.png
-  - .claude/skills/swift-testing-pro/assets/swift-testing-pro-icon.svg
   - .claude/skills/swift-testing-pro/references/async-tests.md
   - .claude/skills/swift-testing-pro/references/core-rules.md
   - .claude/skills/swift-testing-pro/references/migrating-from-xctest.md
   - .claude/skills/swift-testing-pro/references/new-features.md
   - .claude/skills/swift-testing-pro/references/writing-better-tests.md
-  - .claude/skills/swift-testing-pro/skills/swift-testing-pro/SKILL.md
-  - .claude/skills/swift-testing-pro/skills/swift-testing-pro/references/async-tests.md
-  - .claude/skills/swift-testing-pro/skills/swift-testing-pro/references/core-rules.md
-  - .claude/skills/swift-testing-pro/skills/swift-testing-pro/references/migrating-from-xctest.md
-  - .claude/skills/swift-testing-pro/skills/swift-testing-pro/references/new-features.md
-  - .claude/skills/swift-testing-pro/skills/swift-testing-pro/references/writing-better-tests.md
   deployed_file_hashes:
-    .claude/skills/swift-testing-pro/.claude-plugin/plugin.json: sha256:ce277427d557d776102a6768d85432fbfdc4a6930ee20ddef0a9418fe9351f84
-    .claude/skills/swift-testing-pro/SKILL.md: sha256:ad4f1bff44b5b7fce20b282481e651876efce024d13b16cb969bc433036ac059
-    .claude/skills/swift-testing-pro/agents/openai.yaml: sha256:f7a35b0befd4eb136cf87047543379a63efebb4f0f7eb4490489325d09383c4f
-    .claude/skills/swift-testing-pro/apm.yml: sha256:db84a35b4f5d0179740365ba56999fcadf8a0bbeb3500ea7d241858ae4a36d49
-    .claude/skills/swift-testing-pro/assets/swift-testing-pro-icon.png: sha256:13cbe2849191cc3fda400fc065d5fe6afa5b78f09e347d783bfa2b6d852a2b66
-    .claude/skills/swift-testing-pro/assets/swift-testing-pro-icon.svg: sha256:92d3d0b2855da2404beaacd3ea574b79a26535c9d99a0739edfd5e35d764a9e0
+    .claude/skills/swift-testing-pro/SKILL.md: sha256:36e6c3d59bbec2f8b4ce95644df8519f2c66dcbff55138964be4ad9d60c07781
     .claude/skills/swift-testing-pro/references/async-tests.md: sha256:bc6e0eabd10377b5796e9e554a4965a78b7d1aaba8f11021c2a63b6e8a9e669a
     .claude/skills/swift-testing-pro/references/core-rules.md: sha256:2271efdca6c2b7b3365501172147884b6e786bcee7bef680fb4f4718929d6180
     .claude/skills/swift-testing-pro/references/migrating-from-xctest.md: sha256:35b64812402ad1d15b496993e1721daaf4e80672bf9cce47078f772fd271f93f
     .claude/skills/swift-testing-pro/references/new-features.md: sha256:988df5cb556893c789f9aecdc4c8773fdbbda787ab1dad766bf1182a7b9a4819
     .claude/skills/swift-testing-pro/references/writing-better-tests.md: sha256:25da3455f6cec4f10d3dff0bf3e8e1372568c75691916541b4d517f451cb8bf1
-    .claude/skills/swift-testing-pro/skills/swift-testing-pro/SKILL.md: sha256:36e6c3d59bbec2f8b4ce95644df8519f2c66dcbff55138964be4ad9d60c07781
-    .claude/skills/swift-testing-pro/skills/swift-testing-pro/references/async-tests.md: sha256:bc6e0eabd10377b5796e9e554a4965a78b7d1aaba8f11021c2a63b6e8a9e669a
-    .claude/skills/swift-testing-pro/skills/swift-testing-pro/references/core-rules.md: sha256:2271efdca6c2b7b3365501172147884b6e786bcee7bef680fb4f4718929d6180
-    .claude/skills/swift-testing-pro/skills/swift-testing-pro/references/migrating-from-xctest.md: sha256:35b64812402ad1d15b496993e1721daaf4e80672bf9cce47078f772fd271f93f
-    .claude/skills/swift-testing-pro/skills/swift-testing-pro/references/new-features.md: sha256:988df5cb556893c789f9aecdc4c8773fdbbda787ab1dad766bf1182a7b9a4819
-    .claude/skills/swift-testing-pro/skills/swift-testing-pro/references/writing-better-tests.md: sha256:25da3455f6cec4f10d3dff0bf3e8e1372568c75691916541b4d517f451cb8bf1
   content_hash: sha256:a1ea5889a7f80d4b863cbe3972b2c631cb9b142ec5db1d21027c85d9b429b3fc
   declared_license: MIT
 - repo_url: twostraws/swiftdata-agent-skill
@@ -308,7 +256,7 @@ dependencies:
   virtual_path: swiftdata-pro
   is_virtual: true
   depth: 2
-  resolved_by: _local/ios-core
+  resolved_by: AlexW00/apm
   package_type: claude_skill
   deployed_files:
   - .claude/skills/swiftdata-pro
@@ -341,16 +289,11 @@ dependencies:
   virtual_path: swiftui-pro
   is_virtual: true
   depth: 2
-  resolved_by: _local/ios-core
+  resolved_by: AlexW00/apm
   package_type: marketplace_plugin
   deployed_files:
   - .claude/skills/swiftui-pro
-  - .claude/skills/swiftui-pro/.claude-plugin/plugin.json
   - .claude/skills/swiftui-pro/SKILL.md
-  - .claude/skills/swiftui-pro/agents/openai.yaml
-  - .claude/skills/swiftui-pro/apm.yml
-  - .claude/skills/swiftui-pro/assets/swiftui-pro-icon.png
-  - .claude/skills/swiftui-pro/assets/swiftui-pro-icon.svg
   - .claude/skills/swiftui-pro/references/accessibility.md
   - .claude/skills/swiftui-pro/references/api.md
   - .claude/skills/swiftui-pro/references/data.md
@@ -360,23 +303,8 @@ dependencies:
   - .claude/skills/swiftui-pro/references/performance.md
   - .claude/skills/swiftui-pro/references/swift.md
   - .claude/skills/swiftui-pro/references/views.md
-  - .claude/skills/swiftui-pro/skills/swiftui-pro/SKILL.md
-  - .claude/skills/swiftui-pro/skills/swiftui-pro/references/accessibility.md
-  - .claude/skills/swiftui-pro/skills/swiftui-pro/references/api.md
-  - .claude/skills/swiftui-pro/skills/swiftui-pro/references/data.md
-  - .claude/skills/swiftui-pro/skills/swiftui-pro/references/design.md
-  - .claude/skills/swiftui-pro/skills/swiftui-pro/references/hygiene.md
-  - .claude/skills/swiftui-pro/skills/swiftui-pro/references/navigation.md
-  - .claude/skills/swiftui-pro/skills/swiftui-pro/references/performance.md
-  - .claude/skills/swiftui-pro/skills/swiftui-pro/references/swift.md
-  - .claude/skills/swiftui-pro/skills/swiftui-pro/references/views.md
   deployed_file_hashes:
-    .claude/skills/swiftui-pro/.claude-plugin/plugin.json: sha256:65bec2a4bc9d5519a4c7474c29ee491d71b84d3ce46d8786580a9510f757de33
-    .claude/skills/swiftui-pro/SKILL.md: sha256:8b58a171afc1dcf9c42d85414af2dc506c8c92bf2c77527adb4d52b884f4d715
-    .claude/skills/swiftui-pro/agents/openai.yaml: sha256:429c39b71692d4dc86e2b616f28b7e7f56207361c5b5a0b06df4746af96d5fa3
-    .claude/skills/swiftui-pro/apm.yml: sha256:f29cef18c400ea489e19dd8de1c3248f149669e7e3c96f11c1261c9ebe605d0e
-    .claude/skills/swiftui-pro/assets/swiftui-pro-icon.png: sha256:51a28a5834e6d251def3c562712db1e2124e6d67b62be89fe4c1ca628e37a70a
-    .claude/skills/swiftui-pro/assets/swiftui-pro-icon.svg: sha256:a15c0a3030f08ffcc442aed9b7f2f19840877e43f980ad4dfdef515e9aeb44b3
+    .claude/skills/swiftui-pro/SKILL.md: sha256:b8a892d4819494ef79f1db68ffee7a940f20304589ce38032c853dadff168199
     .claude/skills/swiftui-pro/references/accessibility.md: sha256:708d09a35c950fd4c118bbb3cfcab13bb146e7d02084615307bbabc19e00a0e3
     .claude/skills/swiftui-pro/references/api.md: sha256:12fa73d65a19c9d08224f925801db8eec914b1cedf5b2f86a38cdda04a66377a
     .claude/skills/swiftui-pro/references/data.md: sha256:5cc50484c525f748839e12174c065f7ea5fdd4380ce04b6885a906ecd6e6a318
@@ -386,15 +314,5 @@ dependencies:
     .claude/skills/swiftui-pro/references/performance.md: sha256:1b503e3807e216d6b34b45f18bfba89214cea2fa1b88dd7ae8f482ebf0f03616
     .claude/skills/swiftui-pro/references/swift.md: sha256:8c31c5f5f99b3fa9586f0260cd1a4b1688dc7bda5e8de2891eb3f9d6a791125a
     .claude/skills/swiftui-pro/references/views.md: sha256:79a166f6507e86744c0f73cfb583100f61a5da37e313ef4586b3b31136a73627
-    .claude/skills/swiftui-pro/skills/swiftui-pro/SKILL.md: sha256:b8a892d4819494ef79f1db68ffee7a940f20304589ce38032c853dadff168199
-    .claude/skills/swiftui-pro/skills/swiftui-pro/references/accessibility.md: sha256:708d09a35c950fd4c118bbb3cfcab13bb146e7d02084615307bbabc19e00a0e3
-    .claude/skills/swiftui-pro/skills/swiftui-pro/references/api.md: sha256:12fa73d65a19c9d08224f925801db8eec914b1cedf5b2f86a38cdda04a66377a
-    .claude/skills/swiftui-pro/skills/swiftui-pro/references/data.md: sha256:5cc50484c525f748839e12174c065f7ea5fdd4380ce04b6885a906ecd6e6a318
-    .claude/skills/swiftui-pro/skills/swiftui-pro/references/design.md: sha256:03e35d46865cc6807255f3c8481cdbac7b3b0f61924185af84c1913d6c983c69
-    .claude/skills/swiftui-pro/skills/swiftui-pro/references/hygiene.md: sha256:91d96f45f3ffa02f5553c288415f3c3d5f317cab7d8d9c6c60240ea6c44a2b01
-    .claude/skills/swiftui-pro/skills/swiftui-pro/references/navigation.md: sha256:a3adb302455993aff85bbb6b5845ed2fcffa137c8b2ded99c937f3e4b7fcd77b
-    .claude/skills/swiftui-pro/skills/swiftui-pro/references/performance.md: sha256:1b503e3807e216d6b34b45f18bfba89214cea2fa1b88dd7ae8f482ebf0f03616
-    .claude/skills/swiftui-pro/skills/swiftui-pro/references/swift.md: sha256:8c31c5f5f99b3fa9586f0260cd1a4b1688dc7bda5e8de2891eb3f9d6a791125a
-    .claude/skills/swiftui-pro/skills/swiftui-pro/references/views.md: sha256:79a166f6507e86744c0f73cfb583100f61a5da37e313ef4586b3b31136a73627
   content_hash: sha256:43338d56ab22b1f03eee1f2d6e72e08e5f1a3b70b9f4146849ab37a5156fb94d
   declared_license: MIT

@@ -2,6 +2,7 @@
 name: swift-testing-pro
 description: Writes, reviews, and improves Swift Testing code using modern APIs and best practices. Use when reading, writing, or reviewing projects that use Swift Testing.
 license: MIT
+argument-hint: "[focus area]"
 metadata:
   author: Paul Hudson
   version: "1.0"
@@ -11,11 +12,11 @@ Write and review Swift Testing code for correctness, modern API usage, and adher
 
 Review process:
 
-1. Ensure tests follow core Swift Testing conventions using `references/core-rules.md`.
-1. Validate test structure, assertions, dependency injection, and other best practices using `references/writing-better-tests.md`.
-1. Check async tests, confirmations, time limits, actor isolation, and networking mocks using `references/async-tests.md`.
-1. Ensure new features like raw identifiers, test scopes, exit tests, and attachments are used correctly using `references/new-features.md`.
-1. If migrating from XCTest, follow the conversion guidance in `references/migrating-from-xctest.md`.
+1. Ensure tests follow core Swift Testing conventions using `${CLAUDE_SKILL_DIR}/references/core-rules.md`.
+1. Validate test structure, assertions, dependency injection, and other best practices using `${CLAUDE_SKILL_DIR}/references/writing-better-tests.md`.
+1. Check async tests, confirmations, time limits, actor isolation, and networking mocks using `${CLAUDE_SKILL_DIR}/references/async-tests.md`.
+1. Ensure new features like raw identifiers, test scopes, exit tests, and attachments are used correctly using `${CLAUDE_SKILL_DIR}/references/new-features.md`.
+1. If migrating from XCTest, follow the conversion guidance in `${CLAUDE_SKILL_DIR}/references/migrating-from-xctest.md`.
 
 If doing partial work, load only the relevant reference files.
 
@@ -90,8 +91,8 @@ End of example.
 
 ## References
 
-- `references/core-rules.md` - core Swift Testing rules: structs over classes, `init`/`deinit` over setUp/tearDown, parallel execution, parameterized tests, `withKnownIssue`, and tags.
-- `references/writing-better-tests.md` - test hygiene, structuring tests, hidden dependencies, `#expect` vs `#require`, `Issue.record()`, `#expect(throws:)`, and verification methods.
-- `references/async-tests.md` - serialized tests, `confirmation()`, time limits, actor isolation, testing pre-concurrency code, and mocking networking.
-- `references/new-features.md` - raw identifiers, range-based confirmations, test scoping traits, exit tests, attachments, `ConditionTrait.evaluate()`, and the updated `#expect(throws:)` return value.
-- `references/migrating-from-xctest.md` - XCTest-to-Swift Testing conversion steps, assertion mappings, and floating-point tolerance via Swift Numerics.
+- `${CLAUDE_SKILL_DIR}/references/core-rules.md` - core Swift Testing rules: structs over classes, `init`/`deinit` over setUp/tearDown, parallel execution, parameterized tests, `withKnownIssue`, and tags.
+- `${CLAUDE_SKILL_DIR}/references/writing-better-tests.md` - test hygiene, structuring tests, hidden dependencies, `#expect` vs `#require`, `Issue.record()`, `#expect(throws:)`, and verification methods.
+- `${CLAUDE_SKILL_DIR}/references/async-tests.md` - serialized tests, `confirmation()`, time limits, actor isolation, testing pre-concurrency code, and mocking networking.
+- `${CLAUDE_SKILL_DIR}/references/new-features.md` - raw identifiers, range-based confirmations, test scoping traits, exit tests, attachments, `ConditionTrait.evaluate()`, and the updated `#expect(throws:)` return value.
+- `${CLAUDE_SKILL_DIR}/references/migrating-from-xctest.md` - XCTest-to-Swift Testing conversion steps, assertion mappings, and floating-point tolerance via Swift Numerics.

@@ -6,6 +6,6 @@ targets:
 includes: auto          # deploys any Zettel-local .apm/skills/ last (local wins collisions)
 dependencies:
   apm:
-    - ~/Developer/apm/packages/ios-core
-    - ~/Developer/apm/packages/ios-ship
+    - AlexW00/apm/packages/ios-core
+    - AlexW00/apm/packages/ios-ship
   mcp: []

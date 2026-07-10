@@ -1,9 +1,0 @@
-name: swift-testing-pro
-version: 1.0.0
-description: Writes, reviews, and improves Swift Testing code using modern APIs and
-  best practices.
-author: Paul Hudson
-license: MIT
-repository: https://github.com/twostraws/Swift-Testing-Agent-Skill
-homepage: https://github.com/twostraws/Swift-Testing-Agent-Skill
-type: hybrid

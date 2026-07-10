@@ -2,6 +2,7 @@
 name: swift-concurrency-pro
 description: Reviews Swift code for concurrency correctness, modern API usage, and common async/await pitfalls. Use when reading, writing, or reviewing Swift concurrency code.
 license: MIT
+argument-hint: "[focus area]"
 metadata:
   author: Paul Hudson
   version: "1.0"
@@ -11,18 +12,18 @@ Review Swift concurrency code for correctness, modern API usage, and adherence t
 
 Review process:
 
-1. Scan for known-dangerous patterns using `references/hotspots.md` to prioritize what to inspect.
-1. Check for recent Swift 6.2 concurrency behavior using `references/new-features.md`.
-1. Validate actor usage for reentrancy and isolation correctness using `references/actors.md`.
-1. Ensure structured concurrency is preferred over unstructured where appropriate using `references/structured.md`.
-1. Check unstructured task usage for correctness using `references/unstructured.md`.
-1. Verify cancellation is handled correctly using `references/cancellation.md`.
-1. Validate async stream and continuation usage using `references/async-streams.md`.
-1. Check bridging code between sync and async worlds using `references/bridging.md`.
-1. Review any legacy concurrency migrations using `references/interop.md`.
-1. Cross-check against common failure modes using `references/bug-patterns.md`.
-1. If the project has strict-concurrency errors, map diagnostics to fixes using `references/diagnostics.md`.
-1. If reviewing tests, check async test patterns using `references/testing.md`.
+1. Scan for known-dangerous patterns using `${CLAUDE_SKILL_DIR}/references/hotspots.md` to prioritize what to inspect.
+1. Check for recent Swift 6.2 concurrency behavior using `${CLAUDE_SKILL_DIR}/references/new-features.md`.
+1. Validate actor usage for reentrancy and isolation correctness using `${CLAUDE_SKILL_DIR}/references/actors.md`.
+1. Ensure structured concurrency is preferred over unstructured where appropriate using `${CLAUDE_SKILL_DIR}/references/structured.md`.
+1. Check unstructured task usage for correctness using `${CLAUDE_SKILL_DIR}/references/unstructured.md`.
+1. Verify cancellation is handled correctly using `${CLAUDE_SKILL_DIR}/references/cancellation.md`.
+1. Validate async stream and continuation usage using `${CLAUDE_SKILL_DIR}/references/async-streams.md`.
+1. Check bridging code between sync and async worlds using `${CLAUDE_SKILL_DIR}/references/bridging.md`.
+1. Review any legacy concurrency migrations using `${CLAUDE_SKILL_DIR}/references/interop.md`.
+1. Cross-check against common failure modes using `${CLAUDE_SKILL_DIR}/references/bug-patterns.md`.
+1. If the project has strict-concurrency errors, map diagnostics to fixes using `${CLAUDE_SKILL_DIR}/references/diagnostics.md`.
+1. If reviewing tests, check async test patterns using `${CLAUDE_SKILL_DIR}/references/testing.md`.
 
 If doing a partial review, load only the relevant reference files.
 
@@ -110,15 +111,15 @@ End of example.
 
 ## References
 
-- `references/hotspots.md` - Grep targets for code review: known-dangerous patterns and what to check for each.
-- `references/new-features.md` - Swift 6.2 changes that alter review advice: default actor isolation, isolated conformances, caller-actor async behavior, `@concurrent`, `Task.immediate`, task naming, and priority escalation.
-- `references/actors.md` - Actor reentrancy, shared-state annotations, global actor inference, and isolation patterns.
-- `references/structured.md` - Task groups over loops, discarding task groups, concurrency limits.
-- `references/unstructured.md` - Task vs Task.detached, when Task {} is a code smell.
-- `references/cancellation.md` - Cancellation propagation, cooperative checking, broken cancellation patterns.
-- `references/async-streams.md` - AsyncStream factory, continuation lifecycle, back-pressure.
-- `references/bridging.md` - Checked continuations, wrapping legacy APIs, `@unchecked Sendable`.
-- `references/interop.md` - Migrating from GCD, `Mutex`/locks, completion handlers, delegates, and Combine.
-- `references/bug-patterns.md` - Common concurrency failure modes and their fixes.
-- `references/diagnostics.md` - Strict-concurrency compiler errors, protocol conformance fixes, and likely remedies.
-- `references/testing.md` - Async test strategy with Swift Testing, race detection, avoiding timing-based tests.
+- `${CLAUDE_SKILL_DIR}/references/hotspots.md` - Grep targets for code review: known-dangerous patterns and what to check for each.
+- `${CLAUDE_SKILL_DIR}/references/new-features.md` - Swift 6.2 changes that alter review advice: default actor isolation, isolated conformances, caller-actor async behavior, `@concurrent`, `Task.immediate`, task naming, and priority escalation.
+- `${CLAUDE_SKILL_DIR}/references/actors.md` - Actor reentrancy, shared-state annotations, global actor inference, and isolation patterns.
+- `${CLAUDE_SKILL_DIR}/references/structured.md` - Task groups over loops, discarding task groups, concurrency limits.
+- `${CLAUDE_SKILL_DIR}/references/unstructured.md` - Task vs Task.detached, when Task {} is a code smell.
+- `${CLAUDE_SKILL_DIR}/references/cancellation.md` - Cancellation propagation, cooperative checking, broken cancellation patterns.
+- `${CLAUDE_SKILL_DIR}/references/async-streams.md` - AsyncStream factory, continuation lifecycle, back-pressure.
+- `${CLAUDE_SKILL_DIR}/references/bridging.md` - Checked continuations, wrapping legacy APIs, `@unchecked Sendable`.
+- `${CLAUDE_SKILL_DIR}/references/interop.md` - Migrating from GCD, `Mutex`/locks, completion handlers, delegates, and Combine.
+- `${CLAUDE_SKILL_DIR}/references/bug-patterns.md` - Common concurrency failure modes and their fixes.
+- `${CLAUDE_SKILL_DIR}/references/diagnostics.md` - Strict-concurrency compiler errors, protocol conformance fixes, and likely remedies.
+- `${CLAUDE_SKILL_DIR}/references/testing.md` - Async test strategy with Swift Testing, race detection, avoiding timing-based tests.
