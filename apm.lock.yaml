@@ -1,11 +1,11 @@
 lockfile_version: '1'
-generated_at: '2026-07-10T05:36:22.816619+00:00'
+generated_at: '2026-07-10T07:55:12.237749+00:00'
 apm_version: 0.24.0
 dependencies:
 - repo_url: AlexW00/apm
   name: ios-core
   host: github.com
-  resolved_commit: e7aacca67ece7f2ed2beb8479a8f2f2742bf0e1b
+  resolved_commit: 01abbe03baf935d25a5c2f6f50caa2e52e2c6cb7
   version: 0.1.0
   virtual_path: packages/ios-core
   is_virtual: true
@@ -21,12 +21,12 @@ dependencies:
     .claude/skills/metal-motion-effects/SKILL.md: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
     .claude/skills/msl-techniques/SKILL.md: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
     .claude/skills/swiftui-metal-shaders/SKILL.md: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
-  content_hash: sha256:699316748317e98711d4d77ec36072517cbffd380d0662f39b39b6831143e3af
+  content_hash: sha256:fb2ec9c952908ae67d83633d68a3985fcccd1663bec30098d10eee142091f119
   declared_license: MIT
 - repo_url: AlexW00/apm
   name: ios-ship
   host: github.com
-  resolved_commit: e7aacca67ece7f2ed2beb8479a8f2f2742bf0e1b
+  resolved_commit: 01abbe03baf935d25a5c2f6f50caa2e52e2c6cb7
   version: 0.1.0
   virtual_path: packages/ios-ship
   is_virtual: true
@@ -72,11 +72,11 @@ dependencies:
     .claude/skills/widgetkit/references/widgetkit-advanced.md: sha256:ed93f51020e6b3b7ad9c09da4decb640285dd6bebb6e67fd66634eb3fb1b8743
   content_hash: sha256:001b28f00e0d314f339f8c1e80db02d7dd3a1d4dbb9fbf0f8ef47681bcb495dd
 - repo_url: github/awesome-copilot
-  name: awesome-copilot
+  name: apple-appstore-reviewer
   host: github.com
-  resolved_commit: bb4766e22666d271e11dcd26c61173b9829f576a
-  resolved_ref: bb4766e22666d271e11dcd26c61173b9829f576a
-  version: unknown
+  resolved_commit: 30472ecf0fe34cc561df958c08501ecc5ca80ea4
+  resolved_ref: 30472ecf0fe34cc561df958c08501ecc5ca80ea4
+  version: 1.0.0
   virtual_path: skills/apple-appstore-reviewer
   is_virtual: true
   depth: 2
