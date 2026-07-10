@@ -1,0 +1,9 @@
+name: swift-concurrency-pro
+version: 1.0.0
+description: Reviews Swift code for concurrency correctness, modern API usage, and
+  common async/await pitfalls.
+author: Paul Hudson
+license: MIT
+repository: https://github.com/twostraws/Swift-Concurrency-Agent-Skill
+homepage: https://github.com/twostraws/Swift-Concurrency-Agent-Skill
+type: hybrid

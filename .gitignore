@@ -70,3 +70,6 @@ fastlane/test_output
 # Copilot stuff
 plan/
 build/
+
+# APM dependencies
+apm_modules/
