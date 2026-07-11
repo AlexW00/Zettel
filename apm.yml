@@ -8,5 +8,5 @@ dependencies:
   apm:
     - AlexW00/apm/packages/ios-core
     - AlexW00/apm/packages/ios-ship
-    - AlexW00/apm/packages/design-extras
+    - AlexW00/apm/packages/design-eng
   mcp: []

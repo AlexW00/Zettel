@@ -1,21 +1,21 @@
 lockfile_version: '1'
-generated_at: '2026-07-11T04:50:56.462439+00:00'
+generated_at: '2026-07-11T05:56:33.280931+00:00'
 apm_version: 0.24.0
 dependencies:
 - repo_url: AlexW00/apm
-  name: design-extras
+  name: design-eng
   host: github.com
-  resolved_commit: 07e4ec8daa9cbef1450605bc76f28479ab40736b
+  resolved_commit: f06e9b273ab1eda3d20ab93bf3888f605ef69f58
   version: 0.1.0
-  virtual_path: packages/design-extras
+  virtual_path: packages/design-eng
   is_virtual: true
   package_type: apm_package
-  content_hash: sha256:3ecabd30a120b0deb9a2c96f1236c9e8721d9d99b49589b0ef9a394068432e32
+  content_hash: sha256:8856286cd01a3d03b583393cc5df49e7e81cd316f4ab55f88626958fa1189541
   declared_license: MIT
 - repo_url: AlexW00/apm
   name: ios-core
   host: github.com
-  resolved_commit: 07e4ec8daa9cbef1450605bc76f28479ab40736b
+  resolved_commit: f06e9b273ab1eda3d20ab93bf3888f605ef69f58
   version: 0.1.0
   virtual_path: packages/ios-core
   is_virtual: true
@@ -36,7 +36,7 @@ dependencies:
 - repo_url: AlexW00/apm
   name: ios-ship
   host: github.com
-  resolved_commit: 07e4ec8daa9cbef1450605bc76f28479ab40736b
+  resolved_commit: f06e9b273ab1eda3d20ab93bf3888f605ef69f58
   version: 0.1.0
   virtual_path: packages/ios-ship
   is_virtual: true
@@ -60,29 +60,6 @@ dependencies:
   deployed_file_hashes:
     .claude/skills/liquid-glass-design/SKILL.md: sha256:024aa207eb3d4d31d868954a7352a40b78c61f2fd007ab8b452afb6217070f84
   content_hash: sha256:cdd47ce273b84d1e630aa6ea8086baa9b4affd9f881b3f95a7b25334b67a1dc5
-- repo_url: dominikmartn/nothing-design-skill
-  name: nothing-design-skill
-  host: github.com
-  resolved_commit: 74affbb786af098b18503467b205c10a7df30126
-  resolved_ref: 74affbb786af098b18503467b205c10a7df30126
-  version: unknown
-  virtual_path: nothing-design
-  is_virtual: true
-  depth: 2
-  resolved_by: AlexW00/apm
-  package_type: claude_skill
-  deployed_files:
-  - .claude/skills/nothing-design
-  - .claude/skills/nothing-design/SKILL.md
-  - .claude/skills/nothing-design/references/components.md
-  - .claude/skills/nothing-design/references/platform-mapping.md
-  - .claude/skills/nothing-design/references/tokens.md
-  deployed_file_hashes:
-    .claude/skills/nothing-design/SKILL.md: sha256:64275c2031790e64bdc95e77fd87f75afc6f5d73989a5d1b2a766ee161059ad1
-    .claude/skills/nothing-design/references/components.md: sha256:f9452969d79600d5efdc46e35a11b7c7d1a1cd1377d7581097ebac721202cd6e
-    .claude/skills/nothing-design/references/platform-mapping.md: sha256:66e15975efdfad553d4e357ad7fdd6357fce03d073dd11ed1a36fe1d4063871d
-    .claude/skills/nothing-design/references/tokens.md: sha256:39afb46a2012dc6454ca3c4081e1b27e959b6780efc6abed18dcaeeff9320e5e
-  content_hash: sha256:bd835bf84356f346fe0adffe9b388bd45eb77eb2b50d83defde371e1d4861b34
 - repo_url: dpearson2699/swift-ios-skills
   name: swift-ios-skills
   host: github.com
