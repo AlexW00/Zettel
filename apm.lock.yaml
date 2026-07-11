@@ -1,11 +1,21 @@
 lockfile_version: '1'
-generated_at: '2026-07-10T07:55:12.237749+00:00'
+generated_at: '2026-07-11T04:50:56.462439+00:00'
 apm_version: 0.24.0
 dependencies:
 - repo_url: AlexW00/apm
+  name: design-extras
+  host: github.com
+  resolved_commit: 07e4ec8daa9cbef1450605bc76f28479ab40736b
+  version: 0.1.0
+  virtual_path: packages/design-extras
+  is_virtual: true
+  package_type: apm_package
+  content_hash: sha256:3ecabd30a120b0deb9a2c96f1236c9e8721d9d99b49589b0ef9a394068432e32
+  declared_license: MIT
+- repo_url: AlexW00/apm
   name: ios-core
   host: github.com
-  resolved_commit: 01abbe03baf935d25a5c2f6f50caa2e52e2c6cb7
+  resolved_commit: 07e4ec8daa9cbef1450605bc76f28479ab40736b
   version: 0.1.0
   virtual_path: packages/ios-core
   is_virtual: true
@@ -26,7 +36,7 @@ dependencies:
 - repo_url: AlexW00/apm
   name: ios-ship
   host: github.com
-  resolved_commit: 01abbe03baf935d25a5c2f6f50caa2e52e2c6cb7
+  resolved_commit: 07e4ec8daa9cbef1450605bc76f28479ab40736b
   version: 0.1.0
   virtual_path: packages/ios-ship
   is_virtual: true
@@ -50,6 +60,29 @@ dependencies:
   deployed_file_hashes:
     .claude/skills/liquid-glass-design/SKILL.md: sha256:024aa207eb3d4d31d868954a7352a40b78c61f2fd007ab8b452afb6217070f84
   content_hash: sha256:cdd47ce273b84d1e630aa6ea8086baa9b4affd9f881b3f95a7b25334b67a1dc5
+- repo_url: dominikmartn/nothing-design-skill
+  name: nothing-design-skill
+  host: github.com
+  resolved_commit: 74affbb786af098b18503467b205c10a7df30126
+  resolved_ref: 74affbb786af098b18503467b205c10a7df30126
+  version: unknown
+  virtual_path: nothing-design
+  is_virtual: true
+  depth: 2
+  resolved_by: AlexW00/apm
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/nothing-design
+  - .claude/skills/nothing-design/SKILL.md
+  - .claude/skills/nothing-design/references/components.md
+  - .claude/skills/nothing-design/references/platform-mapping.md
+  - .claude/skills/nothing-design/references/tokens.md
+  deployed_file_hashes:
+    .claude/skills/nothing-design/SKILL.md: sha256:64275c2031790e64bdc95e77fd87f75afc6f5d73989a5d1b2a766ee161059ad1
+    .claude/skills/nothing-design/references/components.md: sha256:f9452969d79600d5efdc46e35a11b7c7d1a1cd1377d7581097ebac721202cd6e
+    .claude/skills/nothing-design/references/platform-mapping.md: sha256:66e15975efdfad553d4e357ad7fdd6357fce03d073dd11ed1a36fe1d4063871d
+    .claude/skills/nothing-design/references/tokens.md: sha256:39afb46a2012dc6454ca3c4081e1b27e959b6780efc6abed18dcaeeff9320e5e
+  content_hash: sha256:bd835bf84356f346fe0adffe9b388bd45eb77eb2b50d83defde371e1d4861b34
 - repo_url: dpearson2699/swift-ios-skills
   name: swift-ios-skills
   host: github.com
@@ -71,12 +104,38 @@ dependencies:
     .claude/skills/widgetkit/evals/evals.json: sha256:f774ae36d263b560ff89d0c2b30f672a2a0ad09ca714cb3f39981c75d96fbfea
     .claude/skills/widgetkit/references/widgetkit-advanced.md: sha256:ed93f51020e6b3b7ad9c09da4decb640285dd6bebb6e67fd66634eb3fb1b8743
   content_hash: sha256:001b28f00e0d314f339f8c1e80db02d7dd3a1d4dbb9fbf0f8ef47681bcb495dd
+- repo_url: emilkowalski/skills
+  name: skills
+  host: github.com
+  resolved_commit: 220e8607c90b17337d210125777b7b695f26c221
+  resolved_ref: 220e8607c90b17337d210125777b7b695f26c221
+  version: unknown
+  depth: 2
+  resolved_by: AlexW00/apm
+  package_type: skill_bundle
+  deployed_files:
+  - .claude/skills/animation-vocabulary
+  - .claude/skills/animation-vocabulary/SKILL.md
+  - .claude/skills/apple-design
+  - .claude/skills/apple-design/SKILL.md
+  - .claude/skills/emil-design-eng
+  - .claude/skills/emil-design-eng/SKILL.md
+  - .claude/skills/review-animations
+  - .claude/skills/review-animations/SKILL.md
+  - .claude/skills/review-animations/STANDARDS.md
+  deployed_file_hashes:
+    .claude/skills/animation-vocabulary/SKILL.md: sha256:d718b48fe3c7898804d588f050a2e266d82c9f5ef51da256c8cb8b5951527757
+    .claude/skills/apple-design/SKILL.md: sha256:11840b24a11d7f94f39c6aaab074750ae4e4de4ef54ee4b1dd97e16ebd485e61
+    .claude/skills/emil-design-eng/SKILL.md: sha256:433b5a239cda18e0576e4e558532e7e53512e21fafe5b85db4894c28ec399b72
+    .claude/skills/review-animations/SKILL.md: sha256:da7ffae44f21bc8c5104567256f6c66e5dac69fd7118db639ee3d30e0f9d6ba9
+    .claude/skills/review-animations/STANDARDS.md: sha256:72b1235ea4d7cf64123719d569c0726129b3772713d480369c28f6a5f9f7278c
+  content_hash: sha256:5181533e95f02c8e696da8bcd5f5fcc2b28610afd2458ece78e76aeaaf2a24af
 - repo_url: github/awesome-copilot
-  name: apple-appstore-reviewer
+  name: awesome-copilot
   host: github.com
   resolved_commit: 30472ecf0fe34cc561df958c08501ecc5ca80ea4
   resolved_ref: 30472ecf0fe34cc561df958c08501ecc5ca80ea4
-  version: 1.0.0
+  version: unknown
   virtual_path: skills/apple-appstore-reviewer
   is_virtual: true
   depth: 2
