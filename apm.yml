@@ -1,0 +1,12 @@
+name: zettel
+version: 0.1.0
+description: Zettel agent-config — skills via the apm marketplace
+targets:
+  - claude
+includes: auto          # deploys any Zettel-local .apm/skills/ last (local wins collisions)
+dependencies:
+  apm:
+    - AlexW00/apm/packages/ios-core
+    - AlexW00/apm/packages/ios-ship
+    - AlexW00/apm/packages/design-eng
+  mcp: []
