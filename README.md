@@ -9,7 +9,7 @@ Zettel is a minimal, distraction-free *local* note-taking app available for **iP
 
 ## App Store
 
-You can download Zettel for free:
+You can download Zettel:
 
 - **iOS / macOS**: [App Store](https://apps.apple.com/de/app/zettel-quick-notes/id6748525244)
 
