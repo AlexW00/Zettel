@@ -1,0 +1,47 @@
+{
+  "skill_name": "widgetkit",
+  "evals": [
+    {
+      "id": 0,
+      "name": "widget-push-reload-review",
+      "prompt": "Review this iOS 26 WidgetKit plan before implementation: we will add a WidgetPushHandler type in the app target, send APNs broadcast pushes on a channel whenever server data changes, and rely on those pushes instead of timelines for freshness. What needs to change?",
+      "expected_output": "A correction-focused review that explains the correct WidgetKit push handler registration, widget-extension capability, APNs headers, budget behavior, and the boundary with ActivityKit broadcast channels.",
+      "files": [],
+      "expectations": [
+        "Says `WidgetPushHandler` belongs with the widget configuration and must be registered with `.pushHandler(...)` on the `WidgetConfiguration`.",
+        "Mentions adding the Push Notifications capability to the widget extension target for WidgetKit push updates.",
+        "Specifies the WidgetKit APNs contract: `apns-push-type: widgets`, topic suffix `.push-type.widgets`, and an `aps.content-changed` payload.",
+        "Warns that WidgetKit push notifications are budgeted or opportunistic and supplement timelines rather than replacing them.",
+        "Rejects ActivityKit broadcast channels as a WidgetKit timeline update mechanism."
+      ]
+    },
+    {
+      "id": 1,
+      "name": "control-toggle-push-review",
+      "prompt": "We are building a Control Center garage-door toggle. The action is a plain AppIntent with no value parameter, remote server updates use ControlPushHandler.pushTokensDidChange(controls: [ControlPushInfo]), and APNs sends `apns-push-type: widgets`. Review the plan and provide corrected Swift/API guidance.",
+      "expected_output": "A WidgetKit controls review that distinguishes button and toggle intents, fixes ControlPushHandler types, and names the correct control reload APNs headers.",
+      "files": [],
+      "expectations": [
+        "Requires the `ControlWidgetToggle` action to conform to `SetValueIntent` with a Boolean `value` parameter.",
+        "Explains that `ControlPushHandler.pushTokensDidChange(controls:)` receives `[ControlInfo]`, with push tokens available through each control's push info.",
+        "States that push-capable controls register the handler with `.pushHandler(...)` on the `ControlWidgetConfiguration`.",
+        "Specifies the remote control APNs contract: `apns-push-type: controls`, topic suffix `.push-type.controls`, and an `aps.content-changed` payload.",
+        "Keeps generic App Intents exposition brief and focused on WidgetKit control integration."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "deep-link-rendering-boundary",
+      "prompt": "Audit this widget design note: small widgets can only use widgetURL, not Link; Liquid Glass support means picking a WidgetAccentedRenderingMode enum case globally; and Smart Stack relevance should return WidgetRelevance(intent, score: 80) from AppIntentTimelineProvider on iPhone. Fix the note without drifting into full ActivityKit or App Intents docs.",
+      "expected_output": "A bounded WidgetKit correction that fixes deep links, accented rendering, and Smart Stack relevance while preserving sibling-skill boundaries.",
+      "files": [],
+      "expectations": [
+        "Corrects that `Link` can be used in `.systemSmall`, `.accessoryRectangular`, and larger system widgets, with one `widgetURL(_:)` for the general surface.",
+        "Frames Liquid Glass and accented rendering around `widgetRenderingMode`, `.widgetAccentable()`, and `Image.widgetAccentedRenderingMode(_:)` rather than a global enum choice.",
+        "Rejects the invalid `WidgetRelevance(intent, score:)` initializer.",
+        "Explains that iPhone and iPad Smart Stacks use `TimelineEntryRelevance` and intent donation, while watchOS contextual relevance uses `WidgetRelevance([WidgetRelevanceAttribute(...)])`.",
+        "Keeps ActivityKit, App Intents, and APNs details limited to handoff boundaries that affect the widget note."
+      ]
+    }
+  ]
+}

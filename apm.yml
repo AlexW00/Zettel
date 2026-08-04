@@ -3,6 +3,7 @@ version: 0.1.0
 description: Zettel agent-config — skills via the apm marketplace
 targets:
   - claude
+  - codex
 includes: auto          # deploys any Zettel-local .apm/skills/ last (local wins collisions)
 dependencies:
   apm:

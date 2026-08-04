@@ -1,26 +1,32 @@
 lockfile_version: '1'
-generated_at: '2026-07-11T05:56:33.280931+00:00'
-apm_version: 0.24.0
+generated_at: '2026-08-04T07:10:38.962700+00:00'
+apm_version: 0.26.0
 dependencies:
-- repo_url: AlexW00/apm
+- repo_url: alexw00/apm
   name: design-eng
   host: github.com
-  resolved_commit: f06e9b273ab1eda3d20ab93bf3888f605ef69f58
+  resolved_commit: 401dee12ea412edeaf1b485a9069168f798c6f84
   version: 0.1.0
   virtual_path: packages/design-eng
   is_virtual: true
   package_type: apm_package
-  content_hash: sha256:8856286cd01a3d03b583393cc5df49e7e81cd316f4ab55f88626958fa1189541
+  content_hash: sha256:e82b7f816d3d4f31a77ccf0745e15ee372cc3b15f99f5ecbbe24ee0a7a0ac12d
   declared_license: MIT
-- repo_url: AlexW00/apm
+- repo_url: alexw00/apm
   name: ios-core
   host: github.com
-  resolved_commit: f06e9b273ab1eda3d20ab93bf3888f605ef69f58
+  resolved_commit: 401dee12ea412edeaf1b485a9069168f798c6f84
   version: 0.1.0
   virtual_path: packages/ios-core
   is_virtual: true
   package_type: apm_package
   deployed_files:
+  - .agents/skills/metal-motion-effects
+  - .agents/skills/metal-motion-effects/SKILL.md
+  - .agents/skills/msl-techniques
+  - .agents/skills/msl-techniques/SKILL.md
+  - .agents/skills/swiftui-metal-shaders
+  - .agents/skills/swiftui-metal-shaders/SKILL.md
   - .claude/skills/metal-motion-effects
   - .claude/skills/metal-motion-effects/SKILL.md
   - .claude/skills/msl-techniques
@@ -28,112 +34,232 @@ dependencies:
   - .claude/skills/swiftui-metal-shaders
   - .claude/skills/swiftui-metal-shaders/SKILL.md
   deployed_file_hashes:
+    .agents/skills/metal-motion-effects/SKILL.md: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
+    .agents/skills/msl-techniques/SKILL.md: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
+    .agents/skills/swiftui-metal-shaders/SKILL.md: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
     .claude/skills/metal-motion-effects/SKILL.md: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
     .claude/skills/msl-techniques/SKILL.md: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
     .claude/skills/swiftui-metal-shaders/SKILL.md: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
-  content_hash: sha256:fb2ec9c952908ae67d83633d68a3985fcccd1663bec30098d10eee142091f119
+  content_hash: sha256:d83ffbb2d56837573cfe5cd6539d8b33419679025f7cd93b8373c1c2b2132a88
   declared_license: MIT
-- repo_url: AlexW00/apm
+- repo_url: alexw00/apm
   name: ios-ship
   host: github.com
-  resolved_commit: f06e9b273ab1eda3d20ab93bf3888f605ef69f58
+  resolved_commit: 401dee12ea412edeaf1b485a9069168f798c6f84
   version: 0.1.0
   virtual_path: packages/ios-ship
   is_virtual: true
   package_type: apm_package
-  content_hash: sha256:6f071834640fe3d76b33ce022dce6d45d4d5835e3a1b4daa84aa5ab5b340a98c
+  content_hash: sha256:a4cd4d5c130a9b1457c578cae46e1b5b599c050db47c74a4ea9181dc64d817e6
   declared_license: MIT
 - repo_url: affaan-m/everything-claude-code
-  name: everything-claude-code
+  name: liquid-glass-design
   host: github.com
-  resolved_commit: 40927950c49f6e742d341e20ff7b9b7e1e7bfff5
-  resolved_ref: 40927950c49f6e742d341e20ff7b9b7e1e7bfff5
+  resolved_commit: ff15079b9f9852c385ac3a506f8ec3a26be4f563
+  resolved_ref: ff15079b9f9852c385ac3a506f8ec3a26be4f563
   version: unknown
   virtual_path: skills/liquid-glass-design
   is_virtual: true
   depth: 2
-  resolved_by: AlexW00/apm
+  resolved_by: alexw00/apm
   package_type: claude_skill
   deployed_files:
+  - .agents/skills/liquid-glass-design
+  - .agents/skills/liquid-glass-design/SKILL.md
   - .claude/skills/liquid-glass-design
   - .claude/skills/liquid-glass-design/SKILL.md
   deployed_file_hashes:
+    .agents/skills/liquid-glass-design/SKILL.md: sha256:024aa207eb3d4d31d868954a7352a40b78c61f2fd007ab8b452afb6217070f84
     .claude/skills/liquid-glass-design/SKILL.md: sha256:024aa207eb3d4d31d868954a7352a40b78c61f2fd007ab8b452afb6217070f84
   content_hash: sha256:cdd47ce273b84d1e630aa6ea8086baa9b4affd9f881b3f95a7b25334b67a1dc5
 - repo_url: dpearson2699/swift-ios-skills
-  name: swift-ios-skills
+  name: widgetkit
   host: github.com
-  resolved_commit: a17a5b39d6cf4644a61862077679ebb015186400
-  resolved_ref: a17a5b39d6cf4644a61862077679ebb015186400
+  resolved_commit: 8d90fd121a263355a4fb44fd082af1416a5c1c2a
+  resolved_ref: 8d90fd121a263355a4fb44fd082af1416a5c1c2a
   version: unknown
   virtual_path: skills/widgetkit
   is_virtual: true
   depth: 2
-  resolved_by: AlexW00/apm
+  resolved_by: alexw00/apm
   package_type: claude_skill
   deployed_files:
+  - .agents/skills/widgetkit
+  - .agents/skills/widgetkit/SKILL.md
+  - .agents/skills/widgetkit/evals/evals.json
+  - .agents/skills/widgetkit/references/widgetkit-advanced.md
   - .claude/skills/widgetkit
   - .claude/skills/widgetkit/SKILL.md
   - .claude/skills/widgetkit/evals/evals.json
   - .claude/skills/widgetkit/references/widgetkit-advanced.md
   deployed_file_hashes:
-    .claude/skills/widgetkit/SKILL.md: sha256:7cc05e8f31db26f9a38e12e6c71f441d3a98f87f5f95485217931d293e11eaf2
+    .agents/skills/widgetkit/SKILL.md: sha256:a54b72abfc85c7fc4e6f11ed32d53ae0658f50df736e1c7b827ed0755fc8cb87
+    .agents/skills/widgetkit/evals/evals.json: sha256:f774ae36d263b560ff89d0c2b30f672a2a0ad09ca714cb3f39981c75d96fbfea
+    .agents/skills/widgetkit/references/widgetkit-advanced.md: sha256:ed93f51020e6b3b7ad9c09da4decb640285dd6bebb6e67fd66634eb3fb1b8743
+    .claude/skills/widgetkit/SKILL.md: sha256:a54b72abfc85c7fc4e6f11ed32d53ae0658f50df736e1c7b827ed0755fc8cb87
     .claude/skills/widgetkit/evals/evals.json: sha256:f774ae36d263b560ff89d0c2b30f672a2a0ad09ca714cb3f39981c75d96fbfea
     .claude/skills/widgetkit/references/widgetkit-advanced.md: sha256:ed93f51020e6b3b7ad9c09da4decb640285dd6bebb6e67fd66634eb3fb1b8743
-  content_hash: sha256:001b28f00e0d314f339f8c1e80db02d7dd3a1d4dbb9fbf0f8ef47681bcb495dd
+  content_hash: sha256:0064fe3ddbdffcd23bf5e5fc5571eb3c01a65ff5a9eb2c6a6fbbf1a86954a732
 - repo_url: emilkowalski/skills
   name: skills
   host: github.com
-  resolved_commit: 220e8607c90b17337d210125777b7b695f26c221
-  resolved_ref: 220e8607c90b17337d210125777b7b695f26c221
+  resolved_commit: da80201b64de7d608a6dc5f723797ce6c65b692b
+  resolved_ref: da80201b64de7d608a6dc5f723797ce6c65b692b
   version: unknown
   depth: 2
-  resolved_by: AlexW00/apm
+  resolved_by: alexw00/apm
   package_type: skill_bundle
   deployed_files:
+  - .agents/skills/animation-vocabulary
+  - .agents/skills/animation-vocabulary/SKILL.md
+  - .agents/skills/apple-design
+  - .agents/skills/apple-design/SKILL.md
+  - .agents/skills/emil-design-eng
+  - .agents/skills/emil-design-eng/SKILL.md
+  - .agents/skills/find-animation-opportunities
+  - .agents/skills/find-animation-opportunities/SKILL.md
+  - .agents/skills/improve-animations
+  - .agents/skills/improve-animations/AUDIT.md
+  - .agents/skills/improve-animations/PLAN-TEMPLATE.md
+  - .agents/skills/improve-animations/SKILL.md
+  - .agents/skills/pick-ui-library
+  - .agents/skills/pick-ui-library/SKILL.md
+  - .agents/skills/prototype
+  - .agents/skills/prototype/PICKER.md
+  - .agents/skills/prototype/SKILL.md
+  - .agents/skills/review-animations
+  - .agents/skills/review-animations/SKILL.md
+  - .agents/skills/review-animations/STANDARDS.md
   - .claude/skills/animation-vocabulary
   - .claude/skills/animation-vocabulary/SKILL.md
   - .claude/skills/apple-design
   - .claude/skills/apple-design/SKILL.md
   - .claude/skills/emil-design-eng
   - .claude/skills/emil-design-eng/SKILL.md
+  - .claude/skills/find-animation-opportunities
+  - .claude/skills/find-animation-opportunities/SKILL.md
+  - .claude/skills/improve-animations
+  - .claude/skills/improve-animations/AUDIT.md
+  - .claude/skills/improve-animations/PLAN-TEMPLATE.md
+  - .claude/skills/improve-animations/SKILL.md
+  - .claude/skills/pick-ui-library
+  - .claude/skills/pick-ui-library/SKILL.md
+  - .claude/skills/prototype
+  - .claude/skills/prototype/PICKER.md
+  - .claude/skills/prototype/SKILL.md
   - .claude/skills/review-animations
   - .claude/skills/review-animations/SKILL.md
   - .claude/skills/review-animations/STANDARDS.md
   deployed_file_hashes:
+    .agents/skills/animation-vocabulary/SKILL.md: sha256:d718b48fe3c7898804d588f050a2e266d82c9f5ef51da256c8cb8b5951527757
+    .agents/skills/apple-design/SKILL.md: sha256:11840b24a11d7f94f39c6aaab074750ae4e4de4ef54ee4b1dd97e16ebd485e61
+    .agents/skills/emil-design-eng/SKILL.md: sha256:e71de849347050c2c573c1cf24d742d5a13459557ecffa6e562f08006f46b5b7
+    .agents/skills/find-animation-opportunities/SKILL.md: sha256:91c1243164057fbf824088d12faea937878a757a7ac653e8288b775e8b27b882
+    .agents/skills/improve-animations/AUDIT.md: sha256:551c8473e20e5f4774680bc24d45e1c68e50992582720905c6b077756b7b5a55
+    .agents/skills/improve-animations/PLAN-TEMPLATE.md: sha256:0a08ac8e23fd2082d7ffb86aeed7b789de77328c3cf874b16f1a755f2ef0a6ad
+    .agents/skills/improve-animations/SKILL.md: sha256:68f17bbc4671593d2f43dba26a679243e2153ba5f26965fb7d59df52842534ff
+    .agents/skills/pick-ui-library/SKILL.md: sha256:4b889bd6c08358499ac4a7202b8af71ffbd3485d2468f7b09d0613bbe7b24bf4
+    .agents/skills/prototype/PICKER.md: sha256:31a55eec94715cc79942e91e172e539e3031dcd5e2e5ee7c1446cf2caee960a6
+    .agents/skills/prototype/SKILL.md: sha256:2ad8401c4deaddb54947fb65247f790e7b3d8784e35312bcbedbfb1d59cd89ce
+    .agents/skills/review-animations/SKILL.md: sha256:61cf8ac0c4c8e1f63385298c546b16c65ca9aec34abddcd04e821c16712d671d
+    .agents/skills/review-animations/STANDARDS.md: sha256:e7d3605034acda54ca13e43aec9e64d65b53de20f75b11b8d694e373012fbe07
     .claude/skills/animation-vocabulary/SKILL.md: sha256:d718b48fe3c7898804d588f050a2e266d82c9f5ef51da256c8cb8b5951527757
     .claude/skills/apple-design/SKILL.md: sha256:11840b24a11d7f94f39c6aaab074750ae4e4de4ef54ee4b1dd97e16ebd485e61
-    .claude/skills/emil-design-eng/SKILL.md: sha256:433b5a239cda18e0576e4e558532e7e53512e21fafe5b85db4894c28ec399b72
-    .claude/skills/review-animations/SKILL.md: sha256:da7ffae44f21bc8c5104567256f6c66e5dac69fd7118db639ee3d30e0f9d6ba9
-    .claude/skills/review-animations/STANDARDS.md: sha256:72b1235ea4d7cf64123719d569c0726129b3772713d480369c28f6a5f9f7278c
-  content_hash: sha256:5181533e95f02c8e696da8bcd5f5fcc2b28610afd2458ece78e76aeaaf2a24af
+    .claude/skills/emil-design-eng/SKILL.md: sha256:e71de849347050c2c573c1cf24d742d5a13459557ecffa6e562f08006f46b5b7
+    .claude/skills/find-animation-opportunities/SKILL.md: sha256:91c1243164057fbf824088d12faea937878a757a7ac653e8288b775e8b27b882
+    .claude/skills/improve-animations/AUDIT.md: sha256:551c8473e20e5f4774680bc24d45e1c68e50992582720905c6b077756b7b5a55
+    .claude/skills/improve-animations/PLAN-TEMPLATE.md: sha256:0a08ac8e23fd2082d7ffb86aeed7b789de77328c3cf874b16f1a755f2ef0a6ad
+    .claude/skills/improve-animations/SKILL.md: sha256:68f17bbc4671593d2f43dba26a679243e2153ba5f26965fb7d59df52842534ff
+    .claude/skills/pick-ui-library/SKILL.md: sha256:4b889bd6c08358499ac4a7202b8af71ffbd3485d2468f7b09d0613bbe7b24bf4
+    .claude/skills/prototype/PICKER.md: sha256:31a55eec94715cc79942e91e172e539e3031dcd5e2e5ee7c1446cf2caee960a6
+    .claude/skills/prototype/SKILL.md: sha256:2ad8401c4deaddb54947fb65247f790e7b3d8784e35312bcbedbfb1d59cd89ce
+    .claude/skills/review-animations/SKILL.md: sha256:61cf8ac0c4c8e1f63385298c546b16c65ca9aec34abddcd04e821c16712d671d
+    .claude/skills/review-animations/STANDARDS.md: sha256:e7d3605034acda54ca13e43aec9e64d65b53de20f75b11b8d694e373012fbe07
+  content_hash: sha256:8bb2467ab9f3373dbb4fa3c5cd3c04da0658c41530538fbc3bd5198cb474ebb1
 - repo_url: github/awesome-copilot
-  name: awesome-copilot
+  name: apple-appstore-reviewer
   host: github.com
-  resolved_commit: 30472ecf0fe34cc561df958c08501ecc5ca80ea4
-  resolved_ref: 30472ecf0fe34cc561df958c08501ecc5ca80ea4
+  resolved_commit: dab758a392cd6b06e806c1aa0444e2bc463b32f9
+  resolved_ref: dab758a392cd6b06e806c1aa0444e2bc463b32f9
   version: unknown
   virtual_path: skills/apple-appstore-reviewer
   is_virtual: true
   depth: 2
-  resolved_by: AlexW00/apm
+  resolved_by: alexw00/apm
   package_type: claude_skill
   deployed_files:
+  - .agents/skills/apple-appstore-reviewer
+  - .agents/skills/apple-appstore-reviewer/SKILL.md
   - .claude/skills/apple-appstore-reviewer
   - .claude/skills/apple-appstore-reviewer/SKILL.md
   deployed_file_hashes:
+    .agents/skills/apple-appstore-reviewer/SKILL.md: sha256:8e24825ff85137d497119bff6c2b91ce37238cad67493e44af7c5ca95b4e4058
     .claude/skills/apple-appstore-reviewer/SKILL.md: sha256:8e24825ff85137d497119bff6c2b91ce37238cad67493e44af7c5ca95b4e4058
   content_hash: sha256:848a1946f838e1b36f4af8b65caeea9e5bfa486d6059325520bb6124c05b0526
 - repo_url: rorkai/app-store-connect-cli-skills
-  name: app-store-connect-cli-skills
+  name: asc
   host: github.com
-  resolved_commit: 0886ecb04f7a0af1050d809b4bc031b67a50657b
-  resolved_ref: 0886ecb04f7a0af1050d809b4bc031b67a50657b
-  version: unknown
+  resolved_commit: 53c60a4945e53d39d2ab31357d61f4687123d77b
+  resolved_ref: 53c60a4945e53d39d2ab31357d61f4687123d77b
+  version: 1.0.0
   depth: 2
-  resolved_by: AlexW00/apm
-  package_type: skill_bundle
+  resolved_by: alexw00/apm
+  package_type: marketplace_plugin
   deployed_files:
+  - .agents/skills/asc-app-create-ui
+  - .agents/skills/asc-app-create-ui/SKILL.md
+  - .agents/skills/asc-apple-ads
+  - .agents/skills/asc-apple-ads/SKILL.md
+  - .agents/skills/asc-aso-audit
+  - .agents/skills/asc-aso-audit/SKILL.md
+  - .agents/skills/asc-aso-audit/references/aso_rules.md
+  - .agents/skills/asc-build-lifecycle
+  - .agents/skills/asc-build-lifecycle/SKILL.md
+  - .agents/skills/asc-cli-usage
+  - .agents/skills/asc-cli-usage/SKILL.md
+  - .agents/skills/asc-crash-triage
+  - .agents/skills/asc-crash-triage/SKILL.md
+  - .agents/skills/asc-id-resolver
+  - .agents/skills/asc-id-resolver/SKILL.md
+  - .agents/skills/asc-localize-metadata
+  - .agents/skills/asc-localize-metadata/SKILL.md
+  - .agents/skills/asc-metadata-sync
+  - .agents/skills/asc-metadata-sync/SKILL.md
+  - .agents/skills/asc-notarization
+  - .agents/skills/asc-notarization/SKILL.md
+  - .agents/skills/asc-ppp-pricing
+  - .agents/skills/asc-ppp-pricing/SKILL.md
+  - .agents/skills/asc-release-flow
+  - .agents/skills/asc-release-flow/SKILL.md
+  - .agents/skills/asc-release-flow/references/multi-item-submissions.md
+  - .agents/skills/asc-revenuecat-catalog-sync
+  - .agents/skills/asc-revenuecat-catalog-sync/SKILL.md
+  - .agents/skills/asc-revenuecat-catalog-sync/examples.md
+  - .agents/skills/asc-revenuecat-catalog-sync/references.md
+  - .agents/skills/asc-screenshot-resize
+  - .agents/skills/asc-screenshot-resize/SKILL.md
+  - .agents/skills/asc-shots-pipeline
+  - .agents/skills/asc-shots-pipeline/SKILL.md
+  - .agents/skills/asc-signing-setup
+  - .agents/skills/asc-signing-setup/SKILL.md
+  - .agents/skills/asc-submission-health
+  - .agents/skills/asc-submission-health/SKILL.md
+  - .agents/skills/asc-submission-health/references/app-privacy.md
+  - .agents/skills/asc-submission-health/references/digital-goods.md
+  - .agents/skills/asc-submission-health/references/readiness-repairs.md
+  - .agents/skills/asc-subscription-localization
+  - .agents/skills/asc-subscription-localization/SKILL.md
+  - .agents/skills/asc-testflight-orchestration
+  - .agents/skills/asc-testflight-orchestration/SKILL.md
+  - .agents/skills/asc-wall-submit
+  - .agents/skills/asc-wall-submit/SKILL.md
+  - .agents/skills/asc-whats-new-writer
+  - .agents/skills/asc-whats-new-writer/SKILL.md
+  - .agents/skills/asc-whats-new-writer/references/release_notes_guidelines.md
+  - .agents/skills/asc-workflow
+  - .agents/skills/asc-workflow/SKILL.md
+  - .agents/skills/asc-xcode-build
+  - .agents/skills/asc-xcode-build/SKILL.md
   - .claude/skills/asc-app-create-ui
   - .claude/skills/asc-app-create-ui/SKILL.md
   - .claude/skills/asc-apple-ads
@@ -159,6 +285,7 @@ dependencies:
   - .claude/skills/asc-ppp-pricing/SKILL.md
   - .claude/skills/asc-release-flow
   - .claude/skills/asc-release-flow/SKILL.md
+  - .claude/skills/asc-release-flow/references/multi-item-submissions.md
   - .claude/skills/asc-revenuecat-catalog-sync
   - .claude/skills/asc-revenuecat-catalog-sync/SKILL.md
   - .claude/skills/asc-revenuecat-catalog-sync/examples.md
@@ -171,6 +298,9 @@ dependencies:
   - .claude/skills/asc-signing-setup/SKILL.md
   - .claude/skills/asc-submission-health
   - .claude/skills/asc-submission-health/SKILL.md
+  - .claude/skills/asc-submission-health/references/app-privacy.md
+  - .claude/skills/asc-submission-health/references/digital-goods.md
+  - .claude/skills/asc-submission-health/references/readiness-repairs.md
   - .claude/skills/asc-subscription-localization
   - .claude/skills/asc-subscription-localization/SKILL.md
   - .claude/skills/asc-testflight-orchestration
@@ -185,34 +315,70 @@ dependencies:
   - .claude/skills/asc-xcode-build
   - .claude/skills/asc-xcode-build/SKILL.md
   deployed_file_hashes:
-    .claude/skills/asc-app-create-ui/SKILL.md: sha256:349eb247254ed0c5f0035f54d587faf98ec8eb56fa5eaa7ae01a0f9923d88c04
+    .agents/skills/asc-app-create-ui/SKILL.md: sha256:3847ed76558045a93b3dc05d73ee504cc304301388cf9ffe8e5c1dc2f8be2440
+    .agents/skills/asc-apple-ads/SKILL.md: sha256:71e8cfbcb226f1747e9ca8be0e6da7a3d0de23db03b0150a8ecabc8aa7db28b2
+    .agents/skills/asc-aso-audit/SKILL.md: sha256:aed35d55438f4d0982c961bbe10265cf5a57a505e804143b157fa21142215f65
+    .agents/skills/asc-aso-audit/references/aso_rules.md: sha256:b6dd2e68e8e96e1cc4fb25dc490e68dee8d87bf5a9562571e96846fdf1fbe60d
+    .agents/skills/asc-build-lifecycle/SKILL.md: sha256:d82fc9d18980202d34b0ed26a40bca61d61e4ebb1df2d4036905fb27c4f1a4dd
+    .agents/skills/asc-cli-usage/SKILL.md: sha256:77e1bdc145fe38eea1425638dcaca1c7928f578e6f780814d663b5d9fe89dd6c
+    .agents/skills/asc-crash-triage/SKILL.md: sha256:3553b13b4c073acd867f1543d8c85ad0cd4d0a7dfbd82382f81a5df3366c5c06
+    .agents/skills/asc-id-resolver/SKILL.md: sha256:dbe821bb8cfe6dc72d8c4e7be89dcb6076cd4e2ba331108ac0a3f5468fa0d10b
+    .agents/skills/asc-localize-metadata/SKILL.md: sha256:002f4bfbcbd4b77e0b5ead0c29526261e74e2b0a6b7f2a06994acaadf20651c8
+    .agents/skills/asc-metadata-sync/SKILL.md: sha256:9545cdb3f425023f2deedf46fcab4df8989338b09705d06998b2555df9ffe8a6
+    .agents/skills/asc-notarization/SKILL.md: sha256:e719161403467be2990421519ae7934b28458f5cd055443d3e0ef8f1bd83e043
+    .agents/skills/asc-ppp-pricing/SKILL.md: sha256:95e9c4a4ad0484a56ad5c14fe495ba3616873a8e918b08cb018ee0524a979279
+    .agents/skills/asc-release-flow/SKILL.md: sha256:92419cc14bf13a3daaf8a14e2c01a3858b47106947c34468a18e9289261a0a2d
+    .agents/skills/asc-release-flow/references/multi-item-submissions.md: sha256:e056c0fdffee02ee7de145249750602fa053b7383e952ddbca05bf147eeb504b
+    .agents/skills/asc-revenuecat-catalog-sync/SKILL.md: sha256:7bc65bf761371387937102ac9679bcf84703d8fecaf65e6830ee5b083189de3d
+    .agents/skills/asc-revenuecat-catalog-sync/examples.md: sha256:2b7ee090c683966d464ebc800b4a7400f95bd23d180aedb0d8dfc20ddca1128b
+    .agents/skills/asc-revenuecat-catalog-sync/references.md: sha256:65e3a19da5381583145d6eb9ef721cd39a7a9a2fb6b92372ee143f3886a67ee9
+    .agents/skills/asc-screenshot-resize/SKILL.md: sha256:311b549c07d90ef5d0710217fb1936370714250e8edf7e1c74c76156e6a19637
+    .agents/skills/asc-shots-pipeline/SKILL.md: sha256:ed7f604c45e2fa0ecde71a1a79a5e711a09de740190c420bd19fcddf21f02deb
+    .agents/skills/asc-signing-setup/SKILL.md: sha256:0612701f52f3779f771b7b0fd43ca2086ab72d48713df89ee209583d1913aa39
+    .agents/skills/asc-submission-health/SKILL.md: sha256:dfbc2d970edd77aa26ab858acc74488666126cbbe60bf7dd269919a2c7bb2872
+    .agents/skills/asc-submission-health/references/app-privacy.md: sha256:671a31e9c1c236e23ad6b8d52874a7a86c5f9d939ffb87eb4a5e7e8341abc425
+    .agents/skills/asc-submission-health/references/digital-goods.md: sha256:d66aebb78e52c670b9919d53f7ac605d7f6ba79369f5652b67b5dc75d1e61ed5
+    .agents/skills/asc-submission-health/references/readiness-repairs.md: sha256:7e1219007fcec8be172f752360aedb2b97737ac642e6a9628640b3b009586dcf
+    .agents/skills/asc-subscription-localization/SKILL.md: sha256:bffc4d28b7ec4ca0ef22d38ec7beeb4fe0ef5f90f025ded4dc997a505137de3c
+    .agents/skills/asc-testflight-orchestration/SKILL.md: sha256:94e473daa89c207b2546c0463d88c1c52354c88b4fecea399658c450c659a261
+    .agents/skills/asc-wall-submit/SKILL.md: sha256:d19bfaff35f88b516ee90a4a6a1f645d0255c6192578d0c3fdb05a6227efe999
+    .agents/skills/asc-whats-new-writer/SKILL.md: sha256:592c33a56caf79e60598f48c01be1bac2d4ef57fb9148805993c44383ea8e78d
+    .agents/skills/asc-whats-new-writer/references/release_notes_guidelines.md: sha256:b4a33667d0745b9f7b9539a07673327d57582a2fefee098881b722538ed2902f
+    .agents/skills/asc-workflow/SKILL.md: sha256:e3f208aa372f6f53a2a9387ed889cd989be518913881291a062fe8cae6af7d4f
+    .agents/skills/asc-xcode-build/SKILL.md: sha256:ddb0a936904ea0e6b1a6af04b4e7daaee3ef359a1a3b074faa030005699be097
+    .claude/skills/asc-app-create-ui/SKILL.md: sha256:3847ed76558045a93b3dc05d73ee504cc304301388cf9ffe8e5c1dc2f8be2440
     .claude/skills/asc-apple-ads/SKILL.md: sha256:71e8cfbcb226f1747e9ca8be0e6da7a3d0de23db03b0150a8ecabc8aa7db28b2
     .claude/skills/asc-aso-audit/SKILL.md: sha256:aed35d55438f4d0982c961bbe10265cf5a57a505e804143b157fa21142215f65
     .claude/skills/asc-aso-audit/references/aso_rules.md: sha256:b6dd2e68e8e96e1cc4fb25dc490e68dee8d87bf5a9562571e96846fdf1fbe60d
     .claude/skills/asc-build-lifecycle/SKILL.md: sha256:d82fc9d18980202d34b0ed26a40bca61d61e4ebb1df2d4036905fb27c4f1a4dd
-    .claude/skills/asc-cli-usage/SKILL.md: sha256:a5f018ccbd2833d361274046d3735865d6eb2ff693b1d11520fdc55a2cae66fc
+    .claude/skills/asc-cli-usage/SKILL.md: sha256:77e1bdc145fe38eea1425638dcaca1c7928f578e6f780814d663b5d9fe89dd6c
     .claude/skills/asc-crash-triage/SKILL.md: sha256:3553b13b4c073acd867f1543d8c85ad0cd4d0a7dfbd82382f81a5df3366c5c06
-    .claude/skills/asc-id-resolver/SKILL.md: sha256:2057597ec95983ba16d47997579204dd5b37fba8868cc9d72b790192b5b3f86d
+    .claude/skills/asc-id-resolver/SKILL.md: sha256:dbe821bb8cfe6dc72d8c4e7be89dcb6076cd4e2ba331108ac0a3f5468fa0d10b
     .claude/skills/asc-localize-metadata/SKILL.md: sha256:002f4bfbcbd4b77e0b5ead0c29526261e74e2b0a6b7f2a06994acaadf20651c8
-    .claude/skills/asc-metadata-sync/SKILL.md: sha256:511e7373cd816c0421b53ecf2efa9d49085f39859820f1d1c44878d1c1227646
+    .claude/skills/asc-metadata-sync/SKILL.md: sha256:9545cdb3f425023f2deedf46fcab4df8989338b09705d06998b2555df9ffe8a6
     .claude/skills/asc-notarization/SKILL.md: sha256:e719161403467be2990421519ae7934b28458f5cd055443d3e0ef8f1bd83e043
-    .claude/skills/asc-ppp-pricing/SKILL.md: sha256:968ee23f141f9a560f5183c49f37451bb878f9065105c8f5c4a40fd36b18ea4b
-    .claude/skills/asc-release-flow/SKILL.md: sha256:4bd58d1a2b4784a1e0fa922226365f82130aa115ef25e7420233a368038fc7ce
-    .claude/skills/asc-revenuecat-catalog-sync/SKILL.md: sha256:86189201f4f861601fb5af89f3ef596f133d0fc7ce8efc19d07474ef988cb359
-    .claude/skills/asc-revenuecat-catalog-sync/examples.md: sha256:a2ab7fd2988dbaee1065f53f345d6f8934cd4ccf44b195f5ff23628eebcf48ad
+    .claude/skills/asc-ppp-pricing/SKILL.md: sha256:95e9c4a4ad0484a56ad5c14fe495ba3616873a8e918b08cb018ee0524a979279
+    .claude/skills/asc-release-flow/SKILL.md: sha256:92419cc14bf13a3daaf8a14e2c01a3858b47106947c34468a18e9289261a0a2d
+    .claude/skills/asc-release-flow/references/multi-item-submissions.md: sha256:e056c0fdffee02ee7de145249750602fa053b7383e952ddbca05bf147eeb504b
+    .claude/skills/asc-revenuecat-catalog-sync/SKILL.md: sha256:7bc65bf761371387937102ac9679bcf84703d8fecaf65e6830ee5b083189de3d
+    .claude/skills/asc-revenuecat-catalog-sync/examples.md: sha256:2b7ee090c683966d464ebc800b4a7400f95bd23d180aedb0d8dfc20ddca1128b
     .claude/skills/asc-revenuecat-catalog-sync/references.md: sha256:65e3a19da5381583145d6eb9ef721cd39a7a9a2fb6b92372ee143f3886a67ee9
     .claude/skills/asc-screenshot-resize/SKILL.md: sha256:311b549c07d90ef5d0710217fb1936370714250e8edf7e1c74c76156e6a19637
     .claude/skills/asc-shots-pipeline/SKILL.md: sha256:ed7f604c45e2fa0ecde71a1a79a5e711a09de740190c420bd19fcddf21f02deb
     .claude/skills/asc-signing-setup/SKILL.md: sha256:0612701f52f3779f771b7b0fd43ca2086ab72d48713df89ee209583d1913aa39
-    .claude/skills/asc-submission-health/SKILL.md: sha256:88f874f41185a010e1945231f2eb7b56a2de91aaea9d8b6c3f79297f8a223e0f
-    .claude/skills/asc-subscription-localization/SKILL.md: sha256:3e95420ede01f49e63a1a5e6ac34bae531066d300c7634f867209668ad27a816
+    .claude/skills/asc-submission-health/SKILL.md: sha256:dfbc2d970edd77aa26ab858acc74488666126cbbe60bf7dd269919a2c7bb2872
+    .claude/skills/asc-submission-health/references/app-privacy.md: sha256:671a31e9c1c236e23ad6b8d52874a7a86c5f9d939ffb87eb4a5e7e8341abc425
+    .claude/skills/asc-submission-health/references/digital-goods.md: sha256:d66aebb78e52c670b9919d53f7ac605d7f6ba79369f5652b67b5dc75d1e61ed5
+    .claude/skills/asc-submission-health/references/readiness-repairs.md: sha256:7e1219007fcec8be172f752360aedb2b97737ac642e6a9628640b3b009586dcf
+    .claude/skills/asc-subscription-localization/SKILL.md: sha256:bffc4d28b7ec4ca0ef22d38ec7beeb4fe0ef5f90f025ded4dc997a505137de3c
     .claude/skills/asc-testflight-orchestration/SKILL.md: sha256:94e473daa89c207b2546c0463d88c1c52354c88b4fecea399658c450c659a261
     .claude/skills/asc-wall-submit/SKILL.md: sha256:d19bfaff35f88b516ee90a4a6a1f645d0255c6192578d0c3fdb05a6227efe999
     .claude/skills/asc-whats-new-writer/SKILL.md: sha256:592c33a56caf79e60598f48c01be1bac2d4ef57fb9148805993c44383ea8e78d
     .claude/skills/asc-whats-new-writer/references/release_notes_guidelines.md: sha256:b4a33667d0745b9f7b9539a07673327d57582a2fefee098881b722538ed2902f
     .claude/skills/asc-workflow/SKILL.md: sha256:e3f208aa372f6f53a2a9387ed889cd989be518913881291a062fe8cae6af7d4f
-    .claude/skills/asc-xcode-build/SKILL.md: sha256:a87a74a3fcd5e0e20500909c1d753631e32fcef682c8282e17e57d487dbc708a
-  content_hash: sha256:4a2efed276aa520550facd334c7ae721ec2d06744a38881a2a1e0439adb66eed
+    .claude/skills/asc-xcode-build/SKILL.md: sha256:ddb0a936904ea0e6b1a6af04b4e7daaee3ef359a1a3b074faa030005699be097
+  content_hash: sha256:9748b80284431860fe579962639b4ca82f0de68f182861af0f42391ce8bb034d
+  declared_license: MIT
 - repo_url: twostraws/swift-concurrency-agent-skill
   name: swift-concurrency-pro
   host: github.com
@@ -222,9 +388,23 @@ dependencies:
   virtual_path: swift-concurrency-pro
   is_virtual: true
   depth: 2
-  resolved_by: AlexW00/apm
+  resolved_by: alexw00/apm
   package_type: marketplace_plugin
   deployed_files:
+  - .agents/skills/swift-concurrency-pro
+  - .agents/skills/swift-concurrency-pro/SKILL.md
+  - .agents/skills/swift-concurrency-pro/references/actors.md
+  - .agents/skills/swift-concurrency-pro/references/async-streams.md
+  - .agents/skills/swift-concurrency-pro/references/bridging.md
+  - .agents/skills/swift-concurrency-pro/references/bug-patterns.md
+  - .agents/skills/swift-concurrency-pro/references/cancellation.md
+  - .agents/skills/swift-concurrency-pro/references/diagnostics.md
+  - .agents/skills/swift-concurrency-pro/references/hotspots.md
+  - .agents/skills/swift-concurrency-pro/references/interop.md
+  - .agents/skills/swift-concurrency-pro/references/new-features.md
+  - .agents/skills/swift-concurrency-pro/references/structured.md
+  - .agents/skills/swift-concurrency-pro/references/testing.md
+  - .agents/skills/swift-concurrency-pro/references/unstructured.md
   - .claude/skills/swift-concurrency-pro
   - .claude/skills/swift-concurrency-pro/SKILL.md
   - .claude/skills/swift-concurrency-pro/references/actors.md
@@ -240,6 +420,19 @@ dependencies:
   - .claude/skills/swift-concurrency-pro/references/testing.md
   - .claude/skills/swift-concurrency-pro/references/unstructured.md
   deployed_file_hashes:
+    .agents/skills/swift-concurrency-pro/SKILL.md: sha256:809362b3e932b3bbf9b3f2f79953bae617573e3e24ea135576bbc1b020d89ce0
+    .agents/skills/swift-concurrency-pro/references/actors.md: sha256:7a77a0f06d0040a6813ec02cd4b1360df4bcfa501f93710bfb4296de9911d64f
+    .agents/skills/swift-concurrency-pro/references/async-streams.md: sha256:589ba0dad544b28b158702e239fe6a4077b6d1484c83b8fd51290192bf1ffc9a
+    .agents/skills/swift-concurrency-pro/references/bridging.md: sha256:c8eb60dcdd90f67cb3b8b1213fc55a56dd5c4a04f465d7aff7fdbd5c451e0498
+    .agents/skills/swift-concurrency-pro/references/bug-patterns.md: sha256:2233f58e784a9b6cf13620133485fcf7e3150192a40e713369ebbddc820dec85
+    .agents/skills/swift-concurrency-pro/references/cancellation.md: sha256:c83b4134b44ea5a0ee06e785bd0cb85616234469833f9677297b6fcddea1e1fa
+    .agents/skills/swift-concurrency-pro/references/diagnostics.md: sha256:cc2debc6f430ed13fc3be3a7ce942e55bb1cf02a9804ebfb272f295b502c9569
+    .agents/skills/swift-concurrency-pro/references/hotspots.md: sha256:199a9fa4beea4a550b3f63e07cddd441d72fd41d1e17e6f3255071a661ce1e6d
+    .agents/skills/swift-concurrency-pro/references/interop.md: sha256:b86cd716bd22b38d718e86b37b3d7dd1225b5ce93a53f88842ff6993e93ca566
+    .agents/skills/swift-concurrency-pro/references/new-features.md: sha256:c721a187b57e9d94112972c9685c57f7129187df2d36add4df1a9c9e9aa9e541
+    .agents/skills/swift-concurrency-pro/references/structured.md: sha256:1655b610fd1dafb7cf42b61457ff8229117c06879d0e9cc40460f437ba97895b
+    .agents/skills/swift-concurrency-pro/references/testing.md: sha256:4a1fc1aefb572bbdbd75a502a74df795af7e2212eec6836a4f353f9b725abffc
+    .agents/skills/swift-concurrency-pro/references/unstructured.md: sha256:d8063edf18bbe5abc9c628548b0100c4dd8defe3340c017d6fa4936eca17c456
     .claude/skills/swift-concurrency-pro/SKILL.md: sha256:809362b3e932b3bbf9b3f2f79953bae617573e3e24ea135576bbc1b020d89ce0
     .claude/skills/swift-concurrency-pro/references/actors.md: sha256:7a77a0f06d0040a6813ec02cd4b1360df4bcfa501f93710bfb4296de9911d64f
     .claude/skills/swift-concurrency-pro/references/async-streams.md: sha256:589ba0dad544b28b158702e239fe6a4077b6d1484c83b8fd51290192bf1ffc9a
@@ -264,9 +457,16 @@ dependencies:
   virtual_path: swift-testing-pro
   is_virtual: true
   depth: 2
-  resolved_by: AlexW00/apm
+  resolved_by: alexw00/apm
   package_type: marketplace_plugin
   deployed_files:
+  - .agents/skills/swift-testing-pro
+  - .agents/skills/swift-testing-pro/SKILL.md
+  - .agents/skills/swift-testing-pro/references/async-tests.md
+  - .agents/skills/swift-testing-pro/references/core-rules.md
+  - .agents/skills/swift-testing-pro/references/migrating-from-xctest.md
+  - .agents/skills/swift-testing-pro/references/new-features.md
+  - .agents/skills/swift-testing-pro/references/writing-better-tests.md
   - .claude/skills/swift-testing-pro
   - .claude/skills/swift-testing-pro/SKILL.md
   - .claude/skills/swift-testing-pro/references/async-tests.md
@@ -275,6 +475,12 @@ dependencies:
   - .claude/skills/swift-testing-pro/references/new-features.md
   - .claude/skills/swift-testing-pro/references/writing-better-tests.md
   deployed_file_hashes:
+    .agents/skills/swift-testing-pro/SKILL.md: sha256:36e6c3d59bbec2f8b4ce95644df8519f2c66dcbff55138964be4ad9d60c07781
+    .agents/skills/swift-testing-pro/references/async-tests.md: sha256:bc6e0eabd10377b5796e9e554a4965a78b7d1aaba8f11021c2a63b6e8a9e669a
+    .agents/skills/swift-testing-pro/references/core-rules.md: sha256:2271efdca6c2b7b3365501172147884b6e786bcee7bef680fb4f4718929d6180
+    .agents/skills/swift-testing-pro/references/migrating-from-xctest.md: sha256:35b64812402ad1d15b496993e1721daaf4e80672bf9cce47078f772fd271f93f
+    .agents/skills/swift-testing-pro/references/new-features.md: sha256:988df5cb556893c789f9aecdc4c8773fdbbda787ab1dad766bf1182a7b9a4819
+    .agents/skills/swift-testing-pro/references/writing-better-tests.md: sha256:25da3455f6cec4f10d3dff0bf3e8e1372568c75691916541b4d517f451cb8bf1
     .claude/skills/swift-testing-pro/SKILL.md: sha256:36e6c3d59bbec2f8b4ce95644df8519f2c66dcbff55138964be4ad9d60c07781
     .claude/skills/swift-testing-pro/references/async-tests.md: sha256:bc6e0eabd10377b5796e9e554a4965a78b7d1aaba8f11021c2a63b6e8a9e669a
     .claude/skills/swift-testing-pro/references/core-rules.md: sha256:2271efdca6c2b7b3365501172147884b6e786bcee7bef680fb4f4718929d6180
@@ -284,7 +490,7 @@ dependencies:
   content_hash: sha256:a1ea5889a7f80d4b863cbe3972b2c631cb9b142ec5db1d21027c85d9b429b3fc
   declared_license: MIT
 - repo_url: twostraws/swiftdata-agent-skill
-  name: swiftdata-agent-skill
+  name: swiftdata-pro
   host: github.com
   resolved_commit: 922d989473a9914210b41529a1ac5636aff4b8c1
   resolved_ref: 922d989473a9914210b41529a1ac5636aff4b8c1
@@ -292,9 +498,19 @@ dependencies:
   virtual_path: swiftdata-pro
   is_virtual: true
   depth: 2
-  resolved_by: AlexW00/apm
+  resolved_by: alexw00/apm
   package_type: claude_skill
   deployed_files:
+  - .agents/skills/swiftdata-pro
+  - .agents/skills/swiftdata-pro/SKILL.md
+  - .agents/skills/swiftdata-pro/agents/openai.yaml
+  - .agents/skills/swiftdata-pro/assets/swiftdata-pro-icon.png
+  - .agents/skills/swiftdata-pro/assets/swiftdata-pro-icon.svg
+  - .agents/skills/swiftdata-pro/references/class-inheritance.md
+  - .agents/skills/swiftdata-pro/references/cloudkit.md
+  - .agents/skills/swiftdata-pro/references/core-rules.md
+  - .agents/skills/swiftdata-pro/references/indexing.md
+  - .agents/skills/swiftdata-pro/references/predicates.md
   - .claude/skills/swiftdata-pro
   - .claude/skills/swiftdata-pro/SKILL.md
   - .claude/skills/swiftdata-pro/agents/openai.yaml
@@ -306,6 +522,15 @@ dependencies:
   - .claude/skills/swiftdata-pro/references/indexing.md
   - .claude/skills/swiftdata-pro/references/predicates.md
   deployed_file_hashes:
+    .agents/skills/swiftdata-pro/SKILL.md: sha256:79164f3bc4942b8ca384057cbe951ca7715aecee4970bea38781d91ddb1c442e
+    .agents/skills/swiftdata-pro/agents/openai.yaml: sha256:4293560a9ce8fe893a81c8d64b2b472b47b4c679023ade972f4129636dd406d5
+    .agents/skills/swiftdata-pro/assets/swiftdata-pro-icon.png: sha256:6be448484728cd09655bd877e7b450fff8b12839e7fd281f1edc406748ebc51d
+    .agents/skills/swiftdata-pro/assets/swiftdata-pro-icon.svg: sha256:876f9b502c4565f51a9ef1e57c15fb0821e3272d28da32d2d42e13ecd9992425
+    .agents/skills/swiftdata-pro/references/class-inheritance.md: sha256:05b22c87e9864a47517ba095c9a870dc320f0e6f4cd85ff9f0b54c5ca356a41d
+    .agents/skills/swiftdata-pro/references/cloudkit.md: sha256:52a549b1713d55be183b79af595d37729426af0abea36ed05f932b718d8ee11f
+    .agents/skills/swiftdata-pro/references/core-rules.md: sha256:8bf45a2af28bfb0648303bb520d3d317d2794b56fcfabe599c4785ccdf02f80a
+    .agents/skills/swiftdata-pro/references/indexing.md: sha256:909167e538461bf517f8fc6b00bfe70d1c8ea19b12a4749088823c275de52a82
+    .agents/skills/swiftdata-pro/references/predicates.md: sha256:623c3195fccdec0ec95c0291223ced7491025b04e59c0b4f4fe5ffd23eb1019b
     .claude/skills/swiftdata-pro/SKILL.md: sha256:79164f3bc4942b8ca384057cbe951ca7715aecee4970bea38781d91ddb1c442e
     .claude/skills/swiftdata-pro/agents/openai.yaml: sha256:4293560a9ce8fe893a81c8d64b2b472b47b4c679023ade972f4129636dd406d5
     .claude/skills/swiftdata-pro/assets/swiftdata-pro-icon.png: sha256:6be448484728cd09655bd877e7b450fff8b12839e7fd281f1edc406748ebc51d
@@ -325,9 +550,20 @@ dependencies:
   virtual_path: swiftui-pro
   is_virtual: true
   depth: 2
-  resolved_by: AlexW00/apm
+  resolved_by: alexw00/apm
   package_type: marketplace_plugin
   deployed_files:
+  - .agents/skills/swiftui-pro
+  - .agents/skills/swiftui-pro/SKILL.md
+  - .agents/skills/swiftui-pro/references/accessibility.md
+  - .agents/skills/swiftui-pro/references/api.md
+  - .agents/skills/swiftui-pro/references/data.md
+  - .agents/skills/swiftui-pro/references/design.md
+  - .agents/skills/swiftui-pro/references/hygiene.md
+  - .agents/skills/swiftui-pro/references/navigation.md
+  - .agents/skills/swiftui-pro/references/performance.md
+  - .agents/skills/swiftui-pro/references/swift.md
+  - .agents/skills/swiftui-pro/references/views.md
   - .claude/skills/swiftui-pro
   - .claude/skills/swiftui-pro/SKILL.md
   - .claude/skills/swiftui-pro/references/accessibility.md
@@ -340,6 +576,16 @@ dependencies:
   - .claude/skills/swiftui-pro/references/swift.md
   - .claude/skills/swiftui-pro/references/views.md
   deployed_file_hashes:
+    .agents/skills/swiftui-pro/SKILL.md: sha256:b8a892d4819494ef79f1db68ffee7a940f20304589ce38032c853dadff168199
+    .agents/skills/swiftui-pro/references/accessibility.md: sha256:708d09a35c950fd4c118bbb3cfcab13bb146e7d02084615307bbabc19e00a0e3
+    .agents/skills/swiftui-pro/references/api.md: sha256:12fa73d65a19c9d08224f925801db8eec914b1cedf5b2f86a38cdda04a66377a
+    .agents/skills/swiftui-pro/references/data.md: sha256:5cc50484c525f748839e12174c065f7ea5fdd4380ce04b6885a906ecd6e6a318
+    .agents/skills/swiftui-pro/references/design.md: sha256:03e35d46865cc6807255f3c8481cdbac7b3b0f61924185af84c1913d6c983c69
+    .agents/skills/swiftui-pro/references/hygiene.md: sha256:91d96f45f3ffa02f5553c288415f3c3d5f317cab7d8d9c6c60240ea6c44a2b01
+    .agents/skills/swiftui-pro/references/navigation.md: sha256:a3adb302455993aff85bbb6b5845ed2fcffa137c8b2ded99c937f3e4b7fcd77b
+    .agents/skills/swiftui-pro/references/performance.md: sha256:1b503e3807e216d6b34b45f18bfba89214cea2fa1b88dd7ae8f482ebf0f03616
+    .agents/skills/swiftui-pro/references/swift.md: sha256:8c31c5f5f99b3fa9586f0260cd1a4b1688dc7bda5e8de2891eb3f9d6a791125a
+    .agents/skills/swiftui-pro/references/views.md: sha256:79a166f6507e86744c0f73cfb583100f61a5da37e313ef4586b3b31136a73627
     .claude/skills/swiftui-pro/SKILL.md: sha256:b8a892d4819494ef79f1db68ffee7a940f20304589ce38032c853dadff168199
     .claude/skills/swiftui-pro/references/accessibility.md: sha256:708d09a35c950fd4c118bbb3cfcab13bb146e7d02084615307bbabc19e00a0e3
     .claude/skills/swiftui-pro/references/api.md: sha256:12fa73d65a19c9d08224f925801db8eec914b1cedf5b2f86a38cdda04a66377a
@@ -352,3 +598,2344 @@ dependencies:
     .claude/skills/swiftui-pro/references/views.md: sha256:79a166f6507e86744c0f73cfb583100f61a5da37e313ef4586b3b31136a73627
   content_hash: sha256:43338d56ab22b1f03eee1f2d6e72e08e5f1a3b70b9f4146849ab37a5156fb94d
   declared_license: MIT
+deployments:
+- kind: project-relative
+  target: claude
+  value: .claude/skills/animation-vocabulary
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/animation-vocabulary/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:d718b48fe3c7898804d588f050a2e266d82c9f5ef51da256c8cb8b5951527757
+- kind: project-relative
+  target: claude
+  value: .claude/skills/apple-appstore-reviewer
+  runtime: null
+  scope: project
+  owners:
+  - github/awesome-copilot/skills/apple-appstore-reviewer
+  active_owner: github/awesome-copilot/skills/apple-appstore-reviewer
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/apple-appstore-reviewer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - github/awesome-copilot/skills/apple-appstore-reviewer
+  active_owner: github/awesome-copilot/skills/apple-appstore-reviewer
+  content_hash: sha256:8e24825ff85137d497119bff6c2b91ce37238cad67493e44af7c5ca95b4e4058
+- kind: project-relative
+  target: claude
+  value: .claude/skills/apple-design
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/apple-design/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:11840b24a11d7f94f39c6aaab074750ae4e4de4ef54ee4b1dd97e16ebd485e61
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-app-create-ui
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-app-create-ui/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:3847ed76558045a93b3dc05d73ee504cc304301388cf9ffe8e5c1dc2f8be2440
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-apple-ads
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-apple-ads/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:71e8cfbcb226f1747e9ca8be0e6da7a3d0de23db03b0150a8ecabc8aa7db28b2
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-aso-audit
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-aso-audit/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:aed35d55438f4d0982c961bbe10265cf5a57a505e804143b157fa21142215f65
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-aso-audit/references/aso_rules.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:b6dd2e68e8e96e1cc4fb25dc490e68dee8d87bf5a9562571e96846fdf1fbe60d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-build-lifecycle
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-build-lifecycle/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:d82fc9d18980202d34b0ed26a40bca61d61e4ebb1df2d4036905fb27c4f1a4dd
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-cli-usage
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-cli-usage/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:77e1bdc145fe38eea1425638dcaca1c7928f578e6f780814d663b5d9fe89dd6c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-crash-triage
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-crash-triage/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:3553b13b4c073acd867f1543d8c85ad0cd4d0a7dfbd82382f81a5df3366c5c06
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-id-resolver
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-id-resolver/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:dbe821bb8cfe6dc72d8c4e7be89dcb6076cd4e2ba331108ac0a3f5468fa0d10b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-localize-metadata
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-localize-metadata/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:002f4bfbcbd4b77e0b5ead0c29526261e74e2b0a6b7f2a06994acaadf20651c8
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-metadata-sync
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-metadata-sync/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:9545cdb3f425023f2deedf46fcab4df8989338b09705d06998b2555df9ffe8a6
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-notarization
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-notarization/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:e719161403467be2990421519ae7934b28458f5cd055443d3e0ef8f1bd83e043
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-ppp-pricing
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-ppp-pricing/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:95e9c4a4ad0484a56ad5c14fe495ba3616873a8e918b08cb018ee0524a979279
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-release-flow
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-release-flow/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:92419cc14bf13a3daaf8a14e2c01a3858b47106947c34468a18e9289261a0a2d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-release-flow/references/multi-item-submissions.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:e056c0fdffee02ee7de145249750602fa053b7383e952ddbca05bf147eeb504b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-revenuecat-catalog-sync
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-revenuecat-catalog-sync/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:7bc65bf761371387937102ac9679bcf84703d8fecaf65e6830ee5b083189de3d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-revenuecat-catalog-sync/examples.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:2b7ee090c683966d464ebc800b4a7400f95bd23d180aedb0d8dfc20ddca1128b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-revenuecat-catalog-sync/references.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:65e3a19da5381583145d6eb9ef721cd39a7a9a2fb6b92372ee143f3886a67ee9
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-screenshot-resize
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-screenshot-resize/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:311b549c07d90ef5d0710217fb1936370714250e8edf7e1c74c76156e6a19637
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-shots-pipeline
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-shots-pipeline/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:ed7f604c45e2fa0ecde71a1a79a5e711a09de740190c420bd19fcddf21f02deb
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-signing-setup
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-signing-setup/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:0612701f52f3779f771b7b0fd43ca2086ab72d48713df89ee209583d1913aa39
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-submission-health
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-submission-health/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:dfbc2d970edd77aa26ab858acc74488666126cbbe60bf7dd269919a2c7bb2872
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-submission-health/references/app-privacy.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:671a31e9c1c236e23ad6b8d52874a7a86c5f9d939ffb87eb4a5e7e8341abc425
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-submission-health/references/digital-goods.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:d66aebb78e52c670b9919d53f7ac605d7f6ba79369f5652b67b5dc75d1e61ed5
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-submission-health/references/readiness-repairs.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:7e1219007fcec8be172f752360aedb2b97737ac642e6a9628640b3b009586dcf
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-subscription-localization
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-subscription-localization/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:bffc4d28b7ec4ca0ef22d38ec7beeb4fe0ef5f90f025ded4dc997a505137de3c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-testflight-orchestration
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-testflight-orchestration/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:94e473daa89c207b2546c0463d88c1c52354c88b4fecea399658c450c659a261
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-wall-submit
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-wall-submit/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:d19bfaff35f88b516ee90a4a6a1f645d0255c6192578d0c3fdb05a6227efe999
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-whats-new-writer
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-whats-new-writer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:592c33a56caf79e60598f48c01be1bac2d4ef57fb9148805993c44383ea8e78d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-whats-new-writer/references/release_notes_guidelines.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:b4a33667d0745b9f7b9539a07673327d57582a2fefee098881b722538ed2902f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-workflow
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-workflow/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:e3f208aa372f6f53a2a9387ed889cd989be518913881291a062fe8cae6af7d4f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-xcode-build
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/asc-xcode-build/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:ddb0a936904ea0e6b1a6af04b4e7daaee3ef359a1a3b074faa030005699be097
+- kind: project-relative
+  target: claude
+  value: .claude/skills/emil-design-eng
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/emil-design-eng/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:e71de849347050c2c573c1cf24d742d5a13459557ecffa6e562f08006f46b5b7
+- kind: project-relative
+  target: claude
+  value: .claude/skills/find-animation-opportunities
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/find-animation-opportunities/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:91c1243164057fbf824088d12faea937878a757a7ac653e8288b775e8b27b882
+- kind: project-relative
+  target: claude
+  value: .claude/skills/improve-animations
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/improve-animations/AUDIT.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:551c8473e20e5f4774680bc24d45e1c68e50992582720905c6b077756b7b5a55
+- kind: project-relative
+  target: claude
+  value: .claude/skills/improve-animations/PLAN-TEMPLATE.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:0a08ac8e23fd2082d7ffb86aeed7b789de77328c3cf874b16f1a755f2ef0a6ad
+- kind: project-relative
+  target: claude
+  value: .claude/skills/improve-animations/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:68f17bbc4671593d2f43dba26a679243e2153ba5f26965fb7d59df52842534ff
+- kind: project-relative
+  target: claude
+  value: .claude/skills/liquid-glass-design
+  runtime: null
+  scope: project
+  owners:
+  - affaan-m/everything-claude-code/skills/liquid-glass-design
+  active_owner: affaan-m/everything-claude-code/skills/liquid-glass-design
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/liquid-glass-design/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - affaan-m/everything-claude-code/skills/liquid-glass-design
+  active_owner: affaan-m/everything-claude-code/skills/liquid-glass-design
+  content_hash: sha256:024aa207eb3d4d31d868954a7352a40b78c61f2fd007ab8b452afb6217070f84
+- kind: project-relative
+  target: claude
+  value: .claude/skills/metal-motion-effects
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/metal-motion-effects/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
+- kind: project-relative
+  target: claude
+  value: .claude/skills/msl-techniques
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/msl-techniques/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
+- kind: project-relative
+  target: claude
+  value: .claude/skills/pick-ui-library
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/pick-ui-library/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:4b889bd6c08358499ac4a7202b8af71ffbd3485d2468f7b09d0613bbe7b24bf4
+- kind: project-relative
+  target: claude
+  value: .claude/skills/prototype
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/prototype/PICKER.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:31a55eec94715cc79942e91e172e539e3031dcd5e2e5ee7c1446cf2caee960a6
+- kind: project-relative
+  target: claude
+  value: .claude/skills/prototype/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:2ad8401c4deaddb54947fb65247f790e7b3d8784e35312bcbedbfb1d59cd89ce
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-animations
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-animations/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:61cf8ac0c4c8e1f63385298c546b16c65ca9aec34abddcd04e821c16712d671d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-animations/STANDARDS.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:e7d3605034acda54ca13e43aec9e64d65b53de20f75b11b8d694e373012fbe07
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:809362b3e932b3bbf9b3f2f79953bae617573e3e24ea135576bbc1b020d89ce0
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/actors.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:7a77a0f06d0040a6813ec02cd4b1360df4bcfa501f93710bfb4296de9911d64f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/async-streams.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:589ba0dad544b28b158702e239fe6a4077b6d1484c83b8fd51290192bf1ffc9a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/bridging.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:c8eb60dcdd90f67cb3b8b1213fc55a56dd5c4a04f465d7aff7fdbd5c451e0498
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/bug-patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:2233f58e784a9b6cf13620133485fcf7e3150192a40e713369ebbddc820dec85
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/cancellation.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:c83b4134b44ea5a0ee06e785bd0cb85616234469833f9677297b6fcddea1e1fa
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/diagnostics.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:cc2debc6f430ed13fc3be3a7ce942e55bb1cf02a9804ebfb272f295b502c9569
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/hotspots.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:199a9fa4beea4a550b3f63e07cddd441d72fd41d1e17e6f3255071a661ce1e6d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/interop.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:b86cd716bd22b38d718e86b37b3d7dd1225b5ce93a53f88842ff6993e93ca566
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/new-features.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:c721a187b57e9d94112972c9685c57f7129187df2d36add4df1a9c9e9aa9e541
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/structured.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:1655b610fd1dafb7cf42b61457ff8229117c06879d0e9cc40460f437ba97895b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/testing.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:4a1fc1aefb572bbdbd75a502a74df795af7e2212eec6836a4f353f9b725abffc
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-concurrency-pro/references/unstructured.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:d8063edf18bbe5abc9c628548b0100c4dd8defe3340c017d6fa4936eca17c456
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-testing-pro
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-testing-pro/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:36e6c3d59bbec2f8b4ce95644df8519f2c66dcbff55138964be4ad9d60c07781
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-testing-pro/references/async-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:bc6e0eabd10377b5796e9e554a4965a78b7d1aaba8f11021c2a63b6e8a9e669a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-testing-pro/references/core-rules.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:2271efdca6c2b7b3365501172147884b6e786bcee7bef680fb4f4718929d6180
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-testing-pro/references/migrating-from-xctest.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:35b64812402ad1d15b496993e1721daaf4e80672bf9cce47078f772fd271f93f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-testing-pro/references/new-features.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:988df5cb556893c789f9aecdc4c8773fdbbda787ab1dad766bf1182a7b9a4819
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swift-testing-pro/references/writing-better-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:25da3455f6cec4f10d3dff0bf3e8e1372568c75691916541b4d517f451cb8bf1
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftdata-pro
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftdata-pro/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:79164f3bc4942b8ca384057cbe951ca7715aecee4970bea38781d91ddb1c442e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftdata-pro/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:4293560a9ce8fe893a81c8d64b2b472b47b4c679023ade972f4129636dd406d5
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftdata-pro/assets/swiftdata-pro-icon.png
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:6be448484728cd09655bd877e7b450fff8b12839e7fd281f1edc406748ebc51d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftdata-pro/assets/swiftdata-pro-icon.svg
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:876f9b502c4565f51a9ef1e57c15fb0821e3272d28da32d2d42e13ecd9992425
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftdata-pro/references/class-inheritance.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:05b22c87e9864a47517ba095c9a870dc320f0e6f4cd85ff9f0b54c5ca356a41d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftdata-pro/references/cloudkit.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:52a549b1713d55be183b79af595d37729426af0abea36ed05f932b718d8ee11f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftdata-pro/references/core-rules.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:8bf45a2af28bfb0648303bb520d3d317d2794b56fcfabe599c4785ccdf02f80a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftdata-pro/references/indexing.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:909167e538461bf517f8fc6b00bfe70d1c8ea19b12a4749088823c275de52a82
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftdata-pro/references/predicates.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:623c3195fccdec0ec95c0291223ced7491025b04e59c0b4f4fe5ffd23eb1019b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-metal-shaders
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-metal-shaders/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:b8a892d4819494ef79f1db68ffee7a940f20304589ce38032c853dadff168199
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro/references/accessibility.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:708d09a35c950fd4c118bbb3cfcab13bb146e7d02084615307bbabc19e00a0e3
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro/references/api.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:12fa73d65a19c9d08224f925801db8eec914b1cedf5b2f86a38cdda04a66377a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro/references/data.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:5cc50484c525f748839e12174c065f7ea5fdd4380ce04b6885a906ecd6e6a318
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro/references/design.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:03e35d46865cc6807255f3c8481cdbac7b3b0f61924185af84c1913d6c983c69
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro/references/hygiene.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:91d96f45f3ffa02f5553c288415f3c3d5f317cab7d8d9c6c60240ea6c44a2b01
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro/references/navigation.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:a3adb302455993aff85bbb6b5845ed2fcffa137c8b2ded99c937f3e4b7fcd77b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro/references/performance.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:1b503e3807e216d6b34b45f18bfba89214cea2fa1b88dd7ae8f482ebf0f03616
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro/references/swift.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:8c31c5f5f99b3fa9586f0260cd1a4b1688dc7bda5e8de2891eb3f9d6a791125a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/swiftui-pro/references/views.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:79a166f6507e86744c0f73cfb583100f61a5da37e313ef4586b3b31136a73627
+- kind: project-relative
+  target: claude
+  value: .claude/skills/widgetkit
+  runtime: null
+  scope: project
+  owners:
+  - dpearson2699/swift-ios-skills/skills/widgetkit
+  active_owner: dpearson2699/swift-ios-skills/skills/widgetkit
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/widgetkit/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - dpearson2699/swift-ios-skills/skills/widgetkit
+  active_owner: dpearson2699/swift-ios-skills/skills/widgetkit
+  content_hash: sha256:a54b72abfc85c7fc4e6f11ed32d53ae0658f50df736e1c7b827ed0755fc8cb87
+- kind: project-relative
+  target: claude
+  value: .claude/skills/widgetkit/evals/evals.json
+  runtime: null
+  scope: project
+  owners:
+  - dpearson2699/swift-ios-skills/skills/widgetkit
+  active_owner: dpearson2699/swift-ios-skills/skills/widgetkit
+  content_hash: sha256:f774ae36d263b560ff89d0c2b30f672a2a0ad09ca714cb3f39981c75d96fbfea
+- kind: project-relative
+  target: claude
+  value: .claude/skills/widgetkit/references/widgetkit-advanced.md
+  runtime: null
+  scope: project
+  owners:
+  - dpearson2699/swift-ios-skills/skills/widgetkit
+  active_owner: dpearson2699/swift-ios-skills/skills/widgetkit
+  content_hash: sha256:ed93f51020e6b3b7ad9c09da4decb640285dd6bebb6e67fd66634eb3fb1b8743
+- kind: project-relative
+  target: codex
+  value: .agents/skills/animation-vocabulary
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/animation-vocabulary/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:d718b48fe3c7898804d588f050a2e266d82c9f5ef51da256c8cb8b5951527757
+- kind: project-relative
+  target: codex
+  value: .agents/skills/apple-appstore-reviewer
+  runtime: null
+  scope: project
+  owners:
+  - github/awesome-copilot/skills/apple-appstore-reviewer
+  active_owner: github/awesome-copilot/skills/apple-appstore-reviewer
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/apple-appstore-reviewer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - github/awesome-copilot/skills/apple-appstore-reviewer
+  active_owner: github/awesome-copilot/skills/apple-appstore-reviewer
+  content_hash: sha256:8e24825ff85137d497119bff6c2b91ce37238cad67493e44af7c5ca95b4e4058
+- kind: project-relative
+  target: codex
+  value: .agents/skills/apple-design
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/apple-design/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:11840b24a11d7f94f39c6aaab074750ae4e4de4ef54ee4b1dd97e16ebd485e61
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-app-create-ui
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-app-create-ui/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:3847ed76558045a93b3dc05d73ee504cc304301388cf9ffe8e5c1dc2f8be2440
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-apple-ads
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-apple-ads/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:71e8cfbcb226f1747e9ca8be0e6da7a3d0de23db03b0150a8ecabc8aa7db28b2
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-aso-audit
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-aso-audit/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:aed35d55438f4d0982c961bbe10265cf5a57a505e804143b157fa21142215f65
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-aso-audit/references/aso_rules.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:b6dd2e68e8e96e1cc4fb25dc490e68dee8d87bf5a9562571e96846fdf1fbe60d
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-build-lifecycle
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-build-lifecycle/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:d82fc9d18980202d34b0ed26a40bca61d61e4ebb1df2d4036905fb27c4f1a4dd
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-cli-usage
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-cli-usage/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:77e1bdc145fe38eea1425638dcaca1c7928f578e6f780814d663b5d9fe89dd6c
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-crash-triage
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-crash-triage/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:3553b13b4c073acd867f1543d8c85ad0cd4d0a7dfbd82382f81a5df3366c5c06
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-id-resolver
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-id-resolver/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:dbe821bb8cfe6dc72d8c4e7be89dcb6076cd4e2ba331108ac0a3f5468fa0d10b
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-localize-metadata
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-localize-metadata/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:002f4bfbcbd4b77e0b5ead0c29526261e74e2b0a6b7f2a06994acaadf20651c8
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-metadata-sync
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-metadata-sync/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:9545cdb3f425023f2deedf46fcab4df8989338b09705d06998b2555df9ffe8a6
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-notarization
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-notarization/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:e719161403467be2990421519ae7934b28458f5cd055443d3e0ef8f1bd83e043
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-ppp-pricing
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-ppp-pricing/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:95e9c4a4ad0484a56ad5c14fe495ba3616873a8e918b08cb018ee0524a979279
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-release-flow
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-release-flow/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:92419cc14bf13a3daaf8a14e2c01a3858b47106947c34468a18e9289261a0a2d
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-release-flow/references/multi-item-submissions.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:e056c0fdffee02ee7de145249750602fa053b7383e952ddbca05bf147eeb504b
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-revenuecat-catalog-sync
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-revenuecat-catalog-sync/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:7bc65bf761371387937102ac9679bcf84703d8fecaf65e6830ee5b083189de3d
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-revenuecat-catalog-sync/examples.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:2b7ee090c683966d464ebc800b4a7400f95bd23d180aedb0d8dfc20ddca1128b
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-revenuecat-catalog-sync/references.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:65e3a19da5381583145d6eb9ef721cd39a7a9a2fb6b92372ee143f3886a67ee9
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-screenshot-resize
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-screenshot-resize/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:311b549c07d90ef5d0710217fb1936370714250e8edf7e1c74c76156e6a19637
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-shots-pipeline
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-shots-pipeline/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:ed7f604c45e2fa0ecde71a1a79a5e711a09de740190c420bd19fcddf21f02deb
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-signing-setup
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-signing-setup/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:0612701f52f3779f771b7b0fd43ca2086ab72d48713df89ee209583d1913aa39
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-submission-health
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-submission-health/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:dfbc2d970edd77aa26ab858acc74488666126cbbe60bf7dd269919a2c7bb2872
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-submission-health/references/app-privacy.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:671a31e9c1c236e23ad6b8d52874a7a86c5f9d939ffb87eb4a5e7e8341abc425
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-submission-health/references/digital-goods.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:d66aebb78e52c670b9919d53f7ac605d7f6ba79369f5652b67b5dc75d1e61ed5
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-submission-health/references/readiness-repairs.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:7e1219007fcec8be172f752360aedb2b97737ac642e6a9628640b3b009586dcf
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-subscription-localization
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-subscription-localization/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:bffc4d28b7ec4ca0ef22d38ec7beeb4fe0ef5f90f025ded4dc997a505137de3c
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-testflight-orchestration
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-testflight-orchestration/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:94e473daa89c207b2546c0463d88c1c52354c88b4fecea399658c450c659a261
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-wall-submit
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-wall-submit/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:d19bfaff35f88b516ee90a4a6a1f645d0255c6192578d0c3fdb05a6227efe999
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-whats-new-writer
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-whats-new-writer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:592c33a56caf79e60598f48c01be1bac2d4ef57fb9148805993c44383ea8e78d
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-whats-new-writer/references/release_notes_guidelines.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:b4a33667d0745b9f7b9539a07673327d57582a2fefee098881b722538ed2902f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-workflow
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-workflow/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:e3f208aa372f6f53a2a9387ed889cd989be518913881291a062fe8cae6af7d4f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-xcode-build
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/asc-xcode-build/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - rorkai/app-store-connect-cli-skills
+  active_owner: rorkai/app-store-connect-cli-skills
+  content_hash: sha256:ddb0a936904ea0e6b1a6af04b4e7daaee3ef359a1a3b074faa030005699be097
+- kind: project-relative
+  target: codex
+  value: .agents/skills/emil-design-eng
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/emil-design-eng/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:e71de849347050c2c573c1cf24d742d5a13459557ecffa6e562f08006f46b5b7
+- kind: project-relative
+  target: codex
+  value: .agents/skills/find-animation-opportunities
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/find-animation-opportunities/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:91c1243164057fbf824088d12faea937878a757a7ac653e8288b775e8b27b882
+- kind: project-relative
+  target: codex
+  value: .agents/skills/improve-animations
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/improve-animations/AUDIT.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:551c8473e20e5f4774680bc24d45e1c68e50992582720905c6b077756b7b5a55
+- kind: project-relative
+  target: codex
+  value: .agents/skills/improve-animations/PLAN-TEMPLATE.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:0a08ac8e23fd2082d7ffb86aeed7b789de77328c3cf874b16f1a755f2ef0a6ad
+- kind: project-relative
+  target: codex
+  value: .agents/skills/improve-animations/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:68f17bbc4671593d2f43dba26a679243e2153ba5f26965fb7d59df52842534ff
+- kind: project-relative
+  target: codex
+  value: .agents/skills/liquid-glass-design
+  runtime: null
+  scope: project
+  owners:
+  - affaan-m/everything-claude-code/skills/liquid-glass-design
+  active_owner: affaan-m/everything-claude-code/skills/liquid-glass-design
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/liquid-glass-design/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - affaan-m/everything-claude-code/skills/liquid-glass-design
+  active_owner: affaan-m/everything-claude-code/skills/liquid-glass-design
+  content_hash: sha256:024aa207eb3d4d31d868954a7352a40b78c61f2fd007ab8b452afb6217070f84
+- kind: project-relative
+  target: codex
+  value: .agents/skills/metal-motion-effects
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/metal-motion-effects/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
+- kind: project-relative
+  target: codex
+  value: .agents/skills/msl-techniques
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/msl-techniques/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
+- kind: project-relative
+  target: codex
+  value: .agents/skills/pick-ui-library
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/pick-ui-library/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:4b889bd6c08358499ac4a7202b8af71ffbd3485d2468f7b09d0613bbe7b24bf4
+- kind: project-relative
+  target: codex
+  value: .agents/skills/prototype
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/prototype/PICKER.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:31a55eec94715cc79942e91e172e539e3031dcd5e2e5ee7c1446cf2caee960a6
+- kind: project-relative
+  target: codex
+  value: .agents/skills/prototype/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:2ad8401c4deaddb54947fb65247f790e7b3d8784e35312bcbedbfb1d59cd89ce
+- kind: project-relative
+  target: codex
+  value: .agents/skills/review-animations
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/review-animations/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:61cf8ac0c4c8e1f63385298c546b16c65ca9aec34abddcd04e821c16712d671d
+- kind: project-relative
+  target: codex
+  value: .agents/skills/review-animations/STANDARDS.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:e7d3605034acda54ca13e43aec9e64d65b53de20f75b11b8d694e373012fbe07
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:809362b3e932b3bbf9b3f2f79953bae617573e3e24ea135576bbc1b020d89ce0
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/actors.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:7a77a0f06d0040a6813ec02cd4b1360df4bcfa501f93710bfb4296de9911d64f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/async-streams.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:589ba0dad544b28b158702e239fe6a4077b6d1484c83b8fd51290192bf1ffc9a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/bridging.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:c8eb60dcdd90f67cb3b8b1213fc55a56dd5c4a04f465d7aff7fdbd5c451e0498
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/bug-patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:2233f58e784a9b6cf13620133485fcf7e3150192a40e713369ebbddc820dec85
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/cancellation.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:c83b4134b44ea5a0ee06e785bd0cb85616234469833f9677297b6fcddea1e1fa
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/diagnostics.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:cc2debc6f430ed13fc3be3a7ce942e55bb1cf02a9804ebfb272f295b502c9569
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/hotspots.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:199a9fa4beea4a550b3f63e07cddd441d72fd41d1e17e6f3255071a661ce1e6d
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/interop.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:b86cd716bd22b38d718e86b37b3d7dd1225b5ce93a53f88842ff6993e93ca566
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/new-features.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:c721a187b57e9d94112972c9685c57f7129187df2d36add4df1a9c9e9aa9e541
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/structured.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:1655b610fd1dafb7cf42b61457ff8229117c06879d0e9cc40460f437ba97895b
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/testing.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:4a1fc1aefb572bbdbd75a502a74df795af7e2212eec6836a4f353f9b725abffc
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-concurrency-pro/references/unstructured.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  active_owner: twostraws/swift-concurrency-agent-skill/swift-concurrency-pro
+  content_hash: sha256:d8063edf18bbe5abc9c628548b0100c4dd8defe3340c017d6fa4936eca17c456
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-testing-pro
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-testing-pro/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:36e6c3d59bbec2f8b4ce95644df8519f2c66dcbff55138964be4ad9d60c07781
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-testing-pro/references/async-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:bc6e0eabd10377b5796e9e554a4965a78b7d1aaba8f11021c2a63b6e8a9e669a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-testing-pro/references/core-rules.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:2271efdca6c2b7b3365501172147884b6e786bcee7bef680fb4f4718929d6180
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-testing-pro/references/migrating-from-xctest.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:35b64812402ad1d15b496993e1721daaf4e80672bf9cce47078f772fd271f93f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-testing-pro/references/new-features.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:988df5cb556893c789f9aecdc4c8773fdbbda787ab1dad766bf1182a7b9a4819
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swift-testing-pro/references/writing-better-tests.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swift-testing-agent-skill/swift-testing-pro
+  active_owner: twostraws/swift-testing-agent-skill/swift-testing-pro
+  content_hash: sha256:25da3455f6cec4f10d3dff0bf3e8e1372568c75691916541b4d517f451cb8bf1
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftdata-pro
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftdata-pro/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:79164f3bc4942b8ca384057cbe951ca7715aecee4970bea38781d91ddb1c442e
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftdata-pro/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:4293560a9ce8fe893a81c8d64b2b472b47b4c679023ade972f4129636dd406d5
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftdata-pro/assets/swiftdata-pro-icon.png
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:6be448484728cd09655bd877e7b450fff8b12839e7fd281f1edc406748ebc51d
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftdata-pro/assets/swiftdata-pro-icon.svg
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:876f9b502c4565f51a9ef1e57c15fb0821e3272d28da32d2d42e13ecd9992425
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftdata-pro/references/class-inheritance.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:05b22c87e9864a47517ba095c9a870dc320f0e6f4cd85ff9f0b54c5ca356a41d
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftdata-pro/references/cloudkit.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:52a549b1713d55be183b79af595d37729426af0abea36ed05f932b718d8ee11f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftdata-pro/references/core-rules.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:8bf45a2af28bfb0648303bb520d3d317d2794b56fcfabe599c4785ccdf02f80a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftdata-pro/references/indexing.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:909167e538461bf517f8fc6b00bfe70d1c8ea19b12a4749088823c275de52a82
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftdata-pro/references/predicates.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftdata-agent-skill/swiftdata-pro
+  active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
+  content_hash: sha256:623c3195fccdec0ec95c0291223ced7491025b04e59c0b4f4fe5ffd23eb1019b
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-metal-shaders
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-metal-shaders/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:b8a892d4819494ef79f1db68ffee7a940f20304589ce38032c853dadff168199
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro/references/accessibility.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:708d09a35c950fd4c118bbb3cfcab13bb146e7d02084615307bbabc19e00a0e3
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro/references/api.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:12fa73d65a19c9d08224f925801db8eec914b1cedf5b2f86a38cdda04a66377a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro/references/data.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:5cc50484c525f748839e12174c065f7ea5fdd4380ce04b6885a906ecd6e6a318
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro/references/design.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:03e35d46865cc6807255f3c8481cdbac7b3b0f61924185af84c1913d6c983c69
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro/references/hygiene.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:91d96f45f3ffa02f5553c288415f3c3d5f317cab7d8d9c6c60240ea6c44a2b01
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro/references/navigation.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:a3adb302455993aff85bbb6b5845ed2fcffa137c8b2ded99c937f3e4b7fcd77b
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro/references/performance.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:1b503e3807e216d6b34b45f18bfba89214cea2fa1b88dd7ae8f482ebf0f03616
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro/references/swift.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:8c31c5f5f99b3fa9586f0260cd1a4b1688dc7bda5e8de2891eb3f9d6a791125a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-pro/references/views.md
+  runtime: null
+  scope: project
+  owners:
+  - twostraws/swiftui-agent-skill/swiftui-pro
+  active_owner: twostraws/swiftui-agent-skill/swiftui-pro
+  content_hash: sha256:79a166f6507e86744c0f73cfb583100f61a5da37e313ef4586b3b31136a73627
+- kind: project-relative
+  target: codex
+  value: .agents/skills/widgetkit
+  runtime: null
+  scope: project
+  owners:
+  - dpearson2699/swift-ios-skills/skills/widgetkit
+  active_owner: dpearson2699/swift-ios-skills/skills/widgetkit
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/widgetkit/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - dpearson2699/swift-ios-skills/skills/widgetkit
+  active_owner: dpearson2699/swift-ios-skills/skills/widgetkit
+  content_hash: sha256:a54b72abfc85c7fc4e6f11ed32d53ae0658f50df736e1c7b827ed0755fc8cb87
+- kind: project-relative
+  target: codex
+  value: .agents/skills/widgetkit/evals/evals.json
+  runtime: null
+  scope: project
+  owners:
+  - dpearson2699/swift-ios-skills/skills/widgetkit
+  active_owner: dpearson2699/swift-ios-skills/skills/widgetkit
+  content_hash: sha256:f774ae36d263b560ff89d0c2b30f672a2a0ad09ca714cb3f39981c75d96fbfea
+- kind: project-relative
+  target: codex
+  value: .agents/skills/widgetkit/references/widgetkit-advanced.md
+  runtime: null
+  scope: project
+  owners:
+  - dpearson2699/swift-ios-skills/skills/widgetkit
+  active_owner: dpearson2699/swift-ios-skills/skills/widgetkit
+  content_hash: sha256:ed93f51020e6b3b7ad9c09da4decb640285dd6bebb6e67fd66634eb3fb1b8743
