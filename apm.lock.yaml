@@ -1,11 +1,12 @@
 lockfile_version: '1'
-generated_at: '2026-08-04T07:10:38.962700+00:00'
-apm_version: 0.26.0
+generated_at: '2026-08-07T03:02:29.023926+00:00'
+apm_version: 0.27.0
 dependencies:
 - repo_url: alexw00/apm
+  materialization_repo_url: AlexW00/apm
   name: design-eng
   host: github.com
-  resolved_commit: 401dee12ea412edeaf1b485a9069168f798c6f84
+  resolved_commit: a25eed44e68dfb1d848e93eb77efb8313bbb01c6
   version: 0.1.0
   virtual_path: packages/design-eng
   is_virtual: true
@@ -13,20 +14,15 @@ dependencies:
   content_hash: sha256:e82b7f816d3d4f31a77ccf0745e15ee372cc3b15f99f5ecbbe24ee0a7a0ac12d
   declared_license: MIT
 - repo_url: alexw00/apm
+  materialization_repo_url: AlexW00/apm
   name: ios-core
   host: github.com
-  resolved_commit: 401dee12ea412edeaf1b485a9069168f798c6f84
+  resolved_commit: a25eed44e68dfb1d848e93eb77efb8313bbb01c6
   version: 0.1.0
   virtual_path: packages/ios-core
   is_virtual: true
   package_type: apm_package
   deployed_files:
-  - .agents/skills/metal-motion-effects
-  - .agents/skills/metal-motion-effects/SKILL.md
-  - .agents/skills/msl-techniques
-  - .agents/skills/msl-techniques/SKILL.md
-  - .agents/skills/swiftui-metal-shaders
-  - .agents/skills/swiftui-metal-shaders/SKILL.md
   - .claude/skills/metal-motion-effects
   - .claude/skills/metal-motion-effects/SKILL.md
   - .claude/skills/msl-techniques
@@ -34,18 +30,16 @@ dependencies:
   - .claude/skills/swiftui-metal-shaders
   - .claude/skills/swiftui-metal-shaders/SKILL.md
   deployed_file_hashes:
-    .agents/skills/metal-motion-effects/SKILL.md: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
-    .agents/skills/msl-techniques/SKILL.md: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
-    .agents/skills/swiftui-metal-shaders/SKILL.md: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
     .claude/skills/metal-motion-effects/SKILL.md: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
     .claude/skills/msl-techniques/SKILL.md: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
     .claude/skills/swiftui-metal-shaders/SKILL.md: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
   content_hash: sha256:d83ffbb2d56837573cfe5cd6539d8b33419679025f7cd93b8373c1c2b2132a88
   declared_license: MIT
 - repo_url: alexw00/apm
+  materialization_repo_url: AlexW00/apm
   name: ios-ship
   host: github.com
-  resolved_commit: 401dee12ea412edeaf1b485a9069168f798c6f84
+  resolved_commit: a25eed44e68dfb1d848e93eb77efb8313bbb01c6
   version: 0.1.0
   virtual_path: packages/ios-ship
   is_virtual: true
@@ -61,7 +55,7 @@ dependencies:
   virtual_path: skills/liquid-glass-design
   is_virtual: true
   depth: 2
-  resolved_by: alexw00/apm
+  resolved_by: AlexW00/apm
   package_type: claude_skill
   deployed_files:
   - .agents/skills/liquid-glass-design
@@ -81,7 +75,7 @@ dependencies:
   virtual_path: skills/widgetkit
   is_virtual: true
   depth: 2
-  resolved_by: alexw00/apm
+  resolved_by: AlexW00/apm
   package_type: claude_skill
   deployed_files:
   - .agents/skills/widgetkit
@@ -107,7 +101,7 @@ dependencies:
   resolved_ref: da80201b64de7d608a6dc5f723797ce6c65b692b
   version: unknown
   depth: 2
-  resolved_by: alexw00/apm
+  resolved_by: AlexW00/apm
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/animation-vocabulary
@@ -185,7 +179,7 @@ dependencies:
   virtual_path: skills/apple-appstore-reviewer
   is_virtual: true
   depth: 2
-  resolved_by: alexw00/apm
+  resolved_by: AlexW00/apm
   package_type: claude_skill
   deployed_files:
   - .agents/skills/apple-appstore-reviewer
@@ -203,7 +197,7 @@ dependencies:
   resolved_ref: 53c60a4945e53d39d2ab31357d61f4687123d77b
   version: 1.0.0
   depth: 2
-  resolved_by: alexw00/apm
+  resolved_by: AlexW00/apm
   package_type: marketplace_plugin
   deployed_files:
   - .agents/skills/asc-app-create-ui
@@ -388,7 +382,7 @@ dependencies:
   virtual_path: swift-concurrency-pro
   is_virtual: true
   depth: 2
-  resolved_by: alexw00/apm
+  resolved_by: AlexW00/apm
   package_type: marketplace_plugin
   deployed_files:
   - .agents/skills/swift-concurrency-pro
@@ -457,7 +451,7 @@ dependencies:
   virtual_path: swift-testing-pro
   is_virtual: true
   depth: 2
-  resolved_by: alexw00/apm
+  resolved_by: AlexW00/apm
   package_type: marketplace_plugin
   deployed_files:
   - .agents/skills/swift-testing-pro
@@ -498,7 +492,7 @@ dependencies:
   virtual_path: swiftdata-pro
   is_virtual: true
   depth: 2
-  resolved_by: alexw00/apm
+  resolved_by: AlexW00/apm
   package_type: claude_skill
   deployed_files:
   - .agents/skills/swiftdata-pro
@@ -550,7 +544,7 @@ dependencies:
   virtual_path: swiftui-pro
   is_virtual: true
   depth: 2
-  resolved_by: alexw00/apm
+  resolved_by: AlexW00/apm
   package_type: marketplace_plugin
   deployed_files:
   - .agents/skills/swiftui-pro
@@ -2401,42 +2395,6 @@ deployments:
   content_hash: sha256:024aa207eb3d4d31d868954a7352a40b78c61f2fd007ab8b452afb6217070f84
 - kind: project-relative
   target: codex
-  value: .agents/skills/metal-motion-effects
-  runtime: null
-  scope: project
-  owners:
-  - alexw00/apm/packages/ios-core
-  active_owner: alexw00/apm/packages/ios-core
-  content_hash: null
-- kind: project-relative
-  target: codex
-  value: .agents/skills/metal-motion-effects/SKILL.md
-  runtime: null
-  scope: project
-  owners:
-  - alexw00/apm/packages/ios-core
-  active_owner: alexw00/apm/packages/ios-core
-  content_hash: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
-- kind: project-relative
-  target: codex
-  value: .agents/skills/msl-techniques
-  runtime: null
-  scope: project
-  owners:
-  - alexw00/apm/packages/ios-core
-  active_owner: alexw00/apm/packages/ios-core
-  content_hash: null
-- kind: project-relative
-  target: codex
-  value: .agents/skills/msl-techniques/SKILL.md
-  runtime: null
-  scope: project
-  owners:
-  - alexw00/apm/packages/ios-core
-  active_owner: alexw00/apm/packages/ios-core
-  content_hash: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
-- kind: project-relative
-  target: codex
   value: .agents/skills/pick-ui-library
   runtime: null
   scope: project
@@ -2786,24 +2744,6 @@ deployments:
   - twostraws/swiftdata-agent-skill/swiftdata-pro
   active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
   content_hash: sha256:623c3195fccdec0ec95c0291223ced7491025b04e59c0b4f4fe5ffd23eb1019b
-- kind: project-relative
-  target: codex
-  value: .agents/skills/swiftui-metal-shaders
-  runtime: null
-  scope: project
-  owners:
-  - alexw00/apm/packages/ios-core
-  active_owner: alexw00/apm/packages/ios-core
-  content_hash: null
-- kind: project-relative
-  target: codex
-  value: .agents/skills/swiftui-metal-shaders/SKILL.md
-  runtime: null
-  scope: project
-  owners:
-  - alexw00/apm/packages/ios-core
-  active_owner: alexw00/apm/packages/ios-core
-  content_hash: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
 - kind: project-relative
   target: codex
   value: .agents/skills/swiftui-pro
