@@ -1,28 +1,34 @@
 lockfile_version: '1'
-generated_at: '2026-08-08T04:52:03.465453+00:00'
+generated_at: '2026-08-08T11:26:10.997188+00:00'
 apm_version: 0.27.0
 dependencies:
 - repo_url: alexw00/apm
   materialization_repo_url: AlexW00/apm
   name: design-eng
   host: github.com
-  resolved_commit: a25eed44e68dfb1d848e93eb77efb8313bbb01c6
+  resolved_commit: efc4e7625b7cbac464bac887a36aa161c12ddfc2
   version: 0.1.0
   virtual_path: packages/design-eng
   is_virtual: true
   package_type: apm_package
-  content_hash: sha256:e82b7f816d3d4f31a77ccf0745e15ee372cc3b15f99f5ecbbe24ee0a7a0ac12d
+  content_hash: sha256:977d470548e8663794f6139cd06ac813c4e7b3a6e8f04e917075f61abbc112cb
   declared_license: MIT
 - repo_url: alexw00/apm
   materialization_repo_url: AlexW00/apm
   name: ios-core
   host: github.com
-  resolved_commit: a25eed44e68dfb1d848e93eb77efb8313bbb01c6
+  resolved_commit: efc4e7625b7cbac464bac887a36aa161c12ddfc2
   version: 0.1.0
   virtual_path: packages/ios-core
   is_virtual: true
   package_type: apm_package
   deployed_files:
+  - .agents/skills/metal-motion-effects
+  - .agents/skills/metal-motion-effects/SKILL.md
+  - .agents/skills/msl-techniques
+  - .agents/skills/msl-techniques/SKILL.md
+  - .agents/skills/swiftui-metal-shaders
+  - .agents/skills/swiftui-metal-shaders/SKILL.md
   - .claude/skills/metal-motion-effects
   - .claude/skills/metal-motion-effects/SKILL.md
   - .claude/skills/msl-techniques
@@ -30,27 +36,30 @@ dependencies:
   - .claude/skills/swiftui-metal-shaders
   - .claude/skills/swiftui-metal-shaders/SKILL.md
   deployed_file_hashes:
+    .agents/skills/metal-motion-effects/SKILL.md: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
+    .agents/skills/msl-techniques/SKILL.md: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
+    .agents/skills/swiftui-metal-shaders/SKILL.md: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
     .claude/skills/metal-motion-effects/SKILL.md: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
     .claude/skills/msl-techniques/SKILL.md: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
     .claude/skills/swiftui-metal-shaders/SKILL.md: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
-  content_hash: sha256:d83ffbb2d56837573cfe5cd6539d8b33419679025f7cd93b8373c1c2b2132a88
+  content_hash: sha256:5dc39a146ad9fe0d425857c56942d8b474f24cd040cc41cc18e2235102eca86b
   declared_license: MIT
 - repo_url: alexw00/apm
   materialization_repo_url: AlexW00/apm
   name: ios-ship
   host: github.com
-  resolved_commit: a25eed44e68dfb1d848e93eb77efb8313bbb01c6
+  resolved_commit: efc4e7625b7cbac464bac887a36aa161c12ddfc2
   version: 0.1.0
   virtual_path: packages/ios-ship
   is_virtual: true
   package_type: apm_package
-  content_hash: sha256:a4cd4d5c130a9b1457c578cae46e1b5b599c050db47c74a4ea9181dc64d817e6
+  content_hash: sha256:5515828c2341b81a9018b9b3d4055381ecde4d513ef37d6d0f3b3139436ab83f
   declared_license: MIT
 - repo_url: affaan-m/everything-claude-code
   name: liquid-glass-design
   host: github.com
-  resolved_commit: ff15079b9f9852c385ac3a506f8ec3a26be4f563
-  resolved_ref: ff15079b9f9852c385ac3a506f8ec3a26be4f563
+  resolved_commit: 59a99d669f5466d99d5be8b6fce8c5f2677766d0
+  resolved_ref: 59a99d669f5466d99d5be8b6fce8c5f2677766d0
   version: unknown
   virtual_path: skills/liquid-glass-design
   is_virtual: true
@@ -97,13 +106,16 @@ dependencies:
 - repo_url: emilkowalski/skills
   name: skills
   host: github.com
-  resolved_commit: da80201b64de7d608a6dc5f723797ce6c65b692b
-  resolved_ref: da80201b64de7d608a6dc5f723797ce6c65b692b
+  resolved_commit: de33dbed000212b54400a33767d1e4d03654db2a
+  resolved_ref: de33dbed000212b54400a33767d1e4d03654db2a
   version: unknown
   depth: 2
   resolved_by: AlexW00/apm
   package_type: skill_bundle
   deployed_files:
+  - .agents/skills/animate
+  - .agents/skills/animate/RECIPES.md
+  - .agents/skills/animate/SKILL.md
   - .agents/skills/animation-vocabulary
   - .agents/skills/animation-vocabulary/SKILL.md
   - .agents/skills/apple-design
@@ -124,6 +136,9 @@ dependencies:
   - .agents/skills/review-animations
   - .agents/skills/review-animations/SKILL.md
   - .agents/skills/review-animations/STANDARDS.md
+  - .claude/skills/animate
+  - .claude/skills/animate/RECIPES.md
+  - .claude/skills/animate/SKILL.md
   - .claude/skills/animation-vocabulary
   - .claude/skills/animation-vocabulary/SKILL.md
   - .claude/skills/apple-design
@@ -145,6 +160,8 @@ dependencies:
   - .claude/skills/review-animations/SKILL.md
   - .claude/skills/review-animations/STANDARDS.md
   deployed_file_hashes:
+    .agents/skills/animate/RECIPES.md: sha256:21ff63d84391db8d96ecdf9170095f55a42c836ccc36fd3269c4772bab031ba2
+    .agents/skills/animate/SKILL.md: sha256:2a99870e61971553c0af3185a194c0e557f33aaa81e0422ca2fcec52195a4341
     .agents/skills/animation-vocabulary/SKILL.md: sha256:d718b48fe3c7898804d588f050a2e266d82c9f5ef51da256c8cb8b5951527757
     .agents/skills/apple-design/SKILL.md: sha256:11840b24a11d7f94f39c6aaab074750ae4e4de4ef54ee4b1dd97e16ebd485e61
     .agents/skills/emil-design-eng/SKILL.md: sha256:e71de849347050c2c573c1cf24d742d5a13459557ecffa6e562f08006f46b5b7
@@ -157,6 +174,8 @@ dependencies:
     .agents/skills/prototype/SKILL.md: sha256:2ad8401c4deaddb54947fb65247f790e7b3d8784e35312bcbedbfb1d59cd89ce
     .agents/skills/review-animations/SKILL.md: sha256:61cf8ac0c4c8e1f63385298c546b16c65ca9aec34abddcd04e821c16712d671d
     .agents/skills/review-animations/STANDARDS.md: sha256:e7d3605034acda54ca13e43aec9e64d65b53de20f75b11b8d694e373012fbe07
+    .claude/skills/animate/RECIPES.md: sha256:21ff63d84391db8d96ecdf9170095f55a42c836ccc36fd3269c4772bab031ba2
+    .claude/skills/animate/SKILL.md: sha256:2a99870e61971553c0af3185a194c0e557f33aaa81e0422ca2fcec52195a4341
     .claude/skills/animation-vocabulary/SKILL.md: sha256:d718b48fe3c7898804d588f050a2e266d82c9f5ef51da256c8cb8b5951527757
     .claude/skills/apple-design/SKILL.md: sha256:11840b24a11d7f94f39c6aaab074750ae4e4de4ef54ee4b1dd97e16ebd485e61
     .claude/skills/emil-design-eng/SKILL.md: sha256:e71de849347050c2c573c1cf24d742d5a13459557ecffa6e562f08006f46b5b7
@@ -169,12 +188,12 @@ dependencies:
     .claude/skills/prototype/SKILL.md: sha256:2ad8401c4deaddb54947fb65247f790e7b3d8784e35312bcbedbfb1d59cd89ce
     .claude/skills/review-animations/SKILL.md: sha256:61cf8ac0c4c8e1f63385298c546b16c65ca9aec34abddcd04e821c16712d671d
     .claude/skills/review-animations/STANDARDS.md: sha256:e7d3605034acda54ca13e43aec9e64d65b53de20f75b11b8d694e373012fbe07
-  content_hash: sha256:8bb2467ab9f3373dbb4fa3c5cd3c04da0658c41530538fbc3bd5198cb474ebb1
+  content_hash: sha256:5295322b7e0c8b8763e32e0a9b0857e602e7c72eeb183bceeef838ade55f8fb5
 - repo_url: github/awesome-copilot
   name: apple-appstore-reviewer
   host: github.com
-  resolved_commit: dab758a392cd6b06e806c1aa0444e2bc463b32f9
-  resolved_ref: dab758a392cd6b06e806c1aa0444e2bc463b32f9
+  resolved_commit: ab7544d03d4c49fdd07f5958e1888ad39c4118e2
+  resolved_ref: ab7544d03d4c49fdd07f5958e1888ad39c4118e2
   version: unknown
   virtual_path: skills/apple-appstore-reviewer
   is_virtual: true
@@ -193,8 +212,8 @@ dependencies:
 - repo_url: rorkai/app-store-connect-cli-skills
   name: asc
   host: github.com
-  resolved_commit: 53c60a4945e53d39d2ab31357d61f4687123d77b
-  resolved_ref: 53c60a4945e53d39d2ab31357d61f4687123d77b
+  resolved_commit: 3b567352099e28c19afddd447bc7e51a348334ce
+  resolved_ref: 3b567352099e28c19afddd447bc7e51a348334ce
   version: 1.0.0
   depth: 2
   resolved_by: AlexW00/apm
@@ -328,7 +347,7 @@ dependencies:
     .agents/skills/asc-revenuecat-catalog-sync/references.md: sha256:65e3a19da5381583145d6eb9ef721cd39a7a9a2fb6b92372ee143f3886a67ee9
     .agents/skills/asc-screenshot-resize/SKILL.md: sha256:311b549c07d90ef5d0710217fb1936370714250e8edf7e1c74c76156e6a19637
     .agents/skills/asc-shots-pipeline/SKILL.md: sha256:ed7f604c45e2fa0ecde71a1a79a5e711a09de740190c420bd19fcddf21f02deb
-    .agents/skills/asc-signing-setup/SKILL.md: sha256:0612701f52f3779f771b7b0fd43ca2086ab72d48713df89ee209583d1913aa39
+    .agents/skills/asc-signing-setup/SKILL.md: sha256:6b40f9afbab54679b1a7a63c182973f52f7541717c3e9a3ee8ddc30e6443dab9
     .agents/skills/asc-submission-health/SKILL.md: sha256:dfbc2d970edd77aa26ab858acc74488666126cbbe60bf7dd269919a2c7bb2872
     .agents/skills/asc-submission-health/references/app-privacy.md: sha256:671a31e9c1c236e23ad6b8d52874a7a86c5f9d939ffb87eb4a5e7e8341abc425
     .agents/skills/asc-submission-health/references/digital-goods.md: sha256:d66aebb78e52c670b9919d53f7ac605d7f6ba79369f5652b67b5dc75d1e61ed5
@@ -339,7 +358,7 @@ dependencies:
     .agents/skills/asc-whats-new-writer/SKILL.md: sha256:592c33a56caf79e60598f48c01be1bac2d4ef57fb9148805993c44383ea8e78d
     .agents/skills/asc-whats-new-writer/references/release_notes_guidelines.md: sha256:b4a33667d0745b9f7b9539a07673327d57582a2fefee098881b722538ed2902f
     .agents/skills/asc-workflow/SKILL.md: sha256:e3f208aa372f6f53a2a9387ed889cd989be518913881291a062fe8cae6af7d4f
-    .agents/skills/asc-xcode-build/SKILL.md: sha256:ddb0a936904ea0e6b1a6af04b4e7daaee3ef359a1a3b074faa030005699be097
+    .agents/skills/asc-xcode-build/SKILL.md: sha256:2834f2562b58faef0a78d9a885148fed00032291f104393667b93b3d6fbccdbf
     .claude/skills/asc-app-create-ui/SKILL.md: sha256:3847ed76558045a93b3dc05d73ee504cc304301388cf9ffe8e5c1dc2f8be2440
     .claude/skills/asc-apple-ads/SKILL.md: sha256:71e8cfbcb226f1747e9ca8be0e6da7a3d0de23db03b0150a8ecabc8aa7db28b2
     .claude/skills/asc-aso-audit/SKILL.md: sha256:aed35d55438f4d0982c961bbe10265cf5a57a505e804143b157fa21142215f65
@@ -359,7 +378,7 @@ dependencies:
     .claude/skills/asc-revenuecat-catalog-sync/references.md: sha256:65e3a19da5381583145d6eb9ef721cd39a7a9a2fb6b92372ee143f3886a67ee9
     .claude/skills/asc-screenshot-resize/SKILL.md: sha256:311b549c07d90ef5d0710217fb1936370714250e8edf7e1c74c76156e6a19637
     .claude/skills/asc-shots-pipeline/SKILL.md: sha256:ed7f604c45e2fa0ecde71a1a79a5e711a09de740190c420bd19fcddf21f02deb
-    .claude/skills/asc-signing-setup/SKILL.md: sha256:0612701f52f3779f771b7b0fd43ca2086ab72d48713df89ee209583d1913aa39
+    .claude/skills/asc-signing-setup/SKILL.md: sha256:6b40f9afbab54679b1a7a63c182973f52f7541717c3e9a3ee8ddc30e6443dab9
     .claude/skills/asc-submission-health/SKILL.md: sha256:dfbc2d970edd77aa26ab858acc74488666126cbbe60bf7dd269919a2c7bb2872
     .claude/skills/asc-submission-health/references/app-privacy.md: sha256:671a31e9c1c236e23ad6b8d52874a7a86c5f9d939ffb87eb4a5e7e8341abc425
     .claude/skills/asc-submission-health/references/digital-goods.md: sha256:d66aebb78e52c670b9919d53f7ac605d7f6ba79369f5652b67b5dc75d1e61ed5
@@ -370,8 +389,8 @@ dependencies:
     .claude/skills/asc-whats-new-writer/SKILL.md: sha256:592c33a56caf79e60598f48c01be1bac2d4ef57fb9148805993c44383ea8e78d
     .claude/skills/asc-whats-new-writer/references/release_notes_guidelines.md: sha256:b4a33667d0745b9f7b9539a07673327d57582a2fefee098881b722538ed2902f
     .claude/skills/asc-workflow/SKILL.md: sha256:e3f208aa372f6f53a2a9387ed889cd989be518913881291a062fe8cae6af7d4f
-    .claude/skills/asc-xcode-build/SKILL.md: sha256:ddb0a936904ea0e6b1a6af04b4e7daaee3ef359a1a3b074faa030005699be097
-  content_hash: sha256:9748b80284431860fe579962639b4ca82f0de68f182861af0f42391ce8bb034d
+    .claude/skills/asc-xcode-build/SKILL.md: sha256:2834f2562b58faef0a78d9a885148fed00032291f104393667b93b3d6fbccdbf
+  content_hash: sha256:0146042d4b1f60041e9c5d25c1254248de0a5ba73ec42a52c1a953eb410724ec
   declared_license: MIT
 - repo_url: twostraws/swift-concurrency-agent-skill
   name: swift-concurrency-pro
@@ -593,6 +612,33 @@ dependencies:
   content_hash: sha256:43338d56ab22b1f03eee1f2d6e72e08e5f1a3b70b9f4146849ab37a5156fb94d
   declared_license: MIT
 deployments:
+- kind: project-relative
+  target: claude
+  value: .claude/skills/animate
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/animate/RECIPES.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:21ff63d84391db8d96ecdf9170095f55a42c836ccc36fd3269c4772bab031ba2
+- kind: project-relative
+  target: claude
+  value: .claude/skills/animate/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:2a99870e61971553c0af3185a194c0e557f33aaa81e0422ca2fcec52195a4341
 - kind: project-relative
   target: claude
   value: .claude/skills/animation-vocabulary
@@ -970,7 +1016,7 @@ deployments:
   owners:
   - rorkai/app-store-connect-cli-skills
   active_owner: rorkai/app-store-connect-cli-skills
-  content_hash: sha256:0612701f52f3779f771b7b0fd43ca2086ab72d48713df89ee209583d1913aa39
+  content_hash: sha256:6b40f9afbab54679b1a7a63c182973f52f7541717c3e9a3ee8ddc30e6443dab9
 - kind: project-relative
   target: claude
   value: .claude/skills/asc-submission-health
@@ -1132,7 +1178,7 @@ deployments:
   owners:
   - rorkai/app-store-connect-cli-skills
   active_owner: rorkai/app-store-connect-cli-skills
-  content_hash: sha256:ddb0a936904ea0e6b1a6af04b4e7daaee3ef359a1a3b074faa030005699be097
+  content_hash: sha256:2834f2562b58faef0a78d9a885148fed00032291f104393667b93b3d6fbccdbf
 - kind: project-relative
   target: claude
   value: .claude/skills/emil-design-eng
@@ -1765,6 +1811,33 @@ deployments:
   content_hash: sha256:ed93f51020e6b3b7ad9c09da4decb640285dd6bebb6e67fd66634eb3fb1b8743
 - kind: project-relative
   target: codex
+  value: .agents/skills/animate
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/animate/RECIPES.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:21ff63d84391db8d96ecdf9170095f55a42c836ccc36fd3269c4772bab031ba2
+- kind: project-relative
+  target: codex
+  value: .agents/skills/animate/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - emilkowalski/skills
+  active_owner: emilkowalski/skills
+  content_hash: sha256:2a99870e61971553c0af3185a194c0e557f33aaa81e0422ca2fcec52195a4341
+- kind: project-relative
+  target: codex
   value: .agents/skills/animation-vocabulary
   runtime: null
   scope: project
@@ -2140,7 +2213,7 @@ deployments:
   owners:
   - rorkai/app-store-connect-cli-skills
   active_owner: rorkai/app-store-connect-cli-skills
-  content_hash: sha256:0612701f52f3779f771b7b0fd43ca2086ab72d48713df89ee209583d1913aa39
+  content_hash: sha256:6b40f9afbab54679b1a7a63c182973f52f7541717c3e9a3ee8ddc30e6443dab9
 - kind: project-relative
   target: codex
   value: .agents/skills/asc-submission-health
@@ -2302,7 +2375,7 @@ deployments:
   owners:
   - rorkai/app-store-connect-cli-skills
   active_owner: rorkai/app-store-connect-cli-skills
-  content_hash: sha256:ddb0a936904ea0e6b1a6af04b4e7daaee3ef359a1a3b074faa030005699be097
+  content_hash: sha256:2834f2562b58faef0a78d9a885148fed00032291f104393667b93b3d6fbccdbf
 - kind: project-relative
   target: codex
   value: .agents/skills/emil-design-eng
@@ -2393,6 +2466,42 @@ deployments:
   - affaan-m/everything-claude-code/skills/liquid-glass-design
   active_owner: affaan-m/everything-claude-code/skills/liquid-glass-design
   content_hash: sha256:024aa207eb3d4d31d868954a7352a40b78c61f2fd007ab8b452afb6217070f84
+- kind: project-relative
+  target: codex
+  value: .agents/skills/metal-motion-effects
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/metal-motion-effects/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: sha256:44b5544cdae609038b46b1be75a9321ebf60e19a9ba0a3164c256c299430b3a2
+- kind: project-relative
+  target: codex
+  value: .agents/skills/msl-techniques
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/msl-techniques/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: sha256:29d8cf49cfaaafe0303e2de7c947d6e768916f2cd297f0f9f634621948016eeb
 - kind: project-relative
   target: codex
   value: .agents/skills/pick-ui-library
@@ -2744,6 +2853,24 @@ deployments:
   - twostraws/swiftdata-agent-skill/swiftdata-pro
   active_owner: twostraws/swiftdata-agent-skill/swiftdata-pro
   content_hash: sha256:623c3195fccdec0ec95c0291223ced7491025b04e59c0b4f4fe5ffd23eb1019b
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-metal-shaders
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/swiftui-metal-shaders/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alexw00/apm/packages/ios-core
+  active_owner: alexw00/apm/packages/ios-core
+  content_hash: sha256:a7cf99610e92296242f6c92295d67b632214766bb0fed1ef6fe6d8e32e45827a
 - kind: project-relative
   target: codex
   value: .agents/skills/swiftui-pro
