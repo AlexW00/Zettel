@@ -1,0 +1,13 @@
+[mcp_servers.apple-docs-mcp]
+command = "npx"
+args = ["-y", "@kimsungwhee/apple-docs-mcp@1.0.26"]
+id = ""
+
+[mcp_servers.apple-docs-mcp.env]
+
+[mcp_servers.xcode]
+command = "xcrun"
+args = ["mcpbridge"]
+id = ""
+
+[mcp_servers.xcode.env]

@@ -10,4 +10,17 @@ dependencies:
     - AlexW00/apm/packages/ios-core
     - AlexW00/apm/packages/ios-ship
     - AlexW00/apm/packages/design-eng
-  mcp: []
+  mcp:
+    - name: apple-docs-mcp
+      registry: false
+      transport: stdio
+      command: npx
+      args:
+        - -y
+        - '@kimsungwhee/apple-docs-mcp@1.0.26'
+    - name: xcode
+      registry: false
+      transport: stdio
+      command: xcrun
+      args:
+        - mcpbridge

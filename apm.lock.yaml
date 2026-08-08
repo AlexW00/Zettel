@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-08-07T03:02:29.023926+00:00'
+generated_at: '2026-08-08T04:52:03.465453+00:00'
 apm_version: 0.27.0
 dependencies:
 - repo_url: alexw00/apm
@@ -2879,3 +2879,65 @@ deployments:
   - dpearson2699/swift-ios-skills/skills/widgetkit
   active_owner: dpearson2699/swift-ios-skills/skills/widgetkit
   content_hash: sha256:ed93f51020e6b3b7ad9c09da4decb640285dd6bebb6e67fd66634eb3fb1b8743
+- kind: uri
+  target: mcp
+  value: apple-docs-mcp
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: xcode
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: apple-docs-mcp
+  runtime: codex
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: xcode
+  runtime: codex
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+mcp_servers:
+- apple-docs-mcp
+- xcode
+mcp_configs:
+  apple-docs-mcp:
+    name: apple-docs-mcp
+    transport: stdio
+    args:
+    - -y
+    - '@kimsungwhee/apple-docs-mcp@1.0.26'
+    registry: false
+    command: npx
+  xcode:
+    name: xcode
+    transport: stdio
+    args:
+    - mcpbridge
+    registry: false
+    command: xcrun
+mcp_target_servers:
+  claude:
+  - apple-docs-mcp
+  - xcode
+  codex:
+  - apple-docs-mcp
+  - xcode

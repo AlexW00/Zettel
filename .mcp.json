@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "apple-docs-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@kimsungwhee/apple-docs-mcp@1.0.26"
+      ]
+    },
+    "xcode": {
+      "type": "stdio",
+      "command": "xcrun",
+      "args": [
+        "mcpbridge"
+      ]
+    }
+  }
+}
